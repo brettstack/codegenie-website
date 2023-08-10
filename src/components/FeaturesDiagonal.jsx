@@ -2,9 +2,8 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 
 import { InvitationModal } from './InvitationModal'
-import featuresdiagonal from '../assets/images/featuresdiagonal.webp'
 
-export const FeaturesDiagonal = () => {
+export const FeaturesDiagonal = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
@@ -33,11 +32,14 @@ export const FeaturesDiagonal = () => {
           <div className="w-3/4 lg:w-1/2 flex flex-col lg:mx-unset mx-auto">
             <span className="custom-block-subtitle">Built for you</span>
             <h2 className="mt-10 mb-8 text-4xl lg:text-5xl custom-block-big-title">
-              Based on your data model or idea
+              Relevant source code based on your data model or idea
             </h2>
             <p className="mb-16 text-customGrayText leading-loose">
-              Code Genie leverages the power of AWS to provide infinitely
-              scalable applications.
+              Provide Code Genie with your application's data model, and it will
+              generate application source code to meet your requirements. Don't
+              have a data model? Simply tell Code Genie your "wish" (app
+              idea/description) and it'll do its best to desgin an initial data
+              model for you!
             </p>
             <div
               className="w-[210px] h-12 custom-button-colored mr-10 "
@@ -46,12 +48,8 @@ export const FeaturesDiagonal = () => {
               Get Started
             </div>
           </div>
-          <div className="w-4/5 lg:w-1/2 lg:pl-16 flex justify-center mx-auto pt-16 lg:pt-0">
-            <img
-              src={featuresdiagonal}
-              alt="f1"
-              className="rounded-xl  custom-border-gray"
-            />
+          <div className="w-4/5 lg:w-1/2 lg:pl-16 flex justify-center mx-auto pt-16 lg:pt-0 max-h-[400px]">
+            {children}
           </div>
         </div>
       </motion.div>

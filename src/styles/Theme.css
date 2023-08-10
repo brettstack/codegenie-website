@@ -60,3 +60,7 @@ html {
 @font-face {
   font-display: var(--fontsource-Inter-font-display, optional);
 }
+
+a {
+  @apply underline text-blue-600 hover:text-blue-800 visited:text-purple-600
+}

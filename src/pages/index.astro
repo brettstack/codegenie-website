@@ -1,4 +1,5 @@
 ---
+import { Code } from 'astro/components'
 import Layout from "../layouts/Layout.astro";
 import { Hero } from "../components/Hero.jsx";
 import { Navbar } from "../components/Navbar.jsx";
@@ -16,6 +17,73 @@ import { ScrollUpButton } from "../components/ScrollUpButton";
 import "../styles/Theme.css";
 import "../styles/Diagonals.css";
 
+
+const projectSchemaYamlFile = `$schema: http://json-schema.org/draft-07/schema#
+title: Project
+'x-codeGenie':
+  idProperty: projectId
+  nameProperty: name
+  imageProperty: logo
+  dynamodb:
+    partitionKey: clientId
+    sortKey: projectId
+  hasMany:
+    TeamMember:
+      $ref: ./team-member.yaml
+    OpenPosition:
+      $ref: ./open-position.yaml
+  ui:
+    listView: CARD_LIST
+allOf:
+  - type: object
+    $ref: '#/definitions/attributes'
+definitions:
+  attributes:
+    type: object
+    properties:
+      clientId:
+        type: string
+        readOnly: true
+      projectId:
+        type: string
+        readOnly: true
+      name:
+        type: string
+      logo:
+        type: string
+        contentEncoding: base64
+        contentMediaType: image/png
+      projectManagerId:
+        type: string
+        x-codeGenie:
+          foreignKey:
+            referencedEntity: Staff
+      description:
+        type: string
+        x-codeGenie:
+          ui:
+            inputType: textarea
+      startDate:
+        type: string
+        format: date
+      endDate:
+        type: string
+        format: date
+      status:
+        type: enum
+        default: Pending
+        enum:
+          - Pending
+          - Active
+          - Complete
+          - Cancelled
+    required:
+      - clientId
+      - projectId
+      - name
+      - status
+    additionalProperties: false
+`
 ---
 
 <Layout title="Code Genie - Instant UI, API, Auth, Database, Cloud foundation">
@@ -27,7 +95,9 @@ import "../styles/Diagonals.css";
   <Divider />
   <Features3 client:load />
   <!-- <Testimonials client:load /> -->
-  <FeaturesDiagonal client:load />
+  <FeaturesDiagonal client:load>
+    <Code code={projectSchemaYamlFile} lang="yaml" />
+    </FeaturesDiagonal>
   <!-- <Pricing client:load /> -->
   <!-- <Brands client:load /> -->
   <FAQ client:load />

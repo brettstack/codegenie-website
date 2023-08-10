@@ -48,7 +48,7 @@ export const FeaturesDiagonal = ({ children }) => {
               Get Started
             </div>
           </div>
-          <div className="w-4/5 lg:w-1/2 lg:pl-16 flex justify-center mx-auto pt-16 lg:pt-0 max-h-[400px]">
+          <div className="w-4/5 lg:w-1/2 lg:pl-16 flex justify-center mx-auto pt-16 lg:pt-0 max-h-[472px]">
             {children}
           </div>
         </div>

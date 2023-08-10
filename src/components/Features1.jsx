@@ -11,7 +11,7 @@ export const Features1 = () => {
   return (
     <section
       className="w-full bg-customDarkBg2 mt-12 sm:mt-20 mb-10 lg:my-20"
-      id="features3"
+      id="features"
     >
       <motion.div
         initial={{ opacity: 0 }}

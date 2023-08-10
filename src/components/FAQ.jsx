@@ -8,11 +8,6 @@ const FAQData = [
       'No! Code Genie generates a foundation for you. What you do from there is totally up to you and your engineering team!',
   },
   {
-    question: 'Do I need to pay Code Genie a monthly fee?',
-    answer:
-      'No! The generated application is intended to be deployed to your own AWS account. We simply help you get started with a low cost solution ($0 when not in use!) that scales with you.',
-  },
-  {
     question: 'Am I locked into AWS?',
     answer: (
       <>
@@ -28,11 +23,30 @@ const FAQData = [
           Express
         </a>
         , making it highly portable. Unfortunately,{' '}
-        <a href="https://aws.amazon.com/dynamodb/">DynamoDB</a> is a bit more
-        challenging, and would require writing a database migration script and
-        updating the controller logic.
+        <a
+          href="https://aws.amazon.com/dynamodb/"
+          target="_blank"
+          rel="noopener"
+        >
+          DynamoDB
+        </a>{' '}
+        is a bit more challenging, and would a database migration (e.g. see this
+        article on how you would{' '}
+        <a
+          href="https://www.mongodb.com/blog/post/migrating-your-data-from-dynamodb-to-mongodb-atlas"
+          target="_blank"
+          rel="noopener"
+        >
+          migrate from DynamoDB to MongoDB
+        </a>
+        ) and updating some controller logic.
       </>
     ),
+  },
+  {
+    question: 'Do I need to pay Code Genie a monthly fee?',
+    answer:
+      'No! The generated application is intended to be deployed to your own AWS account. We simply help you get started with a low cost solution ($0 when not in use!) that scales with you.',
   },
 ]
 

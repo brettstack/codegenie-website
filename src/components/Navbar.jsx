@@ -25,7 +25,7 @@ export const Navbar = () => {
           exit={{ opacity: 0 }}
         >
           <div className="w-[180px]">
-            <a className="navbar-link" href="#home" aria-label="Home">
+            <a className="unstyled navbar-link" href="#home" aria-label="Home">
               <div className="flex justify-start items-center grow basis-0">
                 <div className="text-white mr-2 text-6xl">
                   <CodeGenieLogo />
@@ -46,7 +46,7 @@ export const Navbar = () => {
           <div className="hidden md:flex h-full pb-2">
             {navbarLinks.map(({ href, label, ariaLabel }) => (
               <a
-                className="navbar-link"
+                className="unstyled navbar-link"
                 href={href}
                 aria-label={ariaLabel}
                 key={label}
@@ -64,7 +64,7 @@ export const Navbar = () => {
         >
           <div className="grow basis-0 justify-end hidden md:flex w-[180px]">
             {/* <a
-              className="text-white custom-border-gray rounded-xl
+              className="unstyled text-white custom-border-gray rounded-xl
            bg-customDarkBg2 hover:bg-customDarkBg3  border-gray-700 pl-6 pr-8 pt-2 pb-2 text-sm flex"
               href="https://github.com/matt765/Tidestream"
               target="_blank"
@@ -110,7 +110,7 @@ export const Navbar = () => {
                 </a>
               ))}
               {/* <a
-                className="text-white custom-border-gray rounded-xl
+                className="unstyled text-white custom-border-gray rounded-xl
            bg-customDarkBg2 hover:bg-customDarkBg3  border-gray-700 pl-6 pr-8 pt-2 pb-2 text-sm flex"
                 href="https://github.com/matt765/Tidestream"
                 target="_blank"

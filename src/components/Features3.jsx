@@ -20,10 +20,10 @@ export const Features3 = () => {
         <div className="w-11/12 xl:w-10/12 2xl:w-[1280px] mx-auto md:pl-4 xl:pr-16 xl:pl-16">
           <div className="w-full xl:w-2/3 mb-12 lg:mb-0">
             <span className="custom-block-subtitle">
-              Scale from zero to infinity
+              ☁️ Scale from zero to infinity
             </span>
-            <h2 className="mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
-              ☁️ Backed by AWS Cloud Native, Serverless Services
+            <h2 className="gradient-text mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
+              Backed by AWS Cloud Native, Serverless Services
             </h2>
             <p className="mb-10 text-customGrayText leading-loose">
               Code Genie leverages the power of AWS to provide infinitely

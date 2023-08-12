@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        customPrimary: "rgb(34, 136, 221)",
-        customSecondary: "rgb(16, 225, 183)",
+        customPrimary: "rgb(34, 136, 221)", //#579ddd
+        customSecondary: "rgb(16, 225, 183)", //#10e1b8
         customDarkBg1: "rgb(31, 32, 35)",
         customDarkBg2: "rgb(38, 39, 43)",
         customDarkBg3: "rgb(48, 49, 54)",

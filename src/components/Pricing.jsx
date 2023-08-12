@@ -32,23 +32,23 @@ export const Pricing = () => {
         >
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-16">
-              <span className="custom-block-subtitle">Get in touch</span>
-              <h2 className="mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading text-white">
+              <span className="custom-block-subtitle">📧 Get in touch</span>
+              <h2 className="gradient-text mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading text-white">
                 Custom pricing available now
               </h2>
               <p className="mb-6 text-customGrayText">
-                Code Genie is not yet generally available and we're currently
+                Code Genie is not yet generally available. We're currently
                 working closely with partners to jumpstart the development of
                 their new software projects. We're also offering free builds for
                 some Nonprofits.{' '}
                 <a href="mailto:brett.j.andrews@gmail.com">
-                  Shoot us an email to schedule a demo
+                  Contact us to schedule a demo
                 </a>
                 .
               </p>
               <div className="flex justify-center">
                 <div
-                  className="w-[210px] h-12 custom-button-colored mr-10 "
+                  className="h-12 custom-button-colored"
                   onClick={() =>
                     window.open(
                       'mailto:brett.j.andrews@gmail.com?subject=Code Genie Demo'

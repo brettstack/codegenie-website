@@ -20,10 +20,10 @@ export const Features2 = () => (
         <div className="w-full flex justify-end mb-8">
           <div className="w-full xl:w-2/3 lg:mb-0">
             <span className="custom-block-subtitle">
-              Superb Developer Experience
+              🧑‍💻 Superb Developer Experience
             </span>
-            <h2 className="mt-6 mb-8 text-4xl md:text-5xl custom-block-big-title">
-              🧑‍💻 Technology that devs know and love
+            <h2 className="gradient-text mt-6 mb-8 text-4xl md:text-5xl custom-block-big-title">
+              Technology that devs know and love
             </h2>
             <p className="text-customGrayText leading-loose">
               Code Genie generates source code written in languages and

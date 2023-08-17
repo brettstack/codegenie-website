@@ -72,3 +72,8 @@ a:not(.unstyled) {
     -webkit-background-clip: text;
     background-clip: text;
 }
+
+.astro-code.github-dark code {
+  max-width: 100vw;
+  display: block;
+}

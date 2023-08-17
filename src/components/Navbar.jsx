@@ -101,7 +101,7 @@ export const Navbar = () => {
               {navbarLinks.map(({ label, href, ariaLabel }) => (
                 <a
                   key={href}
-                  className="navbar-link"
+                  className="navbar-link unstyled"
                   href={href}
                   onClick={() => setIsOpen(false)}
                   aria-label={ariaLabel}

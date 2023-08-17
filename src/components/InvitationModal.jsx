@@ -1,8 +1,8 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion'
 
-import { CheckArrowIcon } from "../assets/icons/CheckArrowIcon";
-import { CloseIcon } from "../assets/icons/CloseIcon";
-import { CodeGenieLogo } from "../assets/logos/CodeGenieLogo";
+import { CheckArrowIcon } from '../assets/icons/CheckArrowIcon'
+import { CloseIcon } from '../assets/icons/CloseIcon'
+import { CodeGenieLogo } from '../assets/logos/CodeGenieLogo'
 
 export const InvitationModal = ({ setIsOpen }) => (
   <AnimatePresence>
@@ -54,28 +54,49 @@ export const InvitationModal = ({ setIsOpen }) => (
                 </div>
               </div>
 
-              <h3 className="mb-7 text-2xl text-white font-bold leading-snug text-center">
+              {/* <h3 className="mb-7 text-2xl text-white font-bold leading-snug text-center">
                 Join 3,953 other developers
-              </h3>
-              <div className="flex flex-wrap -m-2">
-                <div className="w-full sm:w-4/5 p-2 mx-auto">
-                  <input
-                    className="px-4 py-4 w-full text-gray-500 font-medium text-center placeholder-gray-500 outline-none border bg-gray-300 border-gray-300 rounded-lg focus:ring focus:ring-indigo-300"
-                    id="newsletterInput3-1"
-                    type="text"
-                    placeholder="Your email address"
-                  />
-                </div>
-                <div className="w-full sm:w-4/5 p-2 mt-4 mx-auto">
-                  <button
-                    className="py-4 px-6 w-full text-white font-semibold rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-customPrimary hover:bg-[#7274f3] transition ease-in-out duration-200"
-                    type="button"
+              </h3> */}
+              <form
+                action="https://software.us4.list-manage.com/subscribe/post?u=b13787ffc31c5db27758e8484&amp;id=0afafd7ecc&amp;f_id=00ee38e9f0"
+                method="post"
+                id="mc-embedded-subscribe-form"
+                name="mc-embedded-subscribe-form"
+                class="validate"
+                target="_blank"
+              >
+                <div className="flex flex-wrap -m-2">
+                  <div className="w-full sm:w-4/5 p-2 mx-auto">
+                    <input
+                      className="px-4 py-4 w-full text-gray-500 font-medium text-center placeholder-gray-500 outline-none border bg-gray-300 border-gray-300 rounded-lg focus:ring focus:ring-indigo-300"
+                      id="newsletterInput3-1"
+                      type="email"
+                      name="EMAIL"
+                      placeholder="Your email address"
+                    />
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    style={{ position: 'absolute', left: '-5000px' }}
                   >
-                    Join Now
-                  </button>
+                    <input
+                      type="text"
+                      name="b_b13787ffc31c5db27758e8484_0afafd7ecc"
+                      tabindex="-1"
+                    />
+                  </div>
+                  <div className="w-full sm:w-4/5 p-2 mt-4 mx-auto">
+                    <button
+                      className="py-4 px-6 w-full text-white font-semibold rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-customPrimary hover:bg-[#7274f3] transition ease-in-out duration-200"
+                      type="submit"
+                    >
+                      Join Now
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
+
             <div
               className="fixed top-6 right-6 z-50 w-5 h-5 cursor-pointer"
               onClick={() => setIsOpen(false)}
@@ -87,4 +108,4 @@ export const InvitationModal = ({ setIsOpen }) => (
       </div>
     </motion.div>
   </AnimatePresence>
-);
+)

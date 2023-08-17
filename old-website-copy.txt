@@ -1,0 +1,32 @@
+Let Code Genie write the foundation of your next project - with a wish.
+npx @codegenie/generator generate "An app that lets users order food from local restaurants" --deploy
+
+Code Genie uses generative AI to design a data model and write source code based on your idea. Download the source code for your full stack application and deploy to AWS in minutes.
+
+
+
+
+
+A Full Stack, Cloud Native, Serverless Application — Instantly
+Code Genie instantly generates a UI, API, Database, Auth, Cloud Infrastructure (IAC) and more based on your idea or data model. The stack consists of these popular languages, libraries, and services:
+
+Built for developers, by developers
+We know how important the developer experience is when it comes to writing great software, and that’s why Code Genie’s generated projects are architected with a DX you’re sure to love.
+
+Local Development
+Make changes to your UI and API code easily with local development. Actual cloud resources are used for all other infrastructure to emulate a prod-like environment.
+
+CI/CD
+Enable the integrated GitHub CI/CD Pipeline to automate deployments of merged changes through to staging and production. PR Preview Stacks can also be enabled for reviewers to easily test changes before approving.
+
+Independent Stacks
+As well as Prod and Staging, each developer can easily spin up their own development stack to work in a prod-like environment.
+
+One-Command Deploy
+Don’t want to use CI/CD? No problem! You can deploy your changes in a single command from your developer machine.
+
+Infrastructure as Code
+All cloud services are instrumented via IAC, ensuring that stacks are repeatable across environments, and changes to infrastructure are version controlled just like your code.
+
+Automated Tests
+All generated source code come with unit and end-to-end tests, achieving over 90% test coverage in total.

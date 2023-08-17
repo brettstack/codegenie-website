@@ -22,12 +22,14 @@ export const Features2 = () => (
             <span className="custom-block-subtitle">
               🧑‍💻 Superb Developer Experience
             </span>
-            <h2 className="gradient-text mt-6 mb-8 text-4xl md:text-5xl custom-block-big-title">
-              Technology that devs know and love
+            <h2 className="mt-6 mb-8 text-4xl md:text-5xl custom-block-big-title">
+              <span className="gradient-text">Technology</span> that devs know
+              and love
             </h2>
             <p className="text-customGrayText leading-loose">
               Code Genie generates source code written in languages and
-              frameworks that are voted as most popular by developers.
+              frameworks that are consistently voted as the most popular by
+              developers.
             </p>
           </div>
         </div>

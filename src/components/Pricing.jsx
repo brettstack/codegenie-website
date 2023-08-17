@@ -33,30 +33,31 @@ export const Pricing = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-16">
               <span className="custom-block-subtitle">📧 Get in touch</span>
-              <h2 className="gradient-text mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading text-white">
-                Custom pricing available now
+              <h2 className="mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading pb-1 text-white">
+                <span className="gradient-text">Custom pricing</span> available
+                now
               </h2>
               <p className="mb-6 text-customGrayText">
                 Code Genie is not yet generally available. We're currently
-                working closely with partners to jumpstart the development of
+                working closely with partners to kickstart the development of
                 their new software projects. We're also offering free builds for
                 some Nonprofits.{' '}
-                <a href="mailto:brett.j.andrews@gmail.com">
+                <a href="mailto:brett@halfstack.software?subject=Code Genie Demo">
                   Contact us to schedule a demo
                 </a>
                 .
               </p>
               <div className="flex justify-center">
-                <div
-                  className="h-12 custom-button-colored"
+                <button
+                  className="w-[210px] h-12 custom-button-colored"
                   onClick={() =>
                     window.open(
-                      'mailto:brett.j.andrews@gmail.com?subject=Code Genie Demo'
+                      'mailto:brett@halfstack.software?subject=Code Genie Demo'
                     )
                   }
                 >
                   Schedule a demo
-                </div>
+                </button>
               </div>
               {/* <label className="mx-auto bg-customDarkBg3 relative flex justify-between items-center group text-xl w-44 h-12 rounded-lg pr-36 pl-1 cursor-pointer">
                 <input

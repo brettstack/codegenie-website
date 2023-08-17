@@ -22,14 +22,16 @@ export const Features1 = () => {
         <div className="w-11/12 xl:w-10/12 2xl:w-[1280px] mx-auto md:pl-4 xl:pr-16 xl:pl-16">
           <div className="w-full xl:w-2/3 mb-12 lg:mb-0">
             <span className="custom-block-subtitle">
-              🚀 Kickstart innovation
+              🧞 Kickstart innovation
             </span>
-            <h2 className="gradient-text mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
-              A solid foundation tailored to your requirements
+            <h2 className="mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
+              A <span className="gradient-text">solid software foundation</span>
             </h2>
             <p className="mb-10 text-customGrayText leading-loose">
               Code Genie takes care of the undifferentiated heavy lifting so
-              that you can focus on what makes your product special.
+              that you can focus on what makes your product special. Download
+              the source code for your full stack application and deploy to AWS
+              and have a live app in minutes!
             </p>
           </div>
           <div className="w-full mb-12 lg:mb-0 flex justify-between">
@@ -37,27 +39,29 @@ export const Features1 = () => {
               <ul className="mb-6 text-white w-11/12 sm:w-4/5 md:w-3/4 lg:w-unset">
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>UI</span>
+                  <span>React Next.js UI</span>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>API</span>
+                  <span>Node.js Serverless Express API</span>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Auth</span>
+                  <span>Cognito Authentication</span>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Database</span>
+                  <span>DynamoDB Database</span>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Infrastructure</span>
+                  <span>CDK Infrastructure as Code (IAC)</span>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Continuous Integration/Delivery</span>
+                  <span>
+                    GitHub Actions Continuous Integration/Delivery (CI/CD)
+                  </span>
                 </li>
                 <li className="mb-4 flex">
                   <HourGlassIcon />

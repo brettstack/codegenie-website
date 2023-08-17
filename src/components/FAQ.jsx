@@ -18,11 +18,16 @@ const FAQData = [
         <a href="https://www.netlify.com" target="_blank" rel="noopener">
           Netlify
         </a>
+        , and swap Auth from Cognito to an alternative such as{' '}
+        <a href="https://auth0.com/" target="_blank" rel="noopener">
+          Auth0
+        </a>
         . The API layer is written in{' '}
         <a href="https://expressjs.com/" target="_blank" rel="noopener">
           Express
         </a>
-        , making it highly portable. Unfortunately,{' '}
+        , making it highly portable to any hosting provider. The main challenge
+        is changing the database from{' '}
         <a
           href="https://aws.amazon.com/dynamodb/"
           target="_blank"
@@ -30,8 +35,8 @@ const FAQData = [
         >
           DynamoDB
         </a>{' '}
-        is a bit more challenging, and would a database migration (e.g. see this
-        article on how you would{' '}
+        , as it requires a database migration (e.g. see this article on how you
+        would{' '}
         <a
           href="https://www.mongodb.com/blog/post/migrating-your-data-from-dynamodb-to-mongodb-atlas"
           target="_blank"
@@ -39,7 +44,7 @@ const FAQData = [
         >
           migrate from DynamoDB to MongoDB
         </a>
-        ) and updating some controller logic.
+        ).
       </>
     ),
   },
@@ -61,9 +66,7 @@ export const FAQ = () => (
     >
       <div className="relative z-10 container px-2 sm:px-8 lg:px-4 mx-auto w-11/12 sm:w-full">
         <div className="md:max-w-4xl mx-auto">
-          <p className="mb-7 custom-block-subtitle text-center">
-            Have any questions?
-          </p>
+          <p className="mb-7 custom-block-subtitle text-center">Questions?</p>
           <h2 className="mb-16 custom-block-big-title text-center">
             Frequently Asked Questions
           </h2>

@@ -2,14 +2,15 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 import { InvitationModal } from './InvitationModal'
-import generatedAppScreenshot from '../assets/images/generated-app-screenshot.webp'
+// import generatedAppScreenshot from '../assets/images/generated-app-screenshot.webp'
+import generatedAppScreenshot from '../assets/images/generated-app-screenshot-dark.webp'
 
 export const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <section
-      className="w-screen  flex justify-center items-center bg-customDarkBg1 mb-[28vw] md:mb-[18vw] lg:mb-[10vw] xl:mb-[13vw] 2xl:mb-60 hero-bg-gradient pb-24 sm:pb-32 md:pb-44 lg:pb-0"
+      className="w-screen  flex justify-center items-center bg-customDarkBg1 mb-40 md:mb-60 hero-bg-gradient pb-24 sm:pb-32 md:pb-44 lg:pb-0"
       id="home"
     >
       <div className="w-full md:w-[800px] xl:w-[900px] flex flex-col justify-center items-center pt-16 md:pt-16 lg:pt-20 text-center">
@@ -18,7 +19,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-customSecondary text-sm sm:text-base  mb-6 sm:mt-32 mt-16  font-bold">
+          <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-32 font-bold">
             Save months developing new software
           </div>
         </motion.div>
@@ -27,15 +28,28 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
-          <div className="text-5xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
-            <span className="inline md:hidden gradient-text">No-code</span>
-            <span className="hidden md:inline gradient-text">
-              No-code/Low-code
-            </span>
-          </div>
-          <div className="gradient-text mt-2 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-20 md:px-24 lg:px-24">
-            for developers
-          </div>
+          {/* <div className="gradient-text text-5xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
+          <span className="inline md:hidden">No-code</span>
+          <span className="hidden md:inline">No-code/Low-code</span>
+        </div>
+        <div className="mt-2 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-20 md:px-24 lg:px-24">
+          for developers
+        </div> */}
+          <h1 className="">
+            {/* <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-5xl  pb-1 font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
+              <span className="inline md:hidden">AI-Generated</span>
+              <span className="hidden md:inline">
+                AI and Data Model-Generated
+              </span>
+            </div> */}
+            <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl mt-4 font-bold tracking-wide text-white">
+              Full Stack <span className="gradient-text">App Generator</span>{' '}
+              with <span className="gradient-text">AI</span>
+            </div>
+            {/* <div className="text-1xl sm:text-4xl lg:text-5xl xl:text-5xl mt-2 font-bold tracking-wide text-white">
+              in an instant
+            </div> */}
+          </h1>
           {/* <div className="text-5xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
             <span className="inline md:hidden">Foundation</span>
             <span className="hidden md:inline">A solid foundation</span>
@@ -50,8 +64,15 @@ export const Hero = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-10 px-12 sm:px-48 ">
-            Instant Serverless, Cloud Native, Full Stack application and source
-            code based on your data model or idea.
+            <p>
+              AWS Serverless, Cloud Native, end-to-end software based on your
+              data model or idea — instantly.
+            </p>
+            {/* <p>
+              Code Genie uses generative AI to design a data model and write
+              source code based on your idea. Download the source code for your
+              full stack application and deploy to AWS in minutes.
+            </p> */}
           </div>
         </motion.div>
         <motion.div
@@ -59,19 +80,19 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-24 sm:mb-40 justify-center">
+          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-24 justify-center">
             <div
               className="custom-button-colored w-64 sm:w-52 h-12 mr-0 sm:mr-4 lg:mr-6 mb-2 sm:mb-0"
               onClick={() => setIsModalOpen(true)}
             >
               Get Started
             </div>
-            <div
+            {/* <div
               className="w-64 sm:w-52 h-12 rounded-xl font-bold text-white border border-solid  flex justify-center items-center cursor-pointer bg-customDarkBg2 hover:bg-customDarkBg3 border-customPrimary transition"
               onClick={() => setIsModalOpen(true)}
             >
               Live demo
-            </div>
+            </div> */}
           </div>
         </motion.div>
         <motion.div

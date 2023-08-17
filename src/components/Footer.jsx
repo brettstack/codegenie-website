@@ -43,7 +43,9 @@ export const Footer = () => {
               <div>
                 <a
                   className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
-                  href="#"
+                  href="https://twitter.com/AWSbrett"
+                  target="_blank"
+                  rel="noopener"
                 >
                   <TwitterIcon />
                 </a>

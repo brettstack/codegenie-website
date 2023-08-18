@@ -35,28 +35,12 @@ export const Hero = () => {
         <div className="mt-2 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-20 md:px-24 lg:px-24">
           for developers
         </div> */}
-          <h1 className="">
-            {/* <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-5xl  pb-1 font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
-              <span className="inline md:hidden">AI-Generated</span>
-              <span className="hidden md:inline">
-                AI and Data Model-Generated
-              </span>
-            </div> */}
+          <h1>
             <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl mt-4 font-bold tracking-wide text-white">
               Full Stack <span className="gradient-text">App Generator</span>{' '}
               with <span className="gradient-text">AI</span>
             </div>
-            {/* <div className="text-1xl sm:text-4xl lg:text-5xl xl:text-5xl mt-2 font-bold tracking-wide text-white">
-              in an instant
-            </div> */}
           </h1>
-          {/* <div className="text-5xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
-            <span className="inline md:hidden">Foundation</span>
-            <span className="hidden md:inline">A solid foundation</span>
-          </div>
-          <div className="mt-2 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-20 md:px-24 lg:px-24">
-            for your next software project
-          </div> */}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 10 }}

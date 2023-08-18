@@ -34,7 +34,7 @@ const FAQData = [
           rel="noopener"
         >
           DynamoDB
-        </a>{' '}
+        </a>
         , as it requires a database migration (e.g. see this article on how you
         would{' '}
         <a

@@ -8,6 +8,7 @@ import { Features2 } from "../components/Features2.jsx";
 import { Features3 } from "../components/Features3.jsx";
 // import { Testimonials } from "../components/Testimonials.jsx";
 import { FeaturesDiagonal } from "../components/FeaturesDiagonal.jsx";
+import { NoCodeForDevelopers } from "../components/NoCodeForDevelopers";
 import { Pricing } from "../components/Pricing.jsx";
 import { FAQ } from "../components/FAQ.jsx";
 // import { Brands } from "../components/Brands.jsx";
@@ -86,7 +87,7 @@ definitions:
 `
 ---
 
-<Layout title="Code Genie - Instant UI, API, Auth, Database, Cloud foundation">
+<Layout title="Code Genie - Full Stack App Generator with AI">
   <Navbar client:load />
   <Hero client:load />
   <Features1 client:load />
@@ -98,6 +99,8 @@ definitions:
   <FeaturesDiagonal client:load>
     <Code code={projectSchemaYamlFile} lang="yaml" />
   </FeaturesDiagonal>
+  <NoCodeForDevelopers client:load />
+  <Divider />
   <Pricing client:load />
   <Divider />
   <!-- <Brands client:load /> -->

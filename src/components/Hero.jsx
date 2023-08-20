@@ -13,7 +13,7 @@ export const Hero = () => {
       className="w-screen  flex justify-center items-center bg-customDarkBg1 mb-52 sm:80 md:mb-52 lg:mb-32 xl:mb-60 hero-bg-gradient pb-24 sm:pb-32 md:pb-44 lg:pb-0"
       id="home"
     >
-      <div className="w-full md:w-[800px] xl:w-[900px] flex flex-col justify-center items-center pt-16 md:pt-16 lg:pt-20 text-center">
+      <div className="w-11/12 md:w-[800px] xl:w-[900px] flex flex-col justify-center items-center pt-16 md:pt-16 lg:pt-20 text-center">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -47,10 +47,10 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <div className="text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-10 px-12 sm:px-48 ">
+          <div className="text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-10 md:px-36">
             <p>
-              AWS Serverless, Cloud Native, end-to-end software based on your
-              data model or idea — instantly.
+              Download source code based on your data model or idea, then deploy
+              to your AWS account in minutes.
             </p>
             {/* <p>
               Code Genie uses generative AI to design a data model and write

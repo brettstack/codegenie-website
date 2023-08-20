@@ -20,12 +20,12 @@ export const NoCodeForDevelopers = () => {
                 Faster than <span className="gradient-text">No Code</span>, and
                 without the limitations
               </h2>
-              <p className="mb-6 text-customGrayText">
-                Code Genie is able to do in minutes what would take days or
-                weeks in traditional No Code platforms (and months writing
-                source code yourself). And since you have the source code,
-                you're not locked into any platform and are free of the inherent
-                limitations and costly licensing fees they come with.
+              <p className="mb-6 text-customGrayText text-justify">
+                Code Genie is able to do in minutes what takes days or weeks
+                with No Code platforms (and months with traditional software
+                development). Additionally, you're not locked into a No Code
+                vendor's inherent limitations and costly licensing fees, since
+                you own the source code.
               </p>
             </div>
           </div>

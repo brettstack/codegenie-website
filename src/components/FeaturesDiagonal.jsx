@@ -35,7 +35,7 @@ export const FeaturesDiagonal = ({ children }) => {
               <span className="gradient-text">Relevant source code</span> based
               on your <span className="gradient-text">data model or idea</span>
             </h2>
-            <p className="mb-16 text-customGrayText leading-loose">
+            <p className="mb-16 text-customGrayText leading-loose text-justify">
               Provide Code Genie with your application's data model, and it will
               generate application source code to meet your requirements. Don't
               have a data model? Simply tell Code Genie your "wish" (app

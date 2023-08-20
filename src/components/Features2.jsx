@@ -26,15 +26,18 @@ export const Features2 = () => (
               <span className="gradient-text">Technology</span> that devs know
               and love
             </h2>
-            <p className="text-customGrayText leading-loose">
+            <p className="text-customGrayText leading-loose text-justify">
               Code Genie generates source code written in languages and
-              frameworks that are consistently voted as the most popular by
-              developers.
+              frameworks that are consistently voted by developers as their
+              tools of choice. Projects are architected in a way to make
+              swapping out individual tools as simple as possible, and we're
+              constantly working on additional generation options to enable
+              engineers to choose their own stack.
             </p>
           </div>
         </div>
         <div className="w-full mb-12 lg:mb-0 flex justify-between">
-          <div className="w-2/3 flex-wrap flex items-center md:items-end">
+          <div className="w-2/3 flex-wrap flex items-center">
             <div className="w-1/3 px-2 lg:px-0 -mt-10">
               <div className="mb-4 rounded">
                 <img
@@ -89,27 +92,57 @@ export const Features2 = () => (
               <ul className="mb-6 text-white">
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>TypeScript</span>
+                  <a
+                    href="https://www.typescriptlang.org/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    TypeScript
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>React</span>
+                  <a href="https://react.dev/" target="_blank" rel="noopener">
+                    React
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Next.js</span>
+                  <a href="https://nextjs.org/" target="_blank" rel="noopener">
+                    Next.js
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Node.js</span>
+                  <a href="https://nodejs.org/" target="_blank" rel="noopener">
+                    Node.js
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Express</span>
+                  <a
+                    href="https://expressjs.com/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Express
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Ant Design</span>
+                  <a href="https://ant.design/" target="_blank" rel="noopener">
+                    Ant Design
+                  </a>
+                </li>
+                <li className="mb-4 flex">
+                  <CheckArrowIcon />
+                  <a
+                    href="https://github.com/features/actions"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    GitHub Actions
+                  </a>
                 </li>
               </ul>
             </div>

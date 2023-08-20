@@ -27,7 +27,7 @@ export const Features1 = () => {
             <h2 className="mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
               A solid <span className="gradient-text">software foundation</span>
             </h2>
-            <p className="mb-10 text-customGrayText leading-loose">
+            <p className="mb-10 text-customGrayText leading-loose text-justify">
               Code Genie takes care of the undifferentiated heavy lifting so
               that you can focus on what makes your product special. Download
               the source code for your full stack application and deploy to AWS

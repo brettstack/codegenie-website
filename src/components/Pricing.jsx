@@ -37,7 +37,7 @@ export const Pricing = () => {
                 <span className="gradient-text">Custom pricing</span> available
                 now
               </h2>
-              <p className="mb-6 text-customGrayText">
+              <p className="mb-6 text-customGrayText text-justify">
                 Code Genie is not yet generally available. We're currently
                 working closely with partners to kickstart the development of
                 their new software projects. We're also offering free builds for

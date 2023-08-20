@@ -25,9 +25,22 @@ export const Features3 = () => {
             <h2 className="mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
               Backed by <span className="gradient-text">AWS Serverless</span>
             </h2>
-            <p className="mb-10 text-customGrayText leading-loose">
-              Code Genie leverages the power of AWS to provide infinitely
-              scalable applications.
+            <p className="mb-10 text-customGrayText leading-loose text-justify">
+              Code Genie leverages the power of AWS to provide "infinitely"
+              scalable applications. All AWS cloud resources are defined in{' '}
+              <a
+                href="https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html"
+                target="_blank"
+                rel="noopener"
+              >
+                CDK
+              </a>{' '}
+              , allowing you to seamlessly deploy to multiple environments
+              including prod, staging, individual developer accounts, and even
+              PR previews. Code Genie projects are Cloud Native Serverless
+              applications, so you'll pay ~$0 for low-traffic environments such
+              as dev and staging, and scale to meet the demands of your
+              high-traffic production app.
             </p>
           </div>
           <div className="w-full mb-12 lg:mb-0 flex justify-between">
@@ -35,31 +48,73 @@ export const Features3 = () => {
               <ul className="mb-6 text-white w-11/12 sm:w-4/5 md:w-3/4 lg:w-unset">
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>AWS</span>
+                  <a
+                    href="https://aws.amazon.com/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    AWS
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Lambda</span>
+                  <a
+                    href="https://aws.amazon.com/lambda/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Lambda
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>API Gateway</span>
+                  <a
+                    href="https://aws.amazon.com/api-gateway/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    API Gateway
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Cognito</span>
+                  <a
+                    href="https://aws.amazon.com/cognito/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Cognito
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>DynamoDB</span>
+                  <a
+                    href="https://aws.amazon.com/dynamodb/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    DynamoDB
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>Amplify</span>
+                  <a
+                    href="https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    AWS Amplify Hosting
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
-                  <span>CDK</span>
+                  <a
+                    href="https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    CDK
+                  </a>
                 </li>
                 <li className="mb-4 flex">
                   <CheckArrowIcon />

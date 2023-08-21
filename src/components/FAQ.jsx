@@ -5,7 +5,7 @@ const FAQData = [
   {
     question: 'Am I locked into Code Genie?',
     answer:
-      'No! Code Genie generates a foundation for you. What you do from there is totally up to you and your engineering team!',
+      'No! Unlike No Code platforms that prioritize vendor lock-in, Code Genie gives you the complete project source code and the freedom that comes along with that.',
   },
   {
     question: 'Am I locked into AWS?',
@@ -44,14 +44,21 @@ const FAQData = [
         >
           migrate from DynamoDB to MongoDB
         </a>
-        ).
+        ). We plan on adding PostgreSQL as a database option in the future,
+        making this even more portable.
       </>
     ),
   },
+  // {
+  //   question: 'Do I need to pay Code Genie a monthly fee?',
+  //   answer:
+  //     'No! The generated application is intended to be deployed to your own AWS account. We simply help you get started with a low cost solution ($0 when not in use!) that scales with you.',
+  // },
   {
-    question: 'Do I need to pay Code Genie a monthly fee?',
+    question:
+      'Does Code Genie use AI to generate the source code? What about copyright infringement?',
     answer:
-      'No! The generated application is intended to be deployed to your own AWS account. We simply help you get started with a low cost solution ($0 when not in use!) that scales with you.',
+      "No. AI is only used to help you create an initial data model based on your idea. Code Genie then generates projects based on the data model to remove copyright infringement concerns. This approach also ensures deterministic results. That is, if you give the same input data model, you'll get the same output (except for improvements we make to the generated output; version locking coming soon.)",
   },
 ]
 

@@ -10,7 +10,7 @@ export const Hero = () => {
 
   return (
     <section
-      className="w-screen  flex justify-center items-center bg-customDarkBg1 mb-52 sm:80 md:mb-52 lg:mb-32 xl:mb-60 hero-bg-gradient pb-24 sm:pb-32 md:pb-44 lg:pb-0"
+      className="w-screen flex justify-center items-center bg-customDarkBg1 mb-0 sm:80 md:mb-52 lg:mb-32 xl:mb-60 hero-bg-gradient pb-0 md:pb-44 lg:pb-0"
       id="home"
     >
       <div className="w-11/12 md:w-[800px] xl:w-[900px] flex flex-col justify-center items-center pt-16 md:pt-16 lg:pt-20 text-center">
@@ -64,7 +64,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-24 justify-center">
+          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-14 lg:mb-24 justify-center">
             <div
               className="custom-button-colored w-64 sm:w-52 h-12 mr-0 sm:mr-4 lg:mr-6 mb-2 sm:mb-0"
               onClick={() => setIsModalOpen(true)}
@@ -84,7 +84,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0, zIndex: 20 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <div className="relative w-screen flex justify-center ">
+          <div className="relative w-screen justify-center hidden md:flex">
             <img
               src={generatedAppScreenshot}
               alt="123"

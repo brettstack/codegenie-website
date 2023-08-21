@@ -4,7 +4,7 @@ export const NoCodeForDevelopers = () => {
   return (
     <section className="w-screen flex justify-center bg-customDarkBg2 relative">
       <div className="absolute -top-16" id="pricing" />
-      <div className="pb-20 pt-12 bg-customDarkBg2  2xl:w-[1150px] lg:w-[1050px]  md:w-4/5 ">
+      <div className="bg-customDarkBg2  2xl:w-[1150px] lg:w-[1050px]  md:w-4/5 ">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -14,7 +14,7 @@ export const NoCodeForDevelopers = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-16">
               <span className="custom-block-subtitle">
-                🧞 No Code, but for Developers
+                🧞 Like No Code, but for Developers
               </span>
               <h2 className="mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading pb-1 text-white">
                 Faster than <span className="gradient-text">No Code</span>, and

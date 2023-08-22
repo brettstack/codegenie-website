@@ -35,7 +35,7 @@ export const InvitationModal = ({ setIsOpen }) => (
                 working closely with partners to kickstart the development of
                 their new software projects. If you're interested in developing
                 with Code Genie{' '}
-                <a href="mailto:brett@halfstack.software?subject=Code Genie Demo">
+                <a href="mailto:brett@codegenie.codes?subject=Code Genie Demo">
                   Contact us to schedule a demo
                 </a>
                 .
@@ -45,7 +45,7 @@ export const InvitationModal = ({ setIsOpen }) => (
                   className="w-[210px] h-12 custom-button-colored mt-4"
                   onClick={() =>
                     window.open(
-                      'mailto:brett@halfstack.software?subject=Code Genie Demo'
+                      'mailto:brett@codegenie.codes?subject=Code Genie Demo'
                     )
                   }
                 >

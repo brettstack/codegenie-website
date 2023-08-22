@@ -42,7 +42,7 @@ export const Pricing = () => {
                 working closely with partners to kickstart the development of
                 their new software projects. We're also offering free builds for
                 some Nonprofits.{' '}
-                <a href="mailto:brett@halfstack.software?subject=Code Genie Demo">
+                <a href="mailto:brett@codegenie.codes?subject=Code Genie Demo">
                   Contact us to schedule a demo
                 </a>
                 .
@@ -52,7 +52,7 @@ export const Pricing = () => {
                   className="w-[210px] h-12 custom-button-colored"
                   onClick={() =>
                     window.open(
-                      'mailto:brett@halfstack.software?subject=Code Genie Demo'
+                      'mailto:brett@codegenie.codes?subject=Code Genie Demo'
                     )
                   }
                 >

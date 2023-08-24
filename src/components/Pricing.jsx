@@ -43,18 +43,19 @@ export const Pricing = () => {
                 their new software projects. We're also offering free builds for
                 some Nonprofits.{' '}
                 <a href="mailto:brett@codegenie.codes?subject=Code Genie Demo">
-                  Contact us to schedule a demo
-                </a>
-                .
+                  Email brett@codegenie.codes to learn more
+                </a>{' '}
+                or schedule a demo.
               </p>
               <div className="flex justify-center">
                 <button
                   className="w-[210px] h-12 custom-button-colored"
-                  onClick={() =>
-                    window.open(
-                      'mailto:brett@codegenie.codes?subject=Code Genie Demo'
-                    )
-                  }
+                  onClick={() => {
+                    Calendly.initPopupWidget({
+                      url: 'https://calendly.com/codegenie-brett/introductory-call',
+                    })
+                    return false
+                  }}
                 >
                   Schedule a demo
                 </button>

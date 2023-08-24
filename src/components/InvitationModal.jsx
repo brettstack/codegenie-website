@@ -34,20 +34,21 @@ export const InvitationModal = ({ setIsOpen }) => (
                 Code Genie is not yet generally available. We're currently
                 working closely with partners to kickstart the development of
                 their new software projects. If you're interested in developing
-                with Code Genie{' '}
+                with Code Genie, you can{' '}
                 <a href="mailto:brett@codegenie.codes?subject=Code Genie Demo">
-                  Contact us to schedule a demo
-                </a>
-                .
+                  email brett@codegenie.codes
+                </a>{' '}
+                or schedule a demo.
               </p>
               <div className="flex justify-center">
                 <button
                   className="w-[210px] h-12 custom-button-colored mt-4"
-                  onClick={() =>
-                    window.open(
-                      'mailto:brett@codegenie.codes?subject=Code Genie Demo'
-                    )
-                  }
+                  onClick={() => {
+                    Calendly.initPopupWidget({
+                      url: 'https://calendly.com/codegenie-brett/introductory-call',
+                    })
+                    return false
+                  }}
                 >
                   Schedule a demo
                 </button>

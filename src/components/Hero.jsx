@@ -12,7 +12,7 @@ export const Hero = () => {
 
   return (
     <section
-      className="w-screen flex justify-center items-center bg-customDarkBg1 mb-0 sm:80 md:mb-52 lg:mb-32 xl:mb-60 hero-bg-gradient pb-0 md:pb-44 lg:pb-0"
+      className="w-screen flex justify-center items-center bg-customDarkBg1 mb-20 xs:mb-40 sm:mb-36 lg:mb-48 xl:mb-60 hero-bg-gradient pb-0"
       id="home"
     >
       <div className="w-11/12 md:w-[800px] xl:w-[900px] flex flex-col justify-center items-center pt-16 md:pt-16 lg:pt-20 text-center">
@@ -21,7 +21,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-32 font-bold">
+          <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-10 font-bold">
             Save months developing new software
           </div>
         </motion.div>
@@ -66,7 +66,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-14 lg:mb-24 justify-center">
+          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-14 justify-center">
             <div
               className="custom-button-colored w-64 sm:w-52 h-12 mr-0 sm:mr-4 lg:mr-6 mb-2 sm:mb-0"
               onClick={() => setIsModalOpen(true)}
@@ -104,8 +104,8 @@ export const Hero = () => {
             />
           </div> */}
         </motion.div>
-        <div className="relative w-screen flex justify-center ">
-          <div className="custom-shape-divider-bottom-1665343298 mt-4 sm:mt-16 md:mt-52 hidden lg:block">
+        <div className="relative w-screen flex justify-center">
+          <div className="custom-shape-divider-bottom-1665343298 mt-4 sm:mt-16 md:mt-32 lg:mt-52 xl:mt-80 block">
             <svg
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"

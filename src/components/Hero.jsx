@@ -86,7 +86,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0, zIndex: 20 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <div className="relative w-screen justify-center hidden md:flex">
+          <div className="relative w-screen justify-center flex">
             <video
               controls
               poster={codeGenieIntroVideoPoster}

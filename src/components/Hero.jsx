@@ -3,7 +3,9 @@ import { motion } from 'framer-motion'
 
 import { InvitationModal } from './InvitationModal'
 // import generatedAppScreenshot from '../assets/images/generated-app-screenshot.webp'
-import generatedAppScreenshot from '../assets/images/generated-app-screenshot-dark.webp'
+// import generatedAppScreenshot from '../assets/images/generated-app-screenshot-dark.webp'
+import codeGenieIntroVideo from '../assets/videos/code-genie-intro.mp4'
+import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.png'
 
 export const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -85,13 +87,22 @@ export const Hero = () => {
           transition={{ duration: 0.5, delay: 0.15 }}
         >
           <div className="relative w-screen justify-center hidden md:flex">
+            <video
+              controls
+              poster={codeGenieIntroVideoPoster}
+              className="w-screen md:w-4/5 xl:w-[1200px] mx-auto absolute z-10 rounded-xl custom-border-gray hero-dashboard-border-gradient lg:top-6 xl:top-0"
+            >
+              <source src={codeGenieIntroVideo} type="video/mp4" />
+            </video>
+          </div>
+          {/* <div className="relative w-screen justify-center hidden md:flex">
             <img
               src={generatedAppScreenshot}
               alt="123"
               className="w-screen md:w-4/5 xl:w-[1200px] mx-auto absolute z-10 rounded-xl custom-border-gray hero-dashboard-border-gradient lg:top-6 xl:top-0"
               // scale-150 md:scale-100
             />
-          </div>
+          </div> */}
         </motion.div>
         <div className="relative w-screen flex justify-center ">
           <div className="custom-shape-divider-bottom-1665343298 mt-4 sm:mt-16 md:mt-52 hidden lg:block">

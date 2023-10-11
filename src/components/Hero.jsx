@@ -39,8 +39,7 @@ export const Hero = () => {
         </div> */}
           <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl mt-4 font-bold tracking-wide text-white">
             <h1>
-              Full Stack <span className="gradient-text">App Generator</span>{' '}
-              with <span className="gradient-text">AI</span>
+              Full Stack <span className="gradient-text">App Generator</span>
             </h1>
           </div>
         </motion.div>

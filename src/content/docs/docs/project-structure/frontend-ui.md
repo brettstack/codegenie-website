@@ -1,6 +1,6 @@
 ---
-title: Project Structure - UI, Frontend
-description: Deep-dive of the UI
+title: Project Structure - Frontend/UI
+description: Deep-dive of the Frontend/UI
 ---
 
 Code Genie projects include a Single Page Application (SPA) that utilizes the following core technologies:

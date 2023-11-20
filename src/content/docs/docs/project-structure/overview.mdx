@@ -8,45 +8,46 @@ Code Genie projects are monorepos that include everything you need to deploy a f
 import FileTree from '../../../../components/file-tree.astro'
 
 <FileTree>
-
-- public/
-  - favicon.svg
-- src/
-  - assets/
-    - logo.svg
-    - screenshot.jpg
-  - components/
-    - CustomButton.astro
-    - InteractiveWidget.jsx
-  - content/
-    - docs/
-      - guides/
-        - 01-getting-started.md
-        - 02-advanced.md
-      - index.mdx
-    - config.ts
-  - env.d.ts
-- astro.config.mjs
-- package.json
-- tsconfig.json
-
+- .codeGenie
+  - ...
+- .github
+  - ...
+- packages
+    - api
+      - ...
+    - cdk
+      - ...
+    - cognito
+      - ...
+    - common
+      - ...
+    - controllers
+      - ...
+    - errors
+      - ...
+    - models
+      - ...
+    - ui
+      - ...
+    - utils
+      - ...
 </FileTree>
 
 ## Common
 
 All aspects of the project are written using Typescript and Node.js. ESLint is used for linting and Jest is used for testing.
 
-## UI/Frontend
+## Frontend/UI
 
 The frontend is a React Next.js Single Page Application (SPA) that uses the Ant Design component library and is hosted on AWS Amplify Hosting.
 
-Read [UI/Frontend](./ui-frontend.md) for more information.
+Read [Frontend](./frontend-ui.md) for more information.
 
-## API/Backend
+## Backend/API
 
 The backend is an Express REST API hosted on AWS Lambda and API Gateway.
 
-Read [API/Backend](./api-backend.md) for more information.
+Read [Backend](./backend-api.md) for more information.
 
 ## Database
 

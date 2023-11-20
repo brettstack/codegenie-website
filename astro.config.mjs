@@ -11,6 +11,7 @@ export default defineConfig({
 		starlight({
 			title: 'Code Genie',
 			description: 'Full stack application generator',
+      favicon: '/favicon.ico',
 			logo: {
 				src: './src/assets/images/code-genie-logo.webp'
 			},

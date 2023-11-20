@@ -1,0 +1,75 @@
+---
+title: Project Structure Overview
+description: High-level overview of the project structure
+---
+
+Code Genie projects are monorepos that include everything you need to deploy a full stack, Serverless, Cloud Native application. This guide will familiarize software developers with the project structure so that they can quickly start developing their application.
+
+import FileTree from '../../../../components/file-tree.astro'
+
+<FileTree>
+
+- public/
+  - favicon.svg
+- src/
+  - assets/
+    - logo.svg
+    - screenshot.jpg
+  - components/
+    - CustomButton.astro
+    - InteractiveWidget.jsx
+  - content/
+    - docs/
+      - guides/
+        - 01-getting-started.md
+        - 02-advanced.md
+      - index.mdx
+    - config.ts
+  - env.d.ts
+- astro.config.mjs
+- package.json
+- tsconfig.json
+
+</FileTree>
+
+## Common
+
+All aspects of the project are written using Typescript and Node.js. ESLint is used for linting and Jest is used for testing.
+
+## UI/Frontend
+
+The frontend is a React Next.js Single Page Application (SPA) that uses the Ant Design component library and is hosted on AWS Amplify Hosting.
+
+Read [UI/Frontend](./ui-frontend.md) for more information.
+
+## API/Backend
+
+The backend is an Express REST API hosted on AWS Lambda and API Gateway.
+
+Read [API/Backend](./api-backend.md) for more information.
+
+## Database
+
+AWS DynamoDB Tables are used for the database, and DynamoDB Toolbox is used as the client library for querying and mutating data.
+
+Read [Database](./database.md) for more information.
+
+## Auth/Identity
+
+user Identity/Auth is managed via an AWS Cognito User Pool.
+
+Read [Auth/Identity](./auth-identity.md) for more information.
+
+## Cloud Infrastructure
+
+All cloud infrastructure is defined as IAC (Infrastructure as Code) using AWS CDK.
+
+Read [Cloud Infrastructure](./cloud-infrastructure.md) for more information.
+
+## Deploying
+
+You can choose to either deploy manually from your local developer machine by running `npm run deploy:dev`, or deploy using CI/CD via GitHub Actions.
+
+Read [Deploying](./deploying.md) for more information.
+
+## Miscelaneous (Everything else)

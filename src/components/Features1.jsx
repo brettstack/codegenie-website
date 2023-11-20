@@ -22,7 +22,9 @@ export const Features1 = () => {
               🚀 Kickstart innovation
             </span>
             <h2 className="mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
-              A solid <span className="gradient-text">software foundation</span>
+              Generate a solid{' '}
+              <span className="gradient-text">software foundation</span>{' '}
+              instantly
             </h2>
             <p className="mb-10 text-customGrayText leading-loose text-justify">
               Code Genie takes care of the undifferentiated heavy lifting so

@@ -88,7 +88,7 @@ export const Hero = () => {
           <div className="relative w-screen justify-center flex">
             <video
               controls
-              poster={codeGenieIntroVideoPoster}
+              poster={codeGenieIntroVideoPoster.src}
               className="w-screen md:w-4/5 xl:w-[1200px] mx-auto absolute z-10 rounded-xl custom-border-gray hero-dashboard-border-gradient lg:top-6 xl:top-0"
             >
               <source src={codeGenieIntroVideo} type="video/mp4" />
@@ -96,7 +96,7 @@ export const Hero = () => {
           </div>
           {/* <div className="relative w-screen justify-center hidden md:flex">
             <img
-              src={generatedAppScreenshot}
+              src={generatedAppScreenshot.src}
               alt="123"
               className="w-screen md:w-4/5 xl:w-[1200px] mx-auto absolute z-10 rounded-xl custom-border-gray hero-dashboard-border-gradient lg:top-6 xl:top-0"
               // scale-150 md:scale-100

@@ -41,14 +41,14 @@ export const Features2 = () => (
             <div className="w-1/3 px-2 lg:px-0 -mt-10">
               <div className="mb-4 rounded">
                 <img
-                  src={typescript}
+                  src={typescript.src}
                   alt="Typescript"
                   className="w-full max-w-[120px] mx-auto"
                 />
               </div>
               <div className="rounded ">
                 <img
-                  src={react}
+                  src={react.src}
                   alt="React"
                   className="w-full max-w-[120px] mx-auto"
                 />
@@ -57,14 +57,14 @@ export const Features2 = () => (
             <div className="w-1/3  pt-12 lg:pt-0 px-2">
               <div className="rounded-lg ">
                 <img
-                  src={nextjs}
+                  src={nextjs.src}
                   alt="Next.js"
                   className="w-full max-w-[120px] mx-auto"
                 />
               </div>
               <div className=" rounded-lg ">
                 <img
-                  src={nodejs}
+                  src={nodejs.src}
                   alt="Node.js"
                   className="w-full max-w-[120px] mx-auto"
                 />
@@ -73,14 +73,14 @@ export const Features2 = () => (
             <div className="w-1/3 px-2 lg:px-0 -mt-10">
               <div className="rounded">
                 <img
-                  src={express}
+                  src={express.src}
                   alt="Express"
                   className="w-full max-w-[120px] mx-auto"
                 />
               </div>
               <div className="rounded mt-5">
                 <img
-                  src={antDesign}
+                  src={antDesign.src}
                   alt="Ant Design"
                   className="w-full max-w-[120px] mx-auto"
                 />

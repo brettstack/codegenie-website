@@ -126,14 +126,14 @@ export const Features3 = () => {
               <div className="-mt-6 w-1/3 md:w-1/3 lg:w-1/4 px-2 lg:px-0">
                 <div className="mb-4 py-3 pl-3 pr-2 rounded">
                   <img
-                    src={apiGateway}
+                    src={apiGateway.src}
                     alt="api gateway"
                     className="w-full max-w-[120px] mx-auto"
                   />
                 </div>
                 <div className="py-3 pl-3 pr-2 rounded ">
                   <img
-                    src={lambda}
+                    src={lambda.src}
                     alt="lambda"
                     className="w-full max-w-[120px] mx-auto"
                   />
@@ -142,14 +142,14 @@ export const Features3 = () => {
               <div className="w-1/3 md:w-1/3 lg:w-1/4 lg:mt-20  pt-12 lg:pt-0 px-2">
                 <div className="mb-4 py-3 pl-3 pr-2 rounded-lg ">
                   <img
-                    src={aws}
+                    src={aws.src}
                     alt="aws"
                     className="w-full max-w-[120px] mx-auto"
                   />
                 </div>
                 <div className="py-3 pl-3 pr-2 rounded-lg ">
                   <img
-                    src={cognito}
+                    src={cognito.src}
                     alt="cognito"
                     className="w-full max-w-[120px] mx-auto"
                   />
@@ -158,14 +158,14 @@ export const Features3 = () => {
               <div className="-mt-6 w-1/3 md:w-1/3 lg:w-1/4 px-2 lg:px-0">
                 <div className="mb-4 py-3 pl-3 pr-2 rounded">
                   <img
-                    src={dynamodb}
+                    src={dynamodb.src}
                     alt="dynamodb"
                     className="w-full max-w-[120px] mx-auto"
                   />
                 </div>
                 <div className="py-3 pl-3 pr-2 rounded ">
                   <img
-                    src={amplify}
+                    src={amplify.src}
                     alt="amplify"
                     className="w-full max-w-[120px] mx-auto"
                   />

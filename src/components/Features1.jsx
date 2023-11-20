@@ -73,14 +73,14 @@ export const Features1 = () => {
               <div className="w-1/2 md:w-1/3 lg:w-1/4 px-2 lg:px-0 -mt-10">
                 <div className="mb-4 rounded">
                   <img
-                    src={ui}
+                    src={ui.src}
                     alt="UI"
                     className="w-full max-w-[120px] mx-auto"
                   />
                 </div>
                 <div className="rounded">
                   <img
-                    src={api}
+                    src={api.src}
                     alt="API"
                     className="w-full max-w-[120px] mx-auto"
                   />
@@ -89,14 +89,14 @@ export const Features1 = () => {
               <div className="w-1/2 md:w-1/3 lg:w-1/4 px-2">
                 <div className="mb-4 rounded-lg">
                   <img
-                    src={auth}
+                    src={auth.src}
                     alt="auth"
                     className="w-full max-w-[120px] mx-auto"
                   />
                 </div>
                 <div className="rounded-lg">
                   <img
-                    src={database}
+                    src={database.src}
                     alt="database"
                     className="w-full max-w-[120px] mx-auto"
                   />

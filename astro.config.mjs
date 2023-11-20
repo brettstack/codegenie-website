@@ -3,8 +3,9 @@ import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
-
 import prefetch from "@astrojs/prefetch";
+
+import robotsTxt from "astro-robots-txt";
 
 // https://astro.build/config
 export default defineConfig({
@@ -55,6 +56,6 @@ export default defineConfig({
       }]
     }]
   }), sitemap(), prefetch({
-    intentSelector: ["a[href^='/']", "a[href^='https://codegenie.codes']", "a[href^='https://www.codegenie.codes']"],
-  })]
+    intentSelector: ["a[href^='/']", "a[href^='https://codegenie.codes']", "a[href^='https://www.codegenie.codes']"]
+  }), robotsTxt()]
 });

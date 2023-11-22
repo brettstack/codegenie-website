@@ -1,5 +1,5 @@
 ---
-title: Project Structure - Database
+title: Project Walkthrough - Database
 description: A walkthrough of the Database
 ---
 

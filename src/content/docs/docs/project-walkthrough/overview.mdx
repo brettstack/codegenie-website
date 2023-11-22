@@ -1,0 +1,82 @@
+---
+title: Project Walkthrough - Overview
+description: High-level overview of a Code Genie Project
+---
+
+Code Genie projects are monorepos that include everything you need to deploy a full stack, Serverless, Cloud Native application.
+
+All packages are written using Typescript and Node.js, with ESLint and Jest being used for linting and testing respectively. Packages for the frontend, backend, infrastructure (IAC), and other supporting packages exist within the top-level `/packages` directory.
+
+This guide walks you through the source code of a Code Genie project so that you can quickly start building your application.
+
+## Project Structure
+
+Below is a high-level view of the overall project structure. In the following guides we'll dive deeper into each individual package.
+
+import FileTree from '../../../../components/file-tree.astro'
+
+<FileTree>
+- .github
+  - workflows
+    - ...
+- packages
+    - api
+      - ...
+    - cdk
+      - ...
+    - cognito
+      - ...
+    - common
+      - ...
+    - controllers
+      - ...
+    - errors
+      - ...
+    - models
+      - ...
+    - ui
+      - ...
+    - utils
+      - ...
+- README.md
+- package.json
+- ...
+</FileTree>
+
+## Frontend (UI)
+
+The frontend is a [React](https://react.dev/) [Next.js](https://nextjs.org/) Single Page Application (SPA) that uses the [Ant Design](https://ant.design/)  component library and is hosted on [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting).
+
+Read the [Frontend project structure guide](./frontend-ui.md) for more information.
+
+## Backend/API
+
+The backend is an Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway), utilizing the [@codegenie/serverless-express](https://github.com/brettstack/code-genie) package.
+
+Read the [Backend project structure guide](./backend-api.md) for more information.
+
+## Database
+
+The database uses AWS DynamoDB, with [DynamoDB Toolbox](https://github.com/dynamodb-toolbox) as the client library for querying and mutating data.
+
+Read the [Database project structure guide](./database.md) for more information.
+
+## Auth/Identity
+
+User Identity/Auth is managed via an [AWS Cognito User Pool](https://aws.amazon.com/cognito).
+
+Read the [Auth/Identity guide](./auth-identity.md) for more information.
+
+## Cloud Infrastructure
+
+All cloud infrastructure is defined as IAC (Infrastructure as Code) using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html). This enables developers to easily create new and consistent environments for prod, staging, and individual developer instances.
+
+Read the [Cloud Infrastructure guide](./cloud-infrastructure.md) for more information.
+
+## Github Workflows (CI/CD)
+
+A Continuous Integration/Delivery (CI/CD) pipeline is built using [GitHub Actions/Workflows](https://github.com/features/actions)
+
+## Miscellaneous (Everything else)
+
+Other packages such not covered in other sections (such as `common` and `utils`) are covered in the [Miscellaneous](./miscellaneous) guide.

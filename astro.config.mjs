@@ -55,41 +55,48 @@ export default defineConfig({
         }
       }]
     }, {
-      label: 'Project Structure',
+      label: 'Project Walkthrough',
       items: [{
         label: 'Overview',
-        link: '/docs/project-structure/overview'
+        link: '/docs/project-walkthrough/overview'
       }, {
         label: 'Frontend (UI)',
-        link: '/docs/project-structure/frontend-ui',
+        link: '/docs/project-walkthrough/frontend-ui',
         badge: {
           variant: 'tip',
           text: 'WIP'
         }
       }, {
         label: 'Backend (API)',
-        link: '/docs/project-structure/backend-api',
+        link: '/docs/project-walkthrough/backend-api',
         badge: {
           variant: 'tip',
           text: 'WIP'
         }
       }, {
         label: 'Database',
-        link: '/docs/project-structure/database',
+        link: '/docs/project-walkthrough/database',
         badge: {
           variant: 'tip',
           text: 'WIP'
         }
       }, {
         label: 'Auth/Identity',
-        link: '/docs/project-structure/auth-identity',
+        link: '/docs/project-walkthrough/auth-identity',
         badge: {
           variant: 'tip',
           text: 'WIP'
         }
       }, {
         label: 'Cloud Infrastructure (IAC)',
-        link: '/docs/project-structure/cloud-infrastructure',
+        link: '/docs/project-walkthrough/cloud-infrastructure',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
+      }, {
+        label: 'Miscellaneous',
+        link: '/docs/project-walkthrough/miscellaneous',
         badge: {
           variant: 'tip',
           text: 'WIP'

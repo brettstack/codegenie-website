@@ -99,7 +99,7 @@ export const Features3 = () => {
                 <li className="mb-4 flex">
                   <CheckArrowIcon />
                   <a
-                    href="https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html"
+                    href="https://aws.amazon.com/amplify/hosting"
                     target="_blank"
                     rel="noopener"
                   >

@@ -49,6 +49,6 @@ npm run start:ui:offline
 
 ## Next steps
 
-The next step is up to you! If you want to play around with the example app and learn more about the generated source code: check out the [Project Structure guides](../project-structure/overview.mdx).
+The next step is up to you! If you want to play around with the example app and learn more about the generated source code: check out the [Project Walkthrough guides](../project-walkthrough/overview.mdx).
 
 If you'd rather start developing your own application, head over to the [Data Modeling guide](./data-modeling.md). After you've finished modeling your application, you can then run the `npm run codegenie:generate` command again to generate the source code.

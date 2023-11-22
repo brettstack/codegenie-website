@@ -3,7 +3,13 @@ title: Project Walkthrough - Frontend/UI
 description: A walkthrough of the Frontend/UI
 ---
 
-Code Genie projects include a Single Page Application (SPA) that utilizes the following core technologies:
+Code Genie projects include a Single Page Application (SPA) Web App, including pages, components, and API integrations for all Entities defined in your application's data model.
+
+This guide will cover everything you need to know to build, deploy, and extend your application's front end.
+
+## Core Technology
+
+The web app utilizes the following core technologies:
 
 - [React](https://react.dev/)
 - [Next.js](https://nextjs.org/) - Enables simple bundling, routing, and other benefits when building React applications
@@ -11,6 +17,32 @@ Code Genie projects include a Single Page Application (SPA) that utilizes the fo
 - [React Query](https://tanstack.com/query/v3/) - Simplifies state management when making API calls
 - [AWS Amplify Client Library](https://aws-amplify.github.io/amplify-js/api/index.html) - Provides client side integration for Cognito Auth
 - [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting/) - Hosts our web app
+
+## Commands
+
+After deploying the app to your developer AWS account, start the UI locally with:
+
+```
+npm run start:ui
+```
+
+If you want to run your UI against a local version of your API, instead run these two commands in separate terminals:
+
+```
+npm run start:api
+```
+
+```
+npm run start:ui:offline
+```
+
+Note that this will still use your other cloud resources (e.g. Database and Auth) but allows you to quickly iterate on your UI and API.
+
+## Branding and themes
+
+Before generating your application, you can specify a logo and a primary brand color, and Code Genie will incorporate those into your project. See [Data Modeling](../guides/data-modeling.md) for more details.
+
+Your project includes Dark and Light themes, and you can customize themes further to match your branding by modifying the design tokens in `./packages/ui/themes/base.ts`. See [Ant Design's Customize Theme Guide](https://ant.design/docs/react/customize-theme) for more information.
 
 ## Project Structure
 
@@ -105,12 +137,3 @@ import FileTree from '../../../../components/file-tree.astro'
     - package.json
     - tsconfig.json
 </FileTree>
-
-## Commands
-
-- `npm run dev` - Runs the UI locally
-- `npm run dev:offline` - Runs the UI locally and points it at a locally running API (requires running `npm run start:api` separately)
-
-## Branding and themes
-
-You can specify a primary brand color and logo in your application definition Dark and Light themes are included out-of-the-box. 

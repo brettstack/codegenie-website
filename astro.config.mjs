@@ -35,10 +35,6 @@ export default defineConfig({
       items: [{
         label: 'Getting Started',
         link: '/docs/guides/getting-started',
-        badge: {
-          variant: 'tip',
-          text: 'WIP'
-        }
       }, {
         label: 'Deploying',
         link: '/docs/guides/deploying',

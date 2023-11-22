@@ -1,0 +1,116 @@
+---
+title: Project Structure - Frontend/UI
+description: A walkthrough of the Frontend/UI
+---
+
+Code Genie projects include a Single Page Application (SPA) that utilizes the following core technologies:
+
+- [React](https://react.dev/)
+- [Next.js](https://nextjs.org/) - Enables simple bundling, routing, and other benefits when building React applications
+- [Ant Design](https://ant.design/) - A powerful, flexible, and stylable React component library
+- [React Query](https://tanstack.com/query/v3/) - Simplifies state management when making API calls
+- [AWS Amplify Client Library](https://aws-amplify.github.io/amplify-js/api/index.html) - Provides client side integration for Cognito Auth
+- [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting/) - Hosts our web app
+
+## Project Structure
+
+import FileTree from '../../../../components/file-tree.astro'
+
+<FileTree>
+- packages
+  - ui
+    - components
+      - MyEntity
+        - MyEntitiesCardList.tsx
+        - MyEntitiesTable.tsx
+        - MyEntityData.tsx
+        - MyEntityDeleteModal.tsx
+        - MyEntityDetails.tsx
+        - MyEntityUpsertModal.tsx
+        - myEntityHooks.ts
+      - ...OtherGeneratedEntities
+        - ...
+      - User
+        - UserData.tsx
+        - UserDeleteModal.tsx
+        - UserDetails.tsx
+        - UserUpsertModal.tsx
+        - UsersTable.tsx
+        - userHooks.ts
+      - layouts
+        - SideMenu.tsx
+        - UnauthenticatedLayout.tsx
+      - AppWrapper.tsx
+      - AvatarNameLink.tsx
+      - GlobalLoadingIndicator.tsx
+      - PageHeading.tsx
+      - PageTitle.tsx
+      - SubHeader.tsx
+      - UserHeader.tsx
+    - lib
+      - getPageTitle.ts
+      - me.ts
+      - numberFormatter.ts
+      - upload.ts
+      - usePages.ts
+    - pages
+      - myEntities
+        - [myEntityId]
+          - myRelatedEntity
+            - [myRelatedEntityId]
+                - index.tsx
+          - index.tsx
+        - index.tsx
+      - _app.tsx
+      - _document.tsx
+      - account.tsx
+      - forgot-password.tsx
+      - index.tsx
+      - profile.tsx
+      - register.tsx
+      - reset-password.tsx
+      - verify-account.tsx
+    - public
+      - icons
+        - android-chrome-144x144.png
+        - ...
+        - apple-touch-icon-1024x1024.png
+        - ...
+        - browserconfig.xml
+        - favicon.ico
+        - ...
+        - index.html
+        - manifest.webmanifest
+        - mstile-144x144.png
+        - ...
+        - yandex-browser-50x50.png
+        - yandex-browser-manifest.json
+      - favicon.ico
+      - logo.png
+      - welcome.png
+    - themes
+      - base.ts
+      - dark.ts
+      - global.css
+      - light.ts
+      - theme-provider.ts
+      - themes.ts
+    - .gitignore
+    - README.md
+    - jest.config.js
+    - jest.setup.js
+    - next-env.d.ts
+    - next.config.js
+    - package-lock.json
+    - package.json
+    - tsconfig.json
+</FileTree>
+
+## Commands
+
+- `npm run dev` - Runs the UI locally
+- `npm run dev:offline` - Runs the UI locally and points it at a locally running API (requires running `npm run start:api` separately)
+
+## Branding and themes
+
+You can specify a primary brand color and logo in your application definition Dark and Light themes are included out-of-the-box. 

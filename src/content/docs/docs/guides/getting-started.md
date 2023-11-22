@@ -3,26 +3,52 @@ title: Getting Started
 description: Get Started with Code Genie
 ---
 
-In this guide we'll walk through how to generate your first application with Code Genie, deploy it to your AWS Account, and run it locally for development.
+This guide will walk you through how to generate your first application with Code Genie, deploy it to your AWS Account, and run it locally for development.
 
-## Define your application's data model
+## Prerequisites
 
-Code Genie applications are generated based on a data model that describes the application's Entities, Properties, Relationships, and other metadata. JSON Schema is used for defining entities, with extensions that allow you to define additional details such as relationships and other customizations.
+- [AWS Account + CLI](https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html)
+- [Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 
-See the reference application data model for an example.
+## Download example
 
-## Generate and download your application's source code
+*Coming Soon:* Download and unzip example project directory
 
-Self-service generation is still under development. Until then, contact brett@codegenie.codes.
+```
+Curl + unzip + CD commands
+```
 
-## Deploy your application to AWS
+## Install dependencies and generate app
+
+*Coming Soon:* Self-service generation is still under development. Until then, contact brett@codegenie.codes with your data model to generate your project source code.
+
+<!-- ```
+npm i
+npm run codegenie:generate
+``` -->
+
+## Deploy developer instance
 
 See the `README.md` in your application's project for further instructions.
 
-## Run and develop your application locally
+<!-- ```
+npm run codegenie:setup
+``` -->
+
+## Run local developer environment
 
 See the `README.md` in your application's project for further instructions.
 
-<!-- ## Further reading -->
+<!-- ```
+npm run start:api
+```
 
-<!-- - Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework -->
+```
+npm run start:ui:offline
+``` -->
+
+## Next steps
+
+The next step is up to you! If you want to play around with the example app and learn more about the generated source code: check out the [Project Structure guides](../project-structure/overview.mdx).
+
+If you'd rather start developing your own application, head over to the [Data Modeling guide](./data-modeling.md). After you've finished modeling your application, you can then run the `npm run codegenie:generate` command again to generate the source code.

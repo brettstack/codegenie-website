@@ -8,7 +8,11 @@ const navbarLinks = [
   { label: 'Home', href: '#home', ariaLabel: 'Home' },
   { label: 'Features', href: '#features', ariaLabel: 'Features' },
   { label: 'Pricing', href: '#pricing', ariaLabel: 'Pricing' },
-  { label: 'Documentation', href: '/docs', ariaLabel: 'Documentation' },
+  {
+    label: 'Documentation',
+    href: '/docs/guides/getting-started',
+    ariaLabel: 'Documentation',
+  },
   // { label: 'Feedback', href: '#feedback', ariaLabel: 'Feedback' },
   { label: 'FAQ', href: '#FAQ', ariaLabel: 'FAQ' },
 ]

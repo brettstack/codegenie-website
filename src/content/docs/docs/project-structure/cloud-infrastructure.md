@@ -1,5 +1,5 @@
 ---
 title: Project Structure - Cloud Infrastructure
-description: Cloud Infrastructure
+description: A walkthrough of the Cloud Infrastructure
 ---
 

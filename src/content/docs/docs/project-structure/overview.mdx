@@ -3,15 +3,18 @@ title: Project Structure Overview
 description: High-level overview of the project structure
 ---
 
-Code Genie projects are monorepos that include everything you need to deploy a full stack, Serverless, Cloud Native application. This guide will familiarize software developers with the project structure so that they can quickly start developing their application.
+Code Genie projects are monorepos that include everything you need to deploy a full stack, Serverless, Cloud Native application. Packages for the frontend, backend, infrastructure (IAC), and other supporting packages exist within the top-level `/packages` directory.
+
+All packages are written using Typescript and Node.js, with ESLint and Jest being used for linting and testing respectively.
+
+This guide will familiarize software developers with the project structure so that they can quickly start developing their application. Below is a high-level view of the overall project structure. In the following guides we'll dive deeper into each individual package.
 
 import FileTree from '../../../../components/file-tree.astro'
 
 <FileTree>
-- .codeGenie
-  - ...
 - .github
-  - ...
+  - workflows
+    - ...
 - packages
     - api
       - ...
@@ -31,46 +34,45 @@ import FileTree from '../../../../components/file-tree.astro'
       - ...
     - utils
       - ...
+- README.md
+- package.json
+- ...
 </FileTree>
 
-## Common
-
-All aspects of the project are written using Typescript and Node.js. ESLint is used for linting and Jest is used for testing.
-
-## Frontend/UI
+## Frontend (UI)
 
 The frontend is a React Next.js Single Page Application (SPA) that uses the Ant Design component library and is hosted on AWS Amplify Hosting.
 
-Read [Frontend](./frontend-ui.md) for more information.
+Read the [Frontend project structure guide](./frontend-ui.md) for more information.
 
 ## Backend/API
 
-The backend is an Express REST API hosted on AWS Lambda and API Gateway.
+The backend is an Express REST API hosted on AWS Lambda and API Gateway, utilizing the popular [@codegenie/serverless-express](https://github.com/brettstack/code-genie) package.
 
-Read [Backend](./backend-api.md) for more information.
+Read the [Backend project structure guide](./backend-api.md) for more information.
 
 ## Database
 
-AWS DynamoDB Tables are used for the database, and DynamoDB Toolbox is used as the client library for querying and mutating data.
+The database uses AWS DynamoDB, with [DynamoDB Toolbox](https://github.com/dynamodb-toolbox) used as the client library for querying and mutating data.
 
-Read [Database](./database.md) for more information.
+Read the [Database project structure guide](./database.md) for more information.
 
 ## Auth/Identity
 
-user Identity/Auth is managed via an AWS Cognito User Pool.
+User Identity/Auth is managed via an AWS Cognito User Pool. Currently only email registration is supported out-of-the-box, with SSO (social signin and SAML) support coming soon. For now, developers can implement SSO themselves by following the[Adding social identity providers to a user pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html) AWS guide.
 
-Read [Auth/Identity](./auth-identity.md) for more information.
+Read the [Auth/Identity guide](./auth-identity.md) for more information.
 
 ## Cloud Infrastructure
 
-All cloud infrastructure is defined as IAC (Infrastructure as Code) using AWS CDK.
+All cloud infrastructure is defined as IAC (Infrastructure as Code) using AWS CDK. This enables developers to easily create new and consistent environments for prod, staging, and individual developer instances.
 
-Read [Cloud Infrastructure](./cloud-infrastructure.md) for more information.
+Read the [Cloud Infrastructure guide](./cloud-infrastructure.md) for more information.
 
-## Deploying
+## Github Workflows (CI/CD)
 
-You can choose to either deploy manually from your local developer machine by running `npm run deploy:dev`, or deploy using CI/CD via GitHub Actions.
+A Continuous Integration/Delivery (CI/CD) pipeline is built using GitHub Actions/Workflows
 
-Read [Deploying](./deploying.md) for more information.
+## Miscellaneous (Everything else)
 
-## Miscelaneous (Everything else)
+Other packages such not covered in other sections (such as `common` and `utils`) are covered in the [Miscellaneous](./miscellaneous) guide.

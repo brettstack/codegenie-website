@@ -10,7 +10,10 @@ import robotsTxt from "astro-robots-txt";
 // https://astro.build/config
 export default defineConfig({
   site: 'https://codegenie.codes',
-  integrations: [react(), tailwind(), starlight({
+  integrations: [
+    react(),
+    tailwind(),
+    starlight({
     title: 'Code Genie',
     description: 'Full stack application generator',
     favicon: '/favicon.ico',
@@ -18,17 +21,38 @@ export default defineConfig({
       src: './src/assets/images/code-genie-logo.webp'
     },
     social: {
-      github: 'https://github.com/CodeGenieApp'
+      github: 'https://github.com/CodeGenieApp',
     },
     editLink: {
       baseUrl: 'https://github.com/CodeGenieApp/docs/edit/main/'
     },
     lastUpdated: true,
+    customCss: [
+      './src/styles/starlight.css',
+    ],
     sidebar: [{
       label: 'Guides',
       items: [{
         label: 'Getting Started',
-        link: '/docs/guides/getting-started'
+        link: '/docs/guides/getting-started',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
+      }, {
+        label: 'Deploying',
+        link: '/docs/guides/deploying',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
+      }, {
+        label: 'Local Development',
+        link: '/docs/guides/local-development',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
       }]
     }, {
       label: 'Project Structure',
@@ -36,23 +60,40 @@ export default defineConfig({
         label: 'Overview',
         link: '/docs/project-structure/overview'
       }, {
-        label: 'UI/Frontend',
-        link: '/docs/project-structure/ui-frontend'
+        label: 'Frontend (UI)',
+        link: '/docs/project-structure/frontend-ui',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
       }, {
-        label: 'API/Backend',
-        link: '/docs/project-structure/api-backend'
+        label: 'Backend (API)',
+        link: '/docs/project-structure/backend-api',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
       }, {
         label: 'Database',
-        link: '/docs/project-structure/database'
+        link: '/docs/project-structure/database',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
       }, {
         label: 'Auth/Identity',
-        link: '/docs/project-structure/auth-identity'
+        link: '/docs/project-structure/auth-identity',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
       }, {
-        label: 'Cloud Infrastructure',
-        link: '/docs/project-structure/cloud-infrastructure'
-      }, {
-        label: 'Deploying',
-        link: '/docs/project-structure/deploying'
+        label: 'Cloud Infrastructure (IAC)',
+        link: '/docs/project-structure/cloud-infrastructure',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
       }]
     }]
   }), sitemap(), prefetch({

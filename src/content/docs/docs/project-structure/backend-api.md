@@ -1,5 +1,5 @@
 ---
 title: Project Structure - Backend/API
-description: Deep-dive of the Backend/API
+description: A walkthrough of the Backend/API
 ---
 

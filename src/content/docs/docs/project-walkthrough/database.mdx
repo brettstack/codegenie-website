@@ -1,0 +1,23 @@
+---
+title: Database Walkthrough
+description: A walkthrough of the Database
+---
+
+## Project Structure
+
+import FileTree from '../../../../components/file-tree.astro'
+
+<FileTree>
+- .github
+  - cdk
+    - lib
+      - constructs
+        - tables
+          - MyEntityTable.ts one table per entity
+          - UserTable.ts
+        - BaseTable.ts
+  - controllers
+    - user.ts
+  - models
+    - User.ts
+</FileTree>

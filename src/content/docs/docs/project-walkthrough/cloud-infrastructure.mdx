@@ -1,0 +1,41 @@
+---
+title: Cloud Infrastructure Walkthrough
+description: A walkthrough of the Cloud Infrastructure
+---
+
+
+## Project Structure
+
+import FileTree from '../../../../components/file-tree.astro'
+
+<FileTree>
+- packages
+  - cdk
+    - bin
+      - cdk.ts
+      - copy-outputs-to-dotenv.ts
+      - pull-stack-outputs.ts
+    - lib
+      - constructs
+        - tables
+          - MyEntityTable.ts 1 table per entity
+          - UserTable.ts
+        - Auth.ts
+        - BaseTable.ts
+        - ExpressApi.ts
+        - WebApp.ts
+      - cdk-stack.ts
+      - environment-config.ts
+      - get-output-by-prefix.ts
+    - test
+      - cdk.test.ts
+    - .gitignore
+    - .npmignore
+    - README.md
+    - cdk.context.json
+    - cdk.json
+    - jest.config.js
+    - package-lock.json
+    - package.json
+    - tsconfig.json
+</FileTree>

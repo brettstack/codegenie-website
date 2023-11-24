@@ -101,8 +101,26 @@ export default defineConfig({
           text: 'WIP'
         }
       }, {
+        label: 'CI/CD Pipeline',
+        link: '/docs/project-walkthrough/ci-cd-pipeline',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
+      }, {
         label: 'Miscellaneous',
         link: '/docs/project-walkthrough/miscellaneous',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
+      }]
+    },
+    {
+      label: 'Spec',
+      items: [{
+        label: 'Application Definition',
+        link: '/docs/spec/application-definition',
         badge: {
           variant: 'tip',
           text: 'WIP'

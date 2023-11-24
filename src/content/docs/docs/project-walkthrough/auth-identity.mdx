@@ -1,0 +1,29 @@
+---
+title: Authentication, Authorization, Identity Walkthrough
+description: A walkthrough of the Authentication, Authorization, Identity
+---
+
+Currently only email registration is supported out-of-the-box, with SSO (social signin and SAML) support coming soon. For now, developers can implement SSO themselves by following the [Adding social identity providers to a user pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html) AWS guide.
+
+## Project Structure
+
+import FileTree from '../../../../components/file-tree.astro'
+
+<FileTree>
+- .github
+  - cdk
+    - lib
+      - constructs
+        - tables
+          - UserTable.ts
+        - Auth.ts
+  - cognito
+    - cognito-post-confirmation.test.ts
+    - cognito-post-confirmation.ts
+    - cognito-pre-signup.test.ts
+    - cognito-pre-signup.ts
+  - controllers
+    - user.ts
+  - models
+    - User.ts
+</FileTree>

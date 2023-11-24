@@ -1,5 +1,5 @@
 ---
-title: Project Walkthrough - Frontend/UI
+title: Frontend/UI Walkthrough
 description: A walkthrough of the Frontend/UI
 ---
 
@@ -38,12 +38,6 @@ npm run start:ui:offline
 
 Note that this will still use your other cloud resources (e.g. Database and Auth) but allows you to quickly iterate on your UI and API.
 
-## Branding and themes
-
-Before generating your application, you can specify a logo and a primary brand color, and Code Genie will incorporate those into your project. See [Data Modeling](../guides/data-modeling.md) for more details.
-
-Your project includes Dark and Light themes, and you can customize themes further to match your branding by modifying the design tokens in `./packages/ui/themes/base.ts`. See [Ant Design's Customize Theme Guide](https://ant.design/docs/react/customize-theme) for more information.
-
 ## Project Structure
 
 import FileTree from '../../../../components/file-tree.astro'
@@ -52,7 +46,7 @@ import FileTree from '../../../../components/file-tree.astro'
 - packages
   - ui
     - components
-      - MyEntity
+      - MyEntity 1 component directory per entity
         - MyEntitiesCardList.tsx
         - MyEntitiesTable.tsx
         - MyEntityData.tsx
@@ -60,8 +54,6 @@ import FileTree from '../../../../components/file-tree.astro'
         - MyEntityDetails.tsx
         - MyEntityUpsertModal.tsx
         - myEntityHooks.ts
-      - ...OtherGeneratedEntities
-        - ...
       - User
         - UserData.tsx
         - UserDeleteModal.tsx
@@ -86,10 +78,10 @@ import FileTree from '../../../../components/file-tree.astro'
       - upload.ts
       - usePages.ts
     - pages
-      - myEntities
-        - [myEntityId]
-          - myRelatedEntity
-            - [myRelatedEntityId]
+      - widgets 1 page directory per entity
+        - [widgetId]
+          - myRelatedEntity 1 directory per related entity
+            - [relatedWidgetId]
                 - index.tsx
           - index.tsx
         - index.tsx
@@ -105,16 +97,16 @@ import FileTree from '../../../../components/file-tree.astro'
     - public
       - icons
         - android-chrome-144x144.png
-        - ...
+        - ... additional sizes
         - apple-touch-icon-1024x1024.png
-        - ...
+        - ... additional sizes
         - browserconfig.xml
         - favicon.ico
-        - ...
+        - ... additional sizes
         - index.html
         - manifest.webmanifest
         - mstile-144x144.png
-        - ...
+        - ... additional sizes
         - yandex-browser-50x50.png
         - yandex-browser-manifest.json
       - favicon.ico
@@ -137,3 +129,91 @@ import FileTree from '../../../../components/file-tree.astro'
     - package.json
     - tsconfig.json
 </FileTree>
+
+## Pages
+
+Pages are defined using the [Next.js file-system based router](https://nextjs.org/docs/pages/building-your-application/routing). They're lightweight React Components that defer most of their functionality to other Components such as Table, CardList, and Form. Pages themselves are primarily responsible for:
+
+- Setting the page title
+- Rendering breadcrumbs
+- Rendering high-level page layout (positioning of other components)
+
+### Standard Pages
+
+<FileTree>
+- packages
+  - ui
+    - pages
+      - _app.tsx initializes Auth, API, Theme, React Query, AuthN Switcher, and Layout
+      - _document.tsx [test](google.com)
+      - 404.tsx
+      - account.tsx
+      - forgot-password.tsx
+      - index.tsx login
+      - register.tsx
+      - reset-password.tsx
+      - verify-account.tsx
+</FileTree>
+
+
+### Generated Entity Pages
+
+<FileTree>
+- packages
+  - ui
+    - pages
+      - widgets list page
+        - [widgetId] details page
+          - relatedWidgets
+            - [relatedWidgetId] related details page
+                - index.tsx
+          - index.tsx
+        - index.tsx
+</FileTree>
+
+Pages are generated for each Entity defined in your [Application Definition](../spec/application-definition). The following pages are generated per entity:
+
+- `/widgets` - A list page for listing all of the records for the Entity. This can be presented as either a Table or a Card List. See [listView](../spec/application-definition#uilistview).
+- `/widgets/[widgetId]` - A details page for presenting information on a single record, including direct record properties, as well as related entities/records.
+- `/widgets/[widgetId]/related-widget/[relatedWidgetId]` - Similar to the above details page.
+
+:::tip[Did you know?]
+You can choose to not generate the details page by marking the Entity with:
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie
+  buildDetailsPage: false
+```
+
+It's recommended you do this for entities that are "simple"; i.e. entities that have few properties and no child relationships.
+:::
+
+:::tip[Did you know?]
+You can set the [listView](../spec/application-definition#uilistview) setting on an Entity to change the list presentation of records. This setting affects both the list page as well as how they're presnted on the details page of a parent record.
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie
+  ui:
+    listView: CARD_LIST
+```
+
+It's recommended to use `CARD_LIST` when:
+
+- There are likely to be few records on the page
+- Users likely won't want to compare values between records (vertical scanning of columns)
+- Users likely won't want to sort/filter
+:::
+
+## Components
+
+### Entity Components
+
+### Standard Components
+
+## Branding and themes
+
+Before generating your application, you can specify a logo and a primary brand color, and Code Genie will incorporate those into your project. See [Data Modeling](../guides/data-modeling.md) for more details.
+
+Your project includes Dark and Light themes, and you can customize themes further to match your branding by modifying the design tokens in `./packages/ui/themes/base.ts`. See [Ant Design's Customize Theme Guide](https://ant.design/docs/react/customize-theme) for more information.

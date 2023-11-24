@@ -119,8 +119,8 @@ export default defineConfig({
     {
       label: 'Spec',
       items: [{
-        label: 'Application Definition',
-        link: '/docs/spec/application-definition',
+        label: 'App Definition',
+        link: '/docs/spec/app-definition',
         badge: {
           variant: 'tip',
           text: 'WIP'

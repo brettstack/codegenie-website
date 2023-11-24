@@ -18,7 +18,7 @@ This guide will walk you through how to generate your first application with Cod
 Curl + unzip + CD commands
 ```
 
-*Coming Soon:* Self-service generation is still under development. Until then, contact brett@codegenie.codes with your data model to generate your project source code.
+*Coming Soon:* Self-service generation is still under development. Until then, contact brett@codegenie.codes with your App Definition to generate your project source code.
 
 <!-- ```sh
 npm i -g @codegenie/generator

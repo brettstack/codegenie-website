@@ -3,24 +3,26 @@ title: Getting Started
 description: Get Started with Code Genie
 ---
 
-This guide will walk you through how to generate your first application with Code Genie, deploy it to your AWS Account, and run it locally for development.
+This guide will walk you through using the example app to generat your first application with Code Genie, deploy it to your AWS Account, and run it locally for development.
 
 ## Prerequisites
 
-- [AWS Account + CLI](https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html)
-- [Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
+Before continuing you'll need an [AWS Account](https://aws.amazon.com/resources/create-account/) and a developer environment with:
+
+- [Node.js 20+](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
+- [AWS CLI](https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html)
 
 ## Download and generate example app
 
-*Coming Soon:* Download and unzip example Code Genie App Definition
+***Coming Soon:*** Self-service generation is still under development. Until then, contact brett@codegenie.codes with your [App Definition](../spec/app-definition) to generate your project source code.
+
+<!-- *Coming Soon:* Download and unzip example Code Genie App Definition
 
 ```sh
 Curl + unzip + CD commands
 ```
 
-*Coming Soon:* Self-service generation is still under development. Until then, contact brett@codegenie.codes with your App Definition to generate your project source code.
-
-<!-- ```sh
+```sh
 npm i -g @codegenie/generator
 npm run @codegenie/generator generate
 ``` -->
@@ -34,6 +36,14 @@ Open `~/.aws/credentials` and add a profile entry called `code-genie-example_dev
 aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
 aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
 ```
+
+:::tip
+The profile name must be a `kebab-cased` version of the application name, followed by the environment name shorthand.
+
+The example app is called "Code Genie Example" and we'll be deploying to our developer environment ("dev" for shorthand), so we create a profile called `code-genie-example_dev`.
+
+For deploying to staging and production, create profiles with the `_staging` and `_prod` suffixes. See [Deploying](./deploying) for more details.
+:::
 
 ## Deploy developer instance
 
@@ -56,7 +66,7 @@ npm run start:ui
 
 You can then visit localhost:3001 to view your local web app and begin making changes.
 
-See [Developing and deploying changes](./local-development) and [Deploying to staging and production](./deploying#deploying-to-staging-and-production) for more details.
+See [Local Development](./local-development) and [Deploying to staging and production](./deploying#deploying-to-staging-and-production) for more details.
 
 ## Next steps
 

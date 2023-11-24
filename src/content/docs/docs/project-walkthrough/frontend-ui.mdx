@@ -139,7 +139,7 @@ Pages are defined using the [Next.js file-system based router](https://nextjs.or
   - verify-account.tsx
 </FileTree>
 
-`_app.tsx` is the main entry point of your application and is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. Read more on the [Next.js Custom App guide](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
+`_app.tsx` is the main entry point of your application. It renders the `AppWrapper` component which is responsible for initializing several core libraries and the global layout. See the `AppWrapper` component detailed in [Standard Components](#standard-components) below and the [Next.js Custom App guide](https://nextjs.org/docs/pages/building-your-application/routing/custom-app) for more information.
 
 `_document.tsx` allows you to customize the outter document such as `<html>`, `<head>`, and `<body>` sections. Read [Next.js Custom Document](https://nextjs.org/docs/pages/building-your-application/routing/custom-document) for more details.
 
@@ -203,6 +203,11 @@ It's recommended to use `CARD_LIST` when:
 
 <FileTree>
 - components
+  - Me
+    - MeData.tsx
+    - MeDetails.tsx
+    - meHooks.tsx
+    - MeUpsertModal.tsx
   - User
     - UserData.tsx
     - UserDeleteModal.tsx
@@ -216,6 +221,16 @@ It's recommended to use `CARD_LIST` when:
   - AppWrapper.tsx
   - AvatarNameLink.tsx
 </FileTree>
+
+Components and hooks for the current signed in user and other users of the system exist under `./components/Me/` and `./components/User/` respectively. These files follow a similar pattern to their generated equivalents and will be covered below.
+
+`layouts/SideMenu` renders navigation links for the top-level pages of the application.
+
+`layouts/UnauthenticatedLayout` is a wrapper component that includes styles for unauthenticated pages such as login, register, forgot password, etc.
+
+`AppWrapper` is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page.
+
+`AvatarNameLink` is a component that renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
 
 ### Generated Entity Components
 

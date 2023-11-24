@@ -47,11 +47,7 @@ export default defineConfig({
         }
       }, {
         label: 'Local Development',
-        link: '/docs/guides/local-development',
-        badge: {
-          variant: 'tip',
-          text: 'WIP'
-        }
+        link: '/docs/guides/local-development'
       }, {
         label: 'Deploying',
         link: '/docs/guides/deploying',
@@ -67,11 +63,7 @@ export default defineConfig({
         link: '/docs/project-walkthrough/overview'
       }, {
         label: 'Frontend (UI)',
-        link: '/docs/project-walkthrough/frontend-ui',
-        badge: {
-          variant: 'tip',
-          text: 'WIP'
-        }
+        link: '/docs/project-walkthrough/frontend-ui'
       }, {
         label: 'Backend (API)',
         link: '/docs/project-walkthrough/backend-api',

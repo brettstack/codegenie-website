@@ -47,36 +47,36 @@ import FileTree from '../../../../components/file-tree.astro'
 
 The frontend is a [React](https://react.dev/) [Next.js](https://nextjs.org/) Single Page Application (SPA) that uses the [Ant Design](https://ant.design/)  component library and is hosted on [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting).
 
-Read the [Frontend project structure guide](./frontend-ui.md) for more information.
+Read the [Frontend project structure walkthrough](./frontend-ui) for more information.
 
 ## Backend/API
 
-The backend is an Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway), utilizing the [@codegenie/serverless-express](https://github.com/brettstack/code-genie) package.
+The backend is an Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway), utilizing the [@codegenie/serverless-express](https://github.com/brettstack/serverless-express) package.
 
-Read the [Backend project structure guide](./backend-api.md) for more information.
+Read the [Backend project structure walkthrough](./backend-api) for more information.
 
 ## Database
 
-The database uses AWS DynamoDB, with [DynamoDB Toolbox](https://github.com/dynamodb-toolbox) as the client library for querying and mutating data.
+The database uses AWS DynamoDB, with [DynamoDB Toolbox](https://github.com/jeremydaly/dynamodb-toolbox) as the client library for querying and mutating data.
 
-Read the [Database project structure guide](./database.md) for more information.
+Read the [Database project structure walkthrough](./database) for more information.
 
 ## Auth/Identity
 
 User Identity/Auth is managed via an [AWS Cognito User Pool](https://aws.amazon.com/cognito).
 
-Read the [Auth/Identity guide](./auth-identity.md) for more information.
+Read the [Auth/Identity walkthrough](./auth-identity) for more information.
 
 ## Cloud Infrastructure
 
 All cloud infrastructure is defined as IAC (Infrastructure as Code) using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html). This enables developers to easily create new and consistent environments for prod, staging, and individual developer instances.
 
-Read the [Cloud Infrastructure guide](./cloud-infrastructure.md) for more information.
+Read the [Cloud Infrastructure walkthrough](./cloud-infrastructure) for more information.
 
-## Github Workflows (CI/CD)
+## CI/CD Pipeline
 
-A Continuous Integration/Delivery (CI/CD) pipeline is built using [GitHub Actions/Workflows](https://github.com/features/actions)
+A Continuous Integration/Delivery (CI/CD) pipeline is built using [GitHub Actions/Workflows](https://github.com/features/actions). Read the [CI/CD Pipeline walkthrough](./ci-cd-pipeline) for more information.
 
 ## Miscellaneous (Everything else)
 
-Other packages such not covered in other sections (such as `common` and `utils`) are covered in the [Miscellaneous](./miscellaneous) guide.
+Other packages such not covered in other sections (such as `common` and `utils`) are covered in the [Miscellaneous](./miscellaneous) walkthrough.

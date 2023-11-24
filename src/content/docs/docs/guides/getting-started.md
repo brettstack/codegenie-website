@@ -14,13 +14,13 @@ This guide will walk you through how to generate your first application with Cod
 
 *Coming Soon:* Download and unzip example Code Genie App Definition
 
-```
+```sh
 Curl + unzip + CD commands
 ```
 
 *Coming Soon:* Self-service generation is still under development. Until then, contact brett@codegenie.codes with your data model to generate your project source code.
 
-<!-- ```
+<!-- ```sh
 npm i -g @codegenie/generator
 npm run @codegenie/generator generate
 ``` -->
@@ -39,7 +39,7 @@ aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
 
 Install dependencies and deploy a developer instance to your AWS account by running:
 
-```
+```sh
 npm i
 npm run deploy:dev
 npm run deploy:dev # Run deploy a second time during intial setup
@@ -50,18 +50,18 @@ npm run copy-outputs-to-dotenv
 
 After deploying to your developer AWS account, start the UI locally by running:
 
-```
+```sh
 npm run start:ui
 ```
 
 You can then visit localhost:3001 to view your local web app and begin making changes.
 
-See [Developing and deploying changes](./local-development.md) and [Deploying to staging and production](./deploying.md#deploying-to-staging-and-production) for more details.
+See [Developing and deploying changes](./local-development) and [Deploying to staging and production](./deploying#deploying-to-staging-and-production) for more details.
 
 ## Next steps
 
-The next step is up to you! If you want to play around with the example app and learn more about the generated source code: check out the [Project Walkthrough guides](../project-walkthrough/overview.mdx).
+The next step is up to you! If you want to play around with the example app and learn more about the generated source code: check out the [Project Walkthrough guides](../project-walkthrough/overview).
 
-If you'd rather start developing your own application, head over to the [App Definition and Data Modeling guide](./data-modeling.md).
+If you'd rather start developing your own application, head over to the [App Definition and Data Modeling guide](./data-modeling).
 
 <!-- After you've finished modeling your application, you can then run the `npm run codegenie:generate` command again to generate the source code. -->

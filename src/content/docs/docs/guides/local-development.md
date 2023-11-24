@@ -7,17 +7,17 @@ description: How to develop locally
 
 After deploying to your developer AWS account, start the UI locally by running:
 
-```
+```sh
 npm run start:ui
 ```
 
 If you want to run your UI against a local version of your API, instead run these two commands in separate terminals:
 
-```
+```sh
 npm run start:api
 ```
 
-```
+```sh
 npm run start:ui:offline
 ```
 

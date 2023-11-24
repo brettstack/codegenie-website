@@ -1,5 +1,5 @@
 ---
-title: Data modeling
+title: Define an application
 description: Describe your application's entities, properties, relationships, and other metadata
 ---
 

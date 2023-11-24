@@ -22,6 +22,9 @@ export default defineConfig({
     },
     social: {
       github: 'https://github.com/CodeGenieApp',
+      slack: 'https://join.slack.com/t/code-genie-workspace/shared_invite/zt-275f7ud06-r3MZaDVYaIi4DXe6f_ahMQ',
+      email: 'mailto:support@codegenie.codes',
+      twitter: 'https://twitter.com/AWSbrett'
     },
     editLink: {
       baseUrl: 'https://github.com/CodeGenieApp/docs/edit/main/'
@@ -36,8 +39,8 @@ export default defineConfig({
         label: 'Getting Started',
         link: '/docs/guides/getting-started',
       }, {
-        label: 'Deploying',
-        link: '/docs/guides/deploying',
+        label: 'Define an Application',
+        link: '/docs/guides/define-an-application',
         badge: {
           variant: 'tip',
           text: 'WIP'
@@ -45,6 +48,13 @@ export default defineConfig({
       }, {
         label: 'Local Development',
         link: '/docs/guides/local-development',
+        badge: {
+          variant: 'tip',
+          text: 'WIP'
+        }
+      }, {
+        label: 'Deploying',
+        link: '/docs/guides/deploying',
         badge: {
           variant: 'tip',
           text: 'WIP'

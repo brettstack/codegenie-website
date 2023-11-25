@@ -5,7 +5,7 @@ description: How to develop locally
 
 ## Run the UI Locally
 
-After deploying to your developer AWS account, start the UI locally by running:
+After deploying to your AWS account, start the UI locally by running:
 
 ```sh
 npm run start:ui

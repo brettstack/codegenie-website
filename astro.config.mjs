@@ -50,11 +50,7 @@ export default defineConfig({
         link: '/docs/guides/local-development'
       }, {
         label: 'Deploying',
-        link: '/docs/guides/deploying',
-        badge: {
-          variant: 'tip',
-          text: 'WIP'
-        }
+        link: '/docs/guides/deploying'
       }]
     }, {
       label: 'Project Walkthrough',

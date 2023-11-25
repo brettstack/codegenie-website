@@ -14,7 +14,9 @@ Before continuing you'll need an [AWS Account](https://aws.amazon.com/resources/
 
 ## Download and generate example app
 
-***Coming Soon:*** Self-service generation is still under development. Until then, contact brett@codegenie.codes with your [App Definition](../spec/app-definition) to generate your project source code.
+:::caution[Coming soon]
+Self-service project generation is still under development. Until then, contact brett@codegenie.codes to discuss your project requirements.
+:::
 
 <!-- *Coming Soon:* Download and unzip example Code Genie App Definition
 
@@ -32,6 +34,7 @@ npm run @codegenie/generator generate
 Open `~/.aws/credentials` and add a profile entry called `code-genie-example_dev`. You can either copy-paste credentials from an existing developer profile, or create new credentials from the AWS IAM Console.
 
 ```
+// ~/.aws/credentials
 [code-genie-example_dev]
 aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
 aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX

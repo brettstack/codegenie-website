@@ -63,8 +63,8 @@ export default defineConfig({
             text: 'WIP'
           }
         }, {
-          label: 'Deploying',
-          link: '/docs/guides/deploying'
+          label: 'Deployments',
+          link: '/docs/guides/deployments'
         }, {
           label: 'Local Development',
           link: '/docs/guides/local-development'

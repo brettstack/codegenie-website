@@ -45,7 +45,7 @@ The profile name should be a `kebab-cased` version of the application name, foll
 
 The example app is called "Code Genie Example" and we'll be deploying to our developer environment ("dev" for shorthand), so we create a profile called `code-genie-example_dev`.
 
-For deploying to staging and production, create profiles with the `_staging` and `_prod` suffixes. See [Deploying](./deploying) for more details.
+For deploying to staging and production, create profiles with the `_staging` and `_prod` suffixes. See [Deployments](./deployments) for more details.
 :::
 
 ## Deploy developer instance
@@ -69,7 +69,7 @@ npm run start:ui
 
 You can then visit localhost:3001 to view your local web app and begin making changes.
 
-See [Local Development](./local-development) and [Deploying to staging and production](./deploying#deploying-to-staging-and-production) for more details.
+See [Local Development](./local-development) and [Deploying to staging and production](./deployments#deploying-to-staging-and-production) for more details.
 
 ## Next steps
 

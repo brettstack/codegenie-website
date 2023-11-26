@@ -1,4 +1,9 @@
-.sl-markdown-content :not(.not-content) > ul, .sl-markdown-content > ul {
+.sl-markdown-content > :not(.not-content) > ul, .sl-markdown-content > ul {
   list-style: disc;
-  padding: 0 1rem;
+  padding: 0 2rem;
+}
+
+.sl-markdown-content :not(.not-content) > ol, .sl-markdown-content > ol {
+  list-style: decimal;
+  padding: 0 2rem;
 }

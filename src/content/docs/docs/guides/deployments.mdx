@@ -1,5 +1,5 @@
 ---
-title: Deploying
+title: Deployments
 description: How to deploy
 ---
 import { Tabs, TabItem } from '@astrojs/starlight/components';
@@ -27,7 +27,7 @@ The profile name should be a `kebab-cased` version of the application name, foll
 :::
 
 :::tip[Use separate AWS Accounts for each stage]
-It's recommended to use separate AWS Accounts for each stage for improved security and stability. However, if you really want to use a single AWS Account you can simply specify the same values for all profiles.
+It's recommended to use separate AWS Accounts for each stage for improved security and stability. However, if you prefer to use a single AWS Account for simplicity you can specify the same values for all profiles.
 :::
 
 ## Deploy to AWS
@@ -67,8 +67,15 @@ The UI isn't deployed on the first run of the `deploy` command because it has de
 
 ## CI/CD
 
-Code Genie uses GitHub Actions for running tests, creating immutable release artifacts, and deploying to AWS.
+Code Genie leverages GitHub Actions to implement a Continuous Integration/Deployment Pipeline. When a Pull Request is merged to the main branch (or when changes are pushed directly to it), a workflow is kicked off that:
 
-:::caution[Deploy using CI/CD]
-It's recommended that you only deploy to **staging** and **production** via CI/CD after your app is live. However, deploying to these stages from your local environment is easier when you're first getting them set up, and can also be faster (though less safe) during an emergency.
+1. Runs unit tests
+1. Deploys the changes to staging
+1. Runs integration/end-to-end tests against staging
+1. Bumps the version based on [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+1. Creates a versioned, immutable release artifact and changelog
+1. Deploys the release to production
+
+:::caution[Only deploy to prod via CI/CD]
+Once your app is live, it's recommended that you **only** deploy to **staging** and **production** via CI/CD. However, deploying to these stages from your local environment is easier when you're first getting them set up, and can also be faster (though less safe) to get a fix out in an emergency.
 :::

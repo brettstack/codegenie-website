@@ -3,55 +3,52 @@ title: Deploying
 description: How to deploy
 ---
 
-You can choose to either deploy manually from your local developer machine by running `npm run deploy:dev`, or deploy using CI/CD via GitHub Actions.
+## Setup AWS CLI Credentials Profiles
 
+Create AWS Credentials Profiles in `~/.aws/credentials` for the stages to which you want to deploy. Usually this will just be a `dev` profile, but you may want to create `staging` and `prod` profiles when setting those environments up for the first time.
 
-## Deploy developer instance
+```
+//~/.aws/credentials
+[my-app-name_dev]
+aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
+aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
 
-Install dependencies and deploy a developer instance to your AWS account by running:
+[my-app-name_staging]
+aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
+aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
 
-```sh
+[my-app-name_prod]
+aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
+aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
+```
+:::note
+The profile name should be a `kebab-cased` version of the application name, followed by the environment name shorthand (`_dev`, `_staging`, `_prod`). See the `profile` values in `packages/cdk/cdk.json` for the exact values.
+:::
+
+:::tip[Use separate AWS Accounts for each stage]
+It's recommended to use separate AWS Accounts for each stage for improved security and stability. However, if you really want to use a single AWS Account you can simply specify the same values for all profiles.
+:::
+
+## Deploy to AWS
+
+Install dependencies and deploy to AWS by running:
+
+<!-- TODO: Tabs for dev, staging, prod -->
+```sh title="Initial install and deploy"
 npm i
 npm run deploy:dev
 npm run deploy:dev # Run deploy a second time during intial setup
 npm run copy-outputs-to-dotenv
 ```
 
-Note that the UI isn't deployed on the first run of the `deploy` command because it require several resources to exist first. This second run is required only during initial setup, and deploying future changes requires only running `npm run deploy` once.
+:::note
+The UI isn't deployed on the first run of the `deploy` command because it has dependencies on several cloud resources such as Cognito (Auth) and API Gateway (API). The second run of `npm run deploy:*` is required only during the initial setup, and subsequent changes can be deployed with a single `npm run deploy:*`.
+:::
 
+## CI/CD
 
-## Deploying to staging and production
+Code Genie uses GitHub Actions for running tests, creating immutable release artifacts, and deploying to AWS.
 
 :::caution[Deploy using CI/CD]
 It's recommended that you only deploy to **staging** and **production** via CI/CD after your app is live. However, deploying to these stages from your local environment is easier when you're first getting them set up, and can also be faster (though less safe) during an emergency.
-:::
-
-Deploying to staging and proudction is similar to deploying to dev. You'll first need to create your `staging` and `prod` AWS Credentials profiles in `~/.aws/credentials`:
-
-```
-//~/.aws/credentials
-[code-genie-example_dev]
-aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
-aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
-
-[code-genie-example_staging]
-aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
-aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
-
-[code-genie-example_prod]
-aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
-aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
-```
-
-Next, you can run one of the following commands to deploy to staging or prod:
-
-```sh title="Deploy to staging"
-npm run deploy:staging
-```
-```sh title="Deploy to production"
-npm run deploy:prod
-```
-
-:::tip[Use separate AWS Accounts for each stage]
-It's recommended to use separate AWS Accounts for each stage for security and stability reasons.
 :::

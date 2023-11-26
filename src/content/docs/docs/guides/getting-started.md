@@ -40,8 +40,8 @@ aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
 aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
 ```
 
-:::tip
-The profile name must be a `kebab-cased` version of the application name, followed by the environment name shorthand.
+:::note
+The profile name should be a `kebab-cased` version of the application name, followed by the environment name shorthand (`_dev`, `_staging`, `_prod`). See the `profile` values in `packages/cdk/cdk.json` for the exact values.
 
 The example app is called "Code Genie Example" and we'll be deploying to our developer environment ("dev" for shorthand), so we create a profile called `code-genie-example_dev`.
 

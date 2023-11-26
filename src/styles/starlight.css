@@ -1,4 +1,4 @@
-.sl-markdown-content > :not(.not-content) ul, .sl-markdown-content > ul {
+.sl-markdown-content :not(.not-content) > ul, .sl-markdown-content > ul {
   list-style: disc;
-  padding: 1rem;
+  padding: 0 1rem;
 }

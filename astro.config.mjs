@@ -15,12 +15,13 @@ export default defineConfig({
     react(),
     tailwind(),
     starlightBlog({
+      title: 'Code Genie',
       authors: {
         brett: {
           name: 'Brett Andrews',
           title: 'Founder, Code Genie',
           url: 'https://twitter.com/AWSBrett',
-          picture: 'https://avatars.githubusercontent.com/u/10137?s=200'
+          picture: '/brett-amazon-badge-photo-profile-pic-square-128.webp'
         },
       },
     }),

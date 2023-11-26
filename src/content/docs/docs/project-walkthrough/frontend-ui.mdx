@@ -18,26 +18,6 @@ The web app utilizes the following core technologies:
 - [AWS Amplify Client Library](https://aws-amplify.github.io/amplify-js/api/index.html) - Provides client side integration for Cognito Auth
 - [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting/) - Hosts our web app
 
-## Commands
-
-After deploying the app to your developer AWS account, start the UI locally with:
-
-```sh
-npm run start:ui
-```
-
-If you want to run your UI against a local version of your API, instead run these two commands in separate terminals:
-
-```sh
-npm run start:api
-```
-
-```sh
-npm run start:ui:offline
-```
-
-Note that this will still use your other cloud resources (e.g. Database and Auth) but allows you to quickly iterate on your UI and API.
-
 ## Project Structure Overview
 
 The frontend package exists within the `./packages/ui` directory.
@@ -48,12 +28,12 @@ import FileTree from '../../../../components/file-tree.astro'
 - components
   - Widget 1 component directory per entity
     - WidgetsCardList.tsx
-    - WidgetsTable.tsx
     - WidgetData.tsx
     - WidgetDeleteModal.tsx
     - WidgetDetails.tsx
+    - WidgetsTable.tsx
     - WidgetUpsertModal.tsx
-    - WidgetHooks.ts
+    - widgetHooks.ts
   - User
     - UserData.tsx
     - UserDeleteModal.tsx
@@ -151,6 +131,10 @@ Other standard pages include authentication flows such as login, register, forgo
 
 ### Generated Entity Pages
 
+:::note
+Throughout the documentation, `Widget` and `RelatedWidget` are the names of our example Entities.
+:::
+
 <FileTree>
 - pages
   - widgets list page
@@ -162,11 +146,14 @@ Other standard pages include authentication flows such as login, register, forgo
     - index.tsx
 </FileTree>
 
+There are two types of generated pages: [List Pages](#list-pages) and [Details Pages](#details-pages).
+
+{/* TODO: talk about how top level entities exist at the top level in /pages and that child entities are nested accordingly */}
 Pages are generated for each Entity defined in your [App Definition](../spec/app-definition). The following pages are generated per entity:
 
 - `/widgets` - A list page for listing all of the records for the Entity. This can be presented as either a Table or a Card List. See [listView](../spec/app-definition#uilistview).
-- `/widgets/[widgetId]` - A details page for presenting information on a single record, including direct record properties, as well as related entities/records.
-- `/widgets/[widgetId]/related-widget/[relatedWidgetId]` - Similar to the above details page.
+- `/widgets/[widgetId]` - A details page for presenting information on a single record, including direct record properties, as well as related entities/records. Note that [Next.js dynamic routes]() are defined by naming folders wrapped in `[]`. In this example, `[widgetId]` results in a query parameter called `widgetId`. {/* TODO: link to Next.js dynamic routes  */}
+- `/widgets/[widgetId]/related-widget/[relatedWidgetId]` - Similar to the above details page, but with a second dynamic route/query parameter called `relatedWidgetId`.
 
 :::tip[Did you know?]
 You can choose to not generate the details page by marking the Entity with:
@@ -180,22 +167,13 @@ x-codeGenie
 It's recommended you do this for entities that are "simple"; i.e. entities that have few properties and no child relationships.
 :::
 
-:::tip[Did you know?]
-You can set the [listView](../spec/app-definition#uilistview) setting on an Entity to change the list presentation of records. This setting affects both the list page as well as how they're presnted on the details page of a parent record.
+### List Pages
 
-```yaml
-// .codegenie/entities/Widget.yaml
-x-codeGenie
-  ui:
-    listView: CARD_LIST
-```
+Talk about list page layout
 
-It's recommended to use `CARD_LIST` when:
+### Details Pages
 
-- There are likely to be few records on the page
-- Users likely won't want to compare values between records (vertical scanning of columns)
-- Users likely won't want to sort/filter
-:::
+Talk about details page layout
 
 ## Components
 
@@ -222,13 +200,13 @@ It's recommended to use `CARD_LIST` when:
   - AvatarNameLink.tsx
 </FileTree>
 
-Components and hooks for the current signed in user and other users of the system exist under `./components/Me/` and `./components/User/` respectively. These files follow a similar pattern to their generated equivalents and will be covered below.
+Components and hooks for the current signed in user and other users of the system exist under `./components/Me/` and `./components/User/` respectively. These files follow a similar pattern to their generated equivalents detailed below.
 
 `layouts/SideMenu` renders navigation links for the top-level pages of the application.
 
 `layouts/UnauthenticatedLayout` is a wrapper component that includes styles for unauthenticated pages such as login, register, forgot password, etc.
 
-`AppWrapper` is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page.
+`AppWrapper` is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. This component is rendered by the main app entry point `pages/_app.tsx`.
 
 `AvatarNameLink` is a component that renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
 
@@ -237,13 +215,63 @@ Components and hooks for the current signed in user and other users of the syste
 <FileTree>
 - components
   - Widget
+    - WidgetsCardList.tsx
     - WidgetData.tsx
     - WidgetDeleteModal.tsx
     - WidgetDetails.tsx
+    - WidgetsTable.tsx
     - WidgetUpsertModal.tsx
-    - AppsCardList.tsx
     - widgetHooks.ts
 </FileTree>
+
+#### Data Component
+
+The `<*Data>` component renders a readonly view of a record in a column layout. The number of columns depends on the screen size, starting at 1 column for small devices (phones) and increasing to 3 columns on large devices (landscape tablets, laptops+). This component is used by the [Details Component](#details-component) and [Card List Component](#card-list-component).
+
+#### Details Component
+
+{/* TODO: fix card and tabs link */}
+The `<*Details>` component is primarily responsible for laying out the components on a [details page](#generated-entity-pages). It first presents a [Card](https://antd.design/components/card) with the record's name and image (if one exists) in the title, along with an edit button that opens an [Upsert Modal](#upsert-modal-component). The card's body renders a [Data Component](#data-component) to present all direct data for the record.
+
+If the Entity defines any Child Entities, a list of [Tabs]() are presented below the main details card to show all related records. These related records are presented as either a [Table](#table-component) or [Card List](#card-list-component).
+
+:::tip[Did you know?]
+You can set the [listView](../spec/app-definition#uilistview) setting on an Entity to change the list presentation of records. This setting affects how they're presented on the list page, as well as the details pages if it's related to a parent record.
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie
+  ui:
+    listView: CARD_LIST
+```
+
+It's recommended to use `CARD_LIST` when:
+
+- There are likely to be few (\<= 12) records on the page
+- Users likely won't want to compare values between records (vertical scanning of columns) or sort/filter.
+:::
+
+#### Card List Component
+
+The `<*CardList>` component
+
+The Card List component forces the data into a single column layout, since the cards are already in a column layout.
+
+#### Table Component
+
+The `<*Table>` component
+
+#### Upsert Modal Component
+
+The `<*UpsertModal>` component
+
+#### Delete Modal Component
+
+The `<*DeleteModal>` component
+
+#### Hooks
+
+The `*Hooks` file
 
 ## Branding and themes
 

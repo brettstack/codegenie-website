@@ -5,7 +5,7 @@ description: High-level overview of a Code Genie Project
 
 Code Genie projects are monorepos that include everything you need to deploy a full stack, Serverless, Cloud Native application.
 
-All packages are written using Typescript and Node.js, with ESLint and Jest being used for linting and testing respectively. Packages for the frontend, backend, infrastructure (IAC), and other supporting packages exist within the top-level `/packages` directory.
+All packages are written using Typescript and Node.js. Packages for the frontend, backend, infrastructure (IAC), and other supporting packages exist within the top-level `/packages` directory.
 
 This guide walks you through the source code of a Code Genie project so that you can quickly start building your application.
 
@@ -49,9 +49,9 @@ The frontend is a [React](https://react.dev/) [Next.js](https://nextjs.org/) Sin
 
 Read the [Frontend project structure walkthrough](./frontend-ui) for more information.
 
-## Backend/API
+## API
 
-The backend is an Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway), utilizing the [@codegenie/serverless-express](https://github.com/brettstack/serverless-express) package.
+The API is an Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway), utilizing the [@codegenie/serverless-express](https://github.com/brettstack/serverless-express) package.
 
 Read the [Backend project structure walkthrough](./backend-api) for more information.
 
@@ -79,4 +79,4 @@ A Continuous Integration/Delivery (CI/CD) pipeline is built using [GitHub Action
 
 ## Miscellaneous (Everything else)
 
-Other packages such not covered in other sections (such as `common` and `utils`) are covered in the [Miscellaneous](./miscellaneous) walkthrough.
+Other packages not covered in other sections (such as `common` and `utils`) are covered in the [Miscellaneous](./miscellaneous) walkthrough.

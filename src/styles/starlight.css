@@ -1,4 +1,4 @@
-.sl-markdown-content > :not(.not-content) > ul, .sl-markdown-content > ul {
+.sl-markdown-content > :not(.not-content) > ul, .sl-markdown-content > ul, .starlight-aside__content > ul {
   list-style: disc;
   padding: 0 2rem;
 }

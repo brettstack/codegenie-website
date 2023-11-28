@@ -26,8 +26,8 @@ export default defineConfig({
       },
     }),
     starlight({
-      title: 'Code Genie',
-      description: 'Full stack application generator',
+      title: 'Code Genie Docs',
+      description: 'Code Genie Documentation',
       favicon: '/favicon.ico',
       logo: {
         src: './src/assets/images/code-genie-logo.webp'
@@ -40,6 +40,9 @@ export default defineConfig({
       },
       editLink: {
         baseUrl: 'https://github.com/CodeGenieApp/docs/edit/main/'
+      },
+      tableOfContents: {
+        maxHeadingLevel: 4
       },
       lastUpdated: true,
       customCss: [

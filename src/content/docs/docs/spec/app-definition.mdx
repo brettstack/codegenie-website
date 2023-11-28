@@ -2,6 +2,18 @@
 title: App Definition
 description: App Definition Spec
 ---
+import FileTree from '../../../../components/file-tree.astro'
+
+<FileTree>
+- .codegenie
+  - entities
+    - widget.yaml
+    - related-widget.yaml
+  - .codeGenie.js
+  - app.yaml
+  - logo.png
+  - theme.yml
+</FileTree>
 
 ## app.yaml
 
@@ -19,8 +31,8 @@ description: App Definition Spec
 
 ### x-codeGenie.ui.listView
 
-- `TABLE` (default) - Table list view
-- `CARD_LIST` - Card List view.
+- `TABLE` (default): Table list view
+- `CARD_LIST`: Card List view.
 
 ## theme.yaml
 

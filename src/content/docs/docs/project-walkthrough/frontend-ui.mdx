@@ -12,11 +12,11 @@ This guide will cover everything you need to know to build, deploy, and extend y
 The web app utilizes the following core technologies:
 
 - [React](https://react.dev/)
-- [Next.js](https://nextjs.org/) - Enables simple bundling, routing, and other benefits when building React applications
-- [Ant Design](https://ant.design/) - A powerful, flexible, and stylable React component library
-- [React Query](https://tanstack.com/query/v3/) - Simplifies state management when making API calls
-- [AWS Amplify Client Library](https://aws-amplify.github.io/amplify-js/api/index.html) - Provides client side integration for Cognito Auth
-- [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting/) - Hosts our web app
+- [Next.js](https://nextjs.org/) &ndash; Enables simple bundling, routing, and other benefits when building React applications
+- [Ant Design](https://ant.design/) &ndash; A powerful, flexible, and stylable React component library
+- [React Query](https://tanstack.com/query/v3/) &ndash; Simplifies state management when making API calls
+- [AWS Amplify Client Library](https://aws-amplify.github.io/amplify-js/api/index.html) &ndash; Provides client side integration for Cognito Auth
+- [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting/) &ndash; Hosts our web app
 
 ## Project Structure Overview
 
@@ -255,21 +255,20 @@ Each property value renders differently based on its type:
 
 - `nameProperty` properties are rendered as an [`<AvatarNameLink>`](#avatar-name-link-component) (only when an `imageProperty` is also defined on the Entity).
 - `foreignKey` properties are rendered as links to the foreigh record. If the Foreign Entity also defines an `imageProperty`, it's rendered as an [`<AvatarNameLink>`](#avatar-name-link-component).
-- `date`, `datetime`, etc. properties are rendered using [dayjs]() in `D MMM YY` format.
+- `date`, `datetime`, etc. properties are rendered using [dayjs](https://day.js.org/) in `D MMM YY` format (e.g. 1 Jan 24).
 - `color` properties are rendered with a small square color swatch next to their color value.
-- `array` properties are rendered as [`<Tag>`]()s.
+- `array` properties are rendered as [`<Tag>`](https://ant.design/components/Tag)s.
 - `boolean` properties are rendered as either "Yes" or "No".
 - `number` properties that have a `money` or `compactNumber` format are rendered as compact numbers. A '$' symbol is also added for properties that have the `money` format.
 - Everything else is rendered as plain text.
 
 #### Details Component
 
-{/* TODO: fix card and tabs link */}
 The `<*Details>` component is primarily responsible for laying out the components on a [details page](#generated-entity-pages).
 
-It first presents a [Card](https://antd.design/components/card) with a title that shows the record's name (rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity), followed by an edit button that opens an [Upsert Modal](#upsert-modal-component). The card's body renders a [Data Component](#data-component) to present all direct data for the record.
+It first presents a [Card](https://ant.design/components/Card) with a title that shows the record's name (rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity), followed by an edit button that opens an [Upsert Modal](#upsert-modal-component). The card's body renders a [Data Component](#data-component) to present all direct data for the record.
 
-If the Entity defines any Child Entities, a list of [Tabs]() are presented below the main details card for each related Entity. Related records are presented as either a [Table](#table-component) or [Card List](#card-list-component).
+If the Entity defines any Child Entities, a list of [Tabs](https://ant.design/components/Tabs) are presented below the main details card for each related Entity. Related records are presented as either a [Table](#table-component) or [Card List](#card-list-component).
 
 #### Card List Component
 
@@ -281,25 +280,32 @@ The Card's body renders a [Data Component](#data-component) for the record and f
 
 A loading indicator is shown while the data is initially being loaded, and an empty state is shown if there are no records.
 
-See [Ant Design Card Component]() for more details.
+See [Ant Design Card](https://ant.design/components/card) for more details.
 
 #### Table Component
 
-The `<*Table>` component fetches a list of records and renders a table with columns for each of the properties defined on the Entity.
+The `<*Table>` component fetches a list of records and renders an [Ant Design Table](https://ant.design/components/table) with columns for each of the properties defined on the Entity.
 
 The property marked as `nameProperty` is positioned as the first column and is rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity. It links to the [Details Page](#details-page) for the record unless the Entity is marked with `buildDetailsPage: false`.
 
 Other columns render values based on their property type and other metadata. See [Data Component](#data-component) for more details.
 
-The final column in each row render Edit and Delete buttons that open an [Upsert Modal](#upsert-modal-component) and [Delete Modal](#delete-modal-component).
-
-Nested Tables
-
-Pagination
+The final column in each row renders Edit and Delete buttons that open an [Upsert Modal](#upsert-modal-component) and [Delete Modal](#delete-modal-component).
 
 A loading indicator is shown while the data is initially being loaded, and an empty state is shown if there are no records.
 
-See [Ant Design Table Component]() for more details.
+Tables also support pagination with page caching, and nested tables for referencing child records.
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie:
+  hasMany:
+    RelatedWidget:
+      $ref: ./related-widget.yaml
+  ui:
+    table:
+      nested: RelatedWidget
+```
 
 #### Upsert Modal Component
 

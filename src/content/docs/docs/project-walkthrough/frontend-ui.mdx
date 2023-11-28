@@ -100,6 +100,7 @@ import FileTree from '../../../../components/file-tree.astro'
 
 Pages are defined using the [Next.js file-system based router](https://nextjs.org/docs/pages/building-your-application/routing). They're lightweight React Components that defer most of their functionality to other Components such as Table, CardList, and Form. Pages themselves are primarily responsible for:
 
+- Fetching data
 - Setting the page title
 - Rendering breadcrumbs
 - Rendering high-level page layout (positioning of other components)
@@ -131,10 +132,6 @@ Other standard pages include authentication flows such as login, register, forgo
 
 ### Generated Entity Pages
 
-:::note
-Throughout the documentation, `Widget` and `RelatedWidget` are the names of our example Entities.
-:::
-
 <FileTree>
 - pages
   - widgets list page
@@ -146,14 +143,40 @@ Throughout the documentation, `Widget` and `RelatedWidget` are the names of our 
     - index.tsx
 </FileTree>
 
-There are two types of generated pages: [List Pages](#list-pages) and [Details Pages](#details-pages).
+:::note
+Throughout the documentation, we use `Widget` and `RelatedWidget` as the names of our example Entities.
+:::
 
 {/* TODO: talk about how top level entities exist at the top level in /pages and that child entities are nested accordingly */}
-Pages are generated for each Entity defined in your [App Definition](../spec/app-definition). The following pages are generated per entity:
+Pages are generated for each Entity defined in your [App Definition](../spec/app-definition). Entites marked as `isTopLevelEntity` receieve root-level routes (and appear in the [Side Nav](#standard-components)), while other pages exist under their parent entities as nested routes.
 
-- `/widgets` - A list page for listing all of the records for the Entity. This can be presented as either a Table or a Card List. See [listView](../spec/app-definition#uilistview).
-- `/widgets/[widgetId]` - A details page for presenting information on a single record, including direct record properties, as well as related entities/records. Note that [Next.js dynamic routes]() are defined by naming folders wrapped in `[]`. In this example, `[widgetId]` results in a query parameter called `widgetId`. {/* TODO: link to Next.js dynamic routes  */}
-- `/widgets/[widgetId]/related-widget/[relatedWidgetId]` - Similar to the above details page, but with a second dynamic route/query parameter called `relatedWidgetId`.
+#### List Page
+
+List Pages are generated for root Entities only and list all of the records for the Entity. The list of records can be presented as either a [Table](#table-component) or a [Card List](#card-list).
+
+In our example, a List Page for the `Widget` Entity is generated at the `/widgets` route, however, one isn't generated for the `RelatedWidget` since records are listed on the [Details Page](#details-page) of their parent record.
+
+:::tip[Did you know?]
+You can set the [listView](../spec/app-definition#uilistview) setting on an Entity to change the list presentation of records. This setting affects how they're presented on the list page for root entities, or the details page of the parent record for nested entities.
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie
+  ui:
+    listView: CARD_LIST
+```
+
+It's recommended to use `CARD_LIST` when:
+
+- There are likely to be few (\<= 12) records on the page
+- Users likely won't want to compare values between records (vertical scanning of columns) or sort/filter.
+:::
+
+#### Details Page
+
+Details Pages present information for a **single** record, including direct record properties, as well as related entities/records.
+
+In our example, a Details Page for the `Widget` Entity is generated at the `/widgets/[widgetId]` route, and another Details Page for the `RelatedWidget` Entity is generated at the `/widgets/[widgetId]/related-widget/[relatedWidgetId]` route. See [Next.js dynamic routes](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes) for more details.
 
 :::tip[Did you know?]
 You can choose to not generate the details page by marking the Entity with:
@@ -166,14 +189,6 @@ x-codeGenie
 
 It's recommended you do this for entities that are "simple"; i.e. entities that have few properties and no child relationships.
 :::
-
-### List Pages
-
-Talk about list page layout
-
-### Details Pages
-
-Talk about details page layout
 
 ## Components
 
@@ -200,15 +215,23 @@ Talk about details page layout
   - AvatarNameLink.tsx
 </FileTree>
 
-Components and hooks for the current signed in user and other users of the system exist under `./components/Me/` and `./components/User/` respectively. These files follow a similar pattern to their generated equivalents detailed below.
+#### Me Components
+Components and hooks for the current signed-in user. See [Generated Entity Components](#generated-entity-components) for further details on the individual components.
 
-`layouts/SideMenu` renders navigation links for the top-level pages of the application.
+#### User Components
+Components and hooks for other registered users. See [Generated Entity Components](#generated-entity-components) for further details on the individual components.
 
-`layouts/UnauthenticatedLayout` is a wrapper component that includes styles for unauthenticated pages such as login, register, forgot password, etc.
+#### Side Menu Component
+The `<SideMenu>` component renders navigation links for the top-level pages of the application.
 
-`AppWrapper` is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. This component is rendered by the main app entry point `pages/_app.tsx`.
+#### Unauthenticated Layout Component
+The `<UnauthenticatedLayout>` component is a layout wrapper component that includes styles for unauthenticated pages such as login, register, forgot password, etc.
 
-`AvatarNameLink` is a component that renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
+#### App Wrapper Component
+The `<AppWrapper>` component is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. This component is rendered by the main app entry point `pages/_app.tsx`.
+
+#### Avatar Name Link Component
+The `<AvatarNameLink>` component renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
 
 ### Generated Entity Components
 
@@ -228,38 +251,55 @@ Components and hooks for the current signed in user and other users of the syste
 
 The `<*Data>` component renders a readonly view of a record in a column layout. The number of columns depends on the screen size, starting at 1 column for small devices (phones) and increasing to 3 columns on large devices (landscape tablets, laptops+). This component is used by the [Details Component](#details-component) and [Card List Component](#card-list-component).
 
+Each property value renders differently based on its type:
+
+- `nameProperty` properties are rendered as an [`<AvatarNameLink>`](#avatar-name-link-component) (only when an `imageProperty` is also defined on the Entity).
+- `foreignKey` properties are rendered as links to the foreigh record. If the Foreign Entity also defines an `imageProperty`, it's rendered as an [`<AvatarNameLink>`](#avatar-name-link-component).
+- `date`, `datetime`, etc. properties are rendered using [dayjs]() in `D MMM YY` format.
+- `color` properties are rendered with a small square color swatch next to their color value.
+- `array` properties are rendered as [`<Tag>`]()s.
+- `boolean` properties are rendered as either "Yes" or "No".
+- `number` properties that have a `money` or `compactNumber` format are rendered as compact numbers. A '$' symbol is also added for properties that have the `money` format.
+- Everything else is rendered as plain text.
+
 #### Details Component
 
 {/* TODO: fix card and tabs link */}
-The `<*Details>` component is primarily responsible for laying out the components on a [details page](#generated-entity-pages). It first presents a [Card](https://antd.design/components/card) with the record's name and image (if one exists) in the title, along with an edit button that opens an [Upsert Modal](#upsert-modal-component). The card's body renders a [Data Component](#data-component) to present all direct data for the record.
+The `<*Details>` component is primarily responsible for laying out the components on a [details page](#generated-entity-pages).
 
-If the Entity defines any Child Entities, a list of [Tabs]() are presented below the main details card to show all related records. These related records are presented as either a [Table](#table-component) or [Card List](#card-list-component).
+It first presents a [Card](https://antd.design/components/card) with a title that shows the record's name (rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity), followed by an edit button that opens an [Upsert Modal](#upsert-modal-component). The card's body renders a [Data Component](#data-component) to present all direct data for the record.
 
-:::tip[Did you know?]
-You can set the [listView](../spec/app-definition#uilistview) setting on an Entity to change the list presentation of records. This setting affects how they're presented on the list page, as well as the details pages if it's related to a parent record.
-
-```yaml
-// .codegenie/entities/Widget.yaml
-x-codeGenie
-  ui:
-    listView: CARD_LIST
-```
-
-It's recommended to use `CARD_LIST` when:
-
-- There are likely to be few (\<= 12) records on the page
-- Users likely won't want to compare values between records (vertical scanning of columns) or sort/filter.
-:::
+If the Entity defines any Child Entities, a list of [Tabs]() are presented below the main details card for each related Entity. Related records are presented as either a [Table](#table-component) or [Card List](#card-list-component).
 
 #### Card List Component
 
-The `<*CardList>` component
+The `<*CardList>` component fetches a list of records and presents them in a responsive grid (between 1 and 3 columns depending on screen size).
 
-The Card List component forces the data into a single column layout, since the cards are already in a column layout.
+The Card Title renders the record's name (rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity) and links to the [Details Page](#details-page) for the record (unless the Entity is marked with `buildDetailsPage: false`). The title also includes an Edit button (that open an [Upsert Modal](#upsert-modal-component)) and a Delete button (that opens a [Delete Modal](#delete-modal-component)).
+
+The Card's body renders a [Data Component](#data-component) for the record and forces it to render as a single column layout, since the cards are already in a responsive column layout.
+
+A loading indicator is shown while the data is initially being loaded, and an empty state is shown if there are no records.
+
+See [Ant Design Card Component]() for more details.
 
 #### Table Component
 
-The `<*Table>` component
+The `<*Table>` component fetches a list of records and renders a table with columns for each of the properties defined on the Entity.
+
+The property marked as `nameProperty` is positioned as the first column and is rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity. It links to the [Details Page](#details-page) for the record unless the Entity is marked with `buildDetailsPage: false`.
+
+Other columns render values based on their property type and other metadata. See [Data Component](#data-component) for more details.
+
+The final column in each row render Edit and Delete buttons that open an [Upsert Modal](#upsert-modal-component) and [Delete Modal](#delete-modal-component).
+
+Nested Tables
+
+Pagination
+
+A loading indicator is shown while the data is initially being loaded, and an empty state is shown if there are no records.
+
+See [Ant Design Table Component]() for more details.
 
 #### Upsert Modal Component
 

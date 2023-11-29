@@ -1,0 +1,100 @@
+---
+title: Pages
+description: A walkthrough of the frontend pages
+---
+
+import FileTree from '../../../../../components/file-tree.astro'
+
+Pages are defined using the [Next.js file-system based router](https://nextjs.org/docs/pages/building-your-application/routing). They're lightweight React Components that defer most of their functionality to other Components such as Table, CardList, and Form. Pages themselves are primarily responsible for:
+
+- Fetching data
+- Setting the page title
+- Rendering breadcrumbs
+- Rendering high-level page layout (positioning of other components)
+
+## Standard Pages
+
+Code Genie projects come with a core set of standard pages required for setup, layout, auth, and more.
+
+<FileTree>
+- pages
+  - _app.tsx
+  - _document.tsx
+  - 404.tsx
+  - account.tsx
+  - forgot-password.tsx
+  - index.tsx login
+  - register.tsx
+  - reset-password.tsx
+  - verify-account.tsx
+</FileTree>
+
+`_app.tsx` is the main entry point of your application. It renders the `AppWrapper` component which is responsible for initializing several core libraries and the global layout. See the `AppWrapper` component detailed in [Standard Components](#standard-components) below and the [Next.js Custom App guide](https://nextjs.org/docs/pages/building-your-application/routing/custom-app) for more information.
+
+`_document.tsx` allows you to customize the outter document such as `<html>`, `<head>`, and `<body>` sections. Read [Next.js Custom Document](https://nextjs.org/docs/pages/building-your-application/routing/custom-document) for more details.
+
+`404.tsx` is used to create a custom 404 page. See [Next.js Custom Errors](https://nextjs.org/docs/pages/building-your-application/routing/custom-error) for more information on customizing 404 and 500 pages.
+
+`account.tsx` renders an Account page that lets you edit account details such as username and avatar.
+
+Other standard pages include authentication flows such as login, register, forgot password, reset password, and verify account.
+
+## Generated Entity Pages
+
+<FileTree>
+- pages
+  - widgets list page
+    - [widgetId] details page
+      - relatedWidgets
+        - [relatedWidgetId] related details page
+            - index.tsx
+      - index.tsx
+    - index.tsx
+</FileTree>
+
+:::note
+Throughout the documentation, we use `Widget` and `RelatedWidget` as the names of our example Entities.
+:::
+
+{/* TODO: talk about how top level entities exist at the top level in /pages and that child entities are nested accordingly */}
+Pages are generated for each Entity defined in your [App Definition](../spec/app-definition). Entites marked as `isTopLevelEntity` receieve root-level routes (and appear in the [Side Nav](#standard-components)), while other pages exist under their parent entities as nested routes.
+
+### List Page
+
+List Pages are generated for root Entities only and list all of the records for the Entity. The list of records can be presented as either a [Table](#table-component) or a [Card List](#card-list).
+
+In our example, a List Page for the `Widget` Entity is generated at the `/widgets` route, however, one isn't generated for the `RelatedWidget` since records are listed on the [Details Page](#details-page) of their parent record.
+
+:::tip[Did you know?]
+You can set the [listView](../spec/app-definition#uilistview) setting on an Entity to change the list presentation of records. This setting affects how they're presented on the list page for root entities, or the details page of the parent record for nested entities.
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie
+  ui:
+    listView: CARD_LIST
+```
+
+It's recommended to use `CARD_LIST` when:
+
+- There are likely to be few (\<= 12) records on the page
+- Users likely won't want to compare values between records (vertical scanning of columns) or sort/filter.
+:::
+
+### Details Page
+
+Details Pages present information for a **single** record, including direct record properties, as well as related entities/records.
+
+In our example, a Details Page for the `Widget` Entity is generated at the `/widgets/[widgetId]` route, and another Details Page for the `RelatedWidget` Entity is generated at the `/widgets/[widgetId]/related-widget/[relatedWidgetId]` route. See [Next.js dynamic routes](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes) for more details.
+
+:::tip[Did you know?]
+You can choose to not generate the details page by marking the Entity with:
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie
+  buildDetailsPage: false
+```
+
+It's recommended you do this for entities that are "simple"; i.e. entities that have few properties and no child relationships.
+:::

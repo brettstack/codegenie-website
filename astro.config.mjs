@@ -78,50 +78,68 @@ export default defineConfig({
           label: 'Overview',
           link: '/docs/project-walkthrough/overview'
         }, {
-          label: 'Frontend (UI)',
-          link: '/docs/project-walkthrough/frontend-ui'
+          label: 'Frontend',
+          items: [{
+            label: 'Overview',
+            link: '/docs/project-walkthrough/frontend/overview'
+          }, {
+            label: 'Pages',
+            link: '/docs/project-walkthrough/frontend/pages'
+          }, {
+            label: 'Components',
+            link: '/docs/project-walkthrough/frontend/components'
+          }, {
+            label: 'Branding/Themes',
+            link: '/docs/project-walkthrough/frontend/branding-themes'
+          }, {
+            label: 'Miscellaneous',
+            link: '/docs/project-walkthrough/frontend/miscellaneous'
+          }]
         }, {
-          label: 'Backend (API)',
-          link: '/docs/project-walkthrough/backend-api',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
-        }, {
-          label: 'Database',
-          link: '/docs/project-walkthrough/database',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
-        }, {
-          label: 'Auth/Identity',
-          link: '/docs/project-walkthrough/auth-identity',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
-        }, {
-          label: 'Cloud Infrastructure (IAC)',
-          link: '/docs/project-walkthrough/cloud-infrastructure',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
-        }, {
-          label: 'CI/CD Pipeline',
-          link: '/docs/project-walkthrough/ci-cd-pipeline',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
-        }, {
-          label: 'Miscellaneous',
-          link: '/docs/project-walkthrough/miscellaneous',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
+          label: 'Backend',
+          items: [{
+            label: 'API',
+            link: '/docs/project-walkthrough/backend/api',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
+          }, {
+            label: 'Database',
+            link: '/docs/project-walkthrough/backend/database',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
+          }, {
+            label: 'Auth/Identity',
+            link: '/docs/project-walkthrough/backend/auth-identity',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
+          }, {
+            label: 'Cloud Infrastructure (IAC)',
+            link: '/docs/project-walkthrough/backend/cloud-infrastructure',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
+          }, {
+            label: 'CI/CD Pipeline',
+            link: '/docs/project-walkthrough/backend/ci-cd-pipeline',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
+          }, {
+            label: 'Miscellaneous',
+            link: '/docs/project-walkthrough/miscellaneous',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
+          }]
         }]
       },
       {

@@ -1,0 +1,133 @@
+---
+title: Components
+description: A walkthrough of the frontend components
+---
+
+import FileTree from '../../../../../components/file-tree.astro'
+
+## Standard Components
+
+<FileTree>
+- components
+  - Me
+    - MeData.tsx
+    - MeDetails.tsx
+    - meHooks.tsx
+    - MeUpsertModal.tsx
+  - User
+    - UserData.tsx
+    - UserDeleteModal.tsx
+    - UserDetails.tsx
+    - UserUpsertModal.tsx
+    - UsersTable.tsx
+    - userHooks.ts
+  - layouts
+    - SideMenu.tsx
+    - UnauthenticatedLayout.tsx
+  - AppWrapper.tsx
+  - AvatarNameLink.tsx
+</FileTree>
+
+### Me Components
+Components and hooks for the current signed-in user. See [Generated Entity Components](#generated-entity-components) for further details on the individual components.
+
+### User Components
+Components and hooks for other registered users. See [Generated Entity Components](#generated-entity-components) for further details on the individual components.
+
+### Side Menu Component
+The `<SideMenu>` component renders navigation links for the top-level pages of the application.
+
+### Unauthenticated Layout Component
+The `<UnauthenticatedLayout>` component is a layout wrapper component that includes styles for unauthenticated pages such as login, register, forgot password, etc.
+
+### App Wrapper Component
+The `<AppWrapper>` component is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. This component is rendered by the main app entry point `pages/_app.tsx`.
+
+### Avatar Name Link Component
+The `<AvatarNameLink>` component renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
+
+## Generated Entity Components
+
+<FileTree>
+- components
+  - Widget
+    - WidgetsCardList.tsx
+    - WidgetData.tsx
+    - WidgetDeleteModal.tsx
+    - WidgetDetails.tsx
+    - WidgetsTable.tsx
+    - WidgetUpsertModal.tsx
+    - widgetHooks.ts
+</FileTree>
+
+### Data Component
+
+The `<*Data>` component renders a readonly view of a record in a column layout. The number of columns depends on the screen size, starting at 1 column for small devices (phones) and increasing to 3 columns on large devices (landscape tablets, laptops+). This component is used by the [Details Component](#details-component) and [Card List Component](#card-list-component).
+
+Each property value renders differently based on its type:
+
+- `nameProperty` properties are rendered as an [`<AvatarNameLink>`](#avatar-name-link-component) (only when an `imageProperty` is also defined on the Entity).
+- `foreignKey` properties are rendered as links to the foreigh record. If the Foreign Entity also defines an `imageProperty`, it's rendered as an [`<AvatarNameLink>`](#avatar-name-link-component).
+- `date`, `datetime`, etc. properties are rendered using [dayjs](https://day.js.org/) in `D MMM YY` format (e.g. 1 Jan 24).
+- `color` properties are rendered with a small square color swatch next to their color value.
+- `array` properties are rendered as [`<Tag>`](https://ant.design/components/Tag)s.
+- `boolean` properties are rendered as either "Yes" or "No".
+- `number` properties that have a `money` or `compactNumber` format are rendered as compact numbers. A '$' symbol is also added for properties that have the `money` format.
+- Everything else is rendered as plain text.
+
+### Details Component
+
+The `<*Details>` component is primarily responsible for laying out the components on a [details page](#generated-entity-pages).
+
+It first presents a [Card](https://ant.design/components/Card) with a title that shows the record's name (rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity), followed by an edit button that opens an [Upsert Modal](#upsert-modal-component). The card's body renders a [Data Component](#data-component) to present all direct data for the record.
+
+If the Entity defines any Child Entities, a list of [Tabs](https://ant.design/components/Tabs) are presented below the main details card for each related Entity. Related records are presented as either a [Table](#table-component) or [Card List](#card-list-component).
+
+### Card List Component
+
+The `<*CardList>` component fetches a list of records and presents them in a responsive grid (between 1 and 3 columns depending on screen size).
+
+The Card Title renders the record's name (rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity) and links to the [Details Page](#details-page) for the record (unless the Entity is marked with `buildDetailsPage: false`). The title also includes an Edit button (that open an [Upsert Modal](#upsert-modal-component)) and a Delete button (that opens a [Delete Modal](#delete-modal-component)).
+
+The Card's body renders a [Data Component](#data-component) for the record and forces it to render as a single column layout, since the cards are already in a responsive column layout.
+
+A loading indicator is shown while the data is initially being loaded, and an empty state is shown if there are no records.
+
+See [Ant Design Card](https://ant.design/components/card) for more details.
+
+### Table Component
+
+The `<*Table>` component fetches a list of records and renders an [Ant Design Table](https://ant.design/components/table) with columns for each of the properties defined on the Entity.
+
+The property marked as `nameProperty` is positioned as the first column and is rendered as an [`AvatarNameLink`](#avatar-name-link-component) if an `imageProperty` is defined on the Entity. It links to the [Details Page](#details-page) for the record unless the Entity is marked with `buildDetailsPage: false`.
+
+Other columns render values based on their property type and other metadata. See [Data Component](#data-component) for more details.
+
+The final column in each row renders Edit and Delete buttons that open an [Upsert Modal](#upsert-modal-component) and [Delete Modal](#delete-modal-component).
+
+A loading indicator is shown while the data is initially being loaded, and an empty state is shown if there are no records.
+
+Tables also support pagination with page caching, and nested tables for referencing child records.
+
+```yaml
+// .codegenie/entities/Widget.yaml
+x-codeGenie:
+  hasMany:
+    RelatedWidget:
+      $ref: ./related-widget.yaml
+  ui:
+    table:
+      nested: RelatedWidget
+```
+
+### Upsert Modal Component
+
+The `<*UpsertModal>` component
+
+### Delete Modal Component
+
+The `<*DeleteModal>` component
+
+### Hooks
+
+The `*Hooks` file

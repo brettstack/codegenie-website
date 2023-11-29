@@ -39,7 +39,7 @@ export const FeaturesDiagonal = ({ children }) => {
               Provide Code Genie with your application's data model, and it will
               generate application source code to meet your requirements. Don't
               have a data model? Simply tell Code Genie your "wish" (app
-              idea/description) and it'll do its best to desgin an initial data
+              idea/description) and it'll do its best to design an initial data
               model for you!
             </p>
             <div

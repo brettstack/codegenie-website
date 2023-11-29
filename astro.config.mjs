@@ -93,7 +93,11 @@ export default defineConfig({
             link: '/docs/project-walkthrough/frontend/branding-themes'
           }, {
             label: 'Miscellaneous',
-            link: '/docs/project-walkthrough/frontend/miscellaneous'
+            link: '/docs/project-walkthrough/frontend/miscellaneous',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
           }]
         }, {
           label: 'Backend',

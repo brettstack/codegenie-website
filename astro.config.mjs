@@ -34,7 +34,6 @@ export default defineConfig({
       },
       social: {
         github: 'https://github.com/CodeGenieApp',
-        slack: 'https://join.slack.com/t/code-genie-workspace/shared_invite/zt-275f7ud06-r3MZaDVYaIi4DXe6f_ahMQ',
         email: 'mailto:support@codegenie.codes',
         twitter: 'https://twitter.com/AWSbrett'
       },

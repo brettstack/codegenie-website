@@ -1,0 +1,40 @@
+---
+title: Hooks
+description: A walkthrough of the frontend hooks
+---
+
+import FileTree from '../../../../../components/file-tree.astro'
+
+<FileTree>
+- components
+  - Widget
+    - widgetHooks.ts
+- lib
+  - usePages.ts
+</FileTree>
+
+## Standard Hooks
+
+A standard hook is provided to assist with [Table](./components#table) pagination.
+
+## Generated Entity Hooks
+
+:::note
+The `*Hooks` file isn't technically a component, but it's co-located within the `./components` directory since it's primarily used by the related Entity components.
+:::
+
+Hooks are provided for querying the underlying REST API.
+
+### `useList*Query`
+
+Calls the [List API]()
+
+### `useSearch*Query`
+
+### `useGet*Query`
+
+### `useCreate*Mutation`
+
+### `useUpdate*Mutation`
+
+### `useDelete*Mutation`

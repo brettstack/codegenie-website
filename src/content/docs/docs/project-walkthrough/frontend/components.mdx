@@ -18,12 +18,6 @@ All Code Genie projects come with a core set of standard components required for
   - AvatarNameLink.tsx
 </FileTree>
 
-{/* ### `<Me>`
-Components and hooks for the current signed-in user. See [Generated Entity Components](#generated-entity-components) for further details on the individual components.
-
-### `<User>`
-Components and hooks for other registered users. See [Generated Entity Components](#generated-entity-components) for further details on the individual components. */}
-
 ### `<SideMenu>`
 The `<SideMenu>` component renders navigation links for the top-level pages of the application.
 
@@ -38,7 +32,7 @@ The `<AvatarNameLink>` component renders an image + name pair. If no image exist
 
 ## Generated Entity Components
 
-Components are generated for each Entity defined in your [App Definition](#../../spec/app-definition), along with standard entities such as `User` and `Me`.
+Components are generated for each Entity defined in your [App Definition](#../../spec/app-definition), along with standard entities such as `Me` and `User` that provide functionality for the currently signed-in user and other users in the system.
 
 <FileTree>
 - components
@@ -49,7 +43,6 @@ Components are generated for each Entity defined in your [App Definition](#../..
     - WidgetDetails.tsx
     - WidgetsTable.tsx
     - WidgetUpsertModal.tsx
-    - widgetHooks.ts
 </FileTree>
 
 ### `<*Data>`
@@ -85,11 +78,11 @@ The Card's body renders a [`<*Data>`](#data) for the record and forces it to ren
 
 A loading indicator is shown while the data is initially being loaded, and an empty state is shown if there are no records.
 
-See [Ant Design Card](https://ant.design/components/card) for more details.
+See [Ant Card](https://ant.design/components/card) for more details.
 
 ### `<*Table>`
 
-The `<*Table>` component fetches a list of records and renders an [Ant Design Table](https://ant.design/components/table) with columns for each of the properties defined on the Entity.
+The `<*Table>` component fetches a list of records and renders an [Ant Table](https://ant.design/components/table) with columns for each of the properties defined on the Entity.
 
 The property marked as `nameProperty` is positioned as the first column and is rendered as an [`AvatarNameLink`](#avatarnamelink) if an `imageProperty` is defined on the Entity. It links to the [Details Page](#details-page) for the record unless the Entity is marked with `buildDetailsPage: false`.
 
@@ -114,18 +107,26 @@ x-codeGenie:
 
 ### `<*UpsertModal>`
 
-The `<*UpsertModal>` component functions as both a Create and Edit modal for a record. The modal renders a form that includes fields for all properties defined on the Entity (except for those marked as `isReadOnly`).
+The `<*UpsertModal>` component functions as both a Create and Edit modal for a record. The modal renders an [Ant Form](https://ant.design/components/form) that includes fields for all properties defined on the Entity (except for those marked as `isReadOnly`).
 
 Each property renders its form field differently based on its type:
 
-- `nameProperty` properties are rendered as an [`<AvatarNameLink>`](#avatarnamelink) (only when an `imageProperty` is also defined on the Entity).
-- `foreignKey` properties are rendered as links to the foreigh record. If the Foreign Entity also defines an `imageProperty`, it's rendered as an [`<AvatarNameLink>`](#avatarnamelink).
-- `date`, `datetime`, etc. properties are rendered using [dayjs](https://day.js.org/) in `D MMM YY` format (e.g. 1 Jan 24).
-- `color` properties are rendered with a small square color swatch next to their color value.
-- `array` properties are rendered as [`<Tag>`](https://ant.design/components/Tag)s.
-- `boolean` properties are rendered as either "Yes" or "No".
-- `number` properties that have a `money` or `compactNumber` format are rendered as compact numbers. A '$' symbol is also added for properties that have the `money` format.
-- Everything else is rendered as plain text.
+- `foreignKey` properties are rendered as a searchable [Select](https://ant.design/components/select) with a list of records of the defined Entity (`foreignKey.referencedEntity`). If the Foreign Entity defines an `imageProperty`, the select options are rendered as an [`<AvatarNameLink>`](#avatarnamelink). As you type, queries are made to the [Search API]() via the [useSearch*Query hook](./hooks#usesearch-query) and are debounced and cached.
+- `contentMediaType` properties are rendered as an [Upload](https://ant.design/components/select) component and are stored as base64 encoded images. A 64kb limit is imposed due to being stored in DynamoDB. Improved image support is coming soon.
+- `enum` properties are rendered as a [Select](https://ant.design/components/select) component.
+- `date-time` and `utc-millisec` properties are renderd as a [DatePicker](https://ant.design/components/datepicker) component with the `showTime` property.
+- `date` properties are renderd as a [DatePicker](https://ant.design/components/datepicker) component.
+- `time` properties are renderd as a [TimePicker](https://ant.design/components/timepicker) component.
+- `color` properties are renderd as a [ColorPicker](https://ant.design/components/colorpicker) component.
+- `number` and `integer` properties are renderd as an [InputNumber](https://ant.design/components/inputnumber) component. The stepper on `integer` properties is set to increase/decrease by `1` only and doesn't allow decimals. You can optionally specify `min` and `max` values.
+- `boolean` properties are renderd as a [Switch](https://ant.design/components/switch) component.
+- `array` properties are renderd as a [Select](https://ant.design/components/select) component with `mode='tags'` to allow multiple values.
+- `email` properties are renderd as an [`<Input type='email' />`](https://ant.design/components/input#email) component.
+- `password` properties are renderd as an [`<Input.Password />`](https://ant.design/components/inputpassword) component.
+- `textarea` properties are renderd as an [`<Input.TextArea />`](https://ant.design/components/inputtextarea) component.
+- Everything else is rendered as an [Input](https://ant.design/components/input) component.
+
+You can also define other properties such as `disabled`, `pattern`, `maxLength` and more. See the [App Definition Spec](../spec/app-definition) for more details.
 
 :::tip[Did you know?]
 "Upsert" originates from database terminology and means to "update or insert". That is, if the record already exists it will perform an update/edit, otherwise it will perform an insert/create.
@@ -135,6 +136,5 @@ Each property renders its form field differently based on its type:
 
 The `<*DeleteModal>` component is used to get user confirmation when they try to perform a delete operation on a record.
 
-### `*Hooks`
+When the user clicks the delete button to confirm the deletion, a `DELETE` request to the [Delete API]() is made via the [useDelete*Mutation hook](./hooks#usedelete-mutation).
 
-The `*Hooks` file isn't technically a component, but exists within this directory since it's primarily used by the related components.

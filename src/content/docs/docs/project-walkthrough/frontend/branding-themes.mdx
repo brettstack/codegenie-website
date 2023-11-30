@@ -6,6 +6,23 @@ description: A walkthrough of the branding and theming option
 import FileTree from '../../../../../components/file-tree.astro'
 
 <FileTree>
+- public
+  - icons
+    - android-chrome-144x144.png
+    - ... additional sizes
+    - apple-touch-icon-1024x1024.png
+    - ... additional sizes
+    - browserconfig.xml
+    - favicon.ico
+    - ... additional sizes
+    - index.html
+    - manifest.webmanifest
+    - mstile-144x144.png
+    - ... additional sizes
+    - yandex-browser-50x50.png
+    - yandex-browser-manifest.json
+  - favicon.ico
+  - logo.png
 - themes
   - base.ts
   - dark.ts
@@ -15,6 +32,21 @@ import FileTree from '../../../../../components/file-tree.astro'
   - themes.ts
 </FileTree>
 
-You can specify a logo and a primary brand color in your App Definition, and Code Genie will incorporate those into your generated project. See [theme.yaml](../spec/app-definition#themeyaml) and [logo.png](../spec/app-definition#logopng) in the App Definition spec for more details.
+You can specify a logo and a primary brand color in your App Definition, and Code Genie will incorporate those into your generated project.
 
-Your project includes Dark and Light themes. You can customize themes further to match your branding by modifying the design tokens in `./packages/ui/themes/base.ts`. See [Ant Design's Customize Theme Guide](https://ant.design/docs/react/customize-theme) for more information.
+## Theme
+
+Your project includes Dark and Light themes, and you can customize themes further to match your branding by modifying the design tokens in `./packages/ui/themes/base.ts`. See [Ant Design's Customize Theme Guide](https://ant.design/docs/react/customize-theme) for more information.
+
+See [theme.yaml](../spec/app-definition#themeyaml) in the App Definition spec for more details.
+
+## Icons
+
+Code Genie generates icons of various sizes and formats for you to use in different environments, including icons for:
+
+- Browser favicon
+- Android
+- Iphone
+- Windows
+
+See [logo.png](../spec/app-definition#logopng) in the App Definition spec for more details.

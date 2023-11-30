@@ -26,8 +26,8 @@ export default defineConfig({
       },
     }),
     starlight({
-      title: 'Code Genie Docs',
-      description: 'Code Genie Documentation',
+      title: 'Code Genie Documentation',
+      description: 'Code Genie docs',
       favicon: '/favicon.ico',
       logo: {
         src: './src/assets/images/code-genie-logo.webp'
@@ -88,15 +88,11 @@ export default defineConfig({
             label: 'Components',
             link: '/docs/project-walkthrough/frontend/components'
           }, {
+            label: 'Hooks',
+            link: '/docs/project-walkthrough/frontend/hooks'
+          }, {
             label: 'Branding/Themes',
             link: '/docs/project-walkthrough/frontend/branding-themes'
-          }, {
-            label: 'Miscellaneous',
-            link: '/docs/project-walkthrough/frontend/miscellaneous',
-            badge: {
-              variant: 'tip',
-              text: 'WIP'
-            }
           }]
         }, {
           label: 'Backend',

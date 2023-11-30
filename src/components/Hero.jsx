@@ -5,7 +5,7 @@ import { InvitationModal } from './InvitationModal'
 // import generatedAppScreenshot from '../assets/images/generated-app-screenshot.webp'
 // import generatedAppScreenshot from '../assets/images/generated-app-screenshot-dark.webp'
 import codeGenieIntroVideo from '../assets/videos/code-genie-intro.mp4'
-import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.png'
+import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.jpg'
 
 export const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)

@@ -97,6 +97,13 @@ export default defineConfig({
         }, {
           label: 'Backend',
           items: [{
+            label: 'Overview',
+            link: '/docs/project-walkthrough/backend/overview',
+            badge: {
+              variant: 'tip',
+              text: 'WIP'
+            }
+          }, {
             label: 'API',
             link: '/docs/project-walkthrough/backend/api',
             badge: {

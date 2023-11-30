@@ -15,7 +15,37 @@ import FileTree from '../../../../../components/file-tree.astro'
 
 ## Standard Hooks
 
-A standard hook is provided to assist with [Table](./components#table) pagination.
+### usePages
+
+Assists with [Table](./components#table) pagination.
+
+```js
+// usePages.ts
+usePages({
+  items,
+  lastEvaluatedKey,
+  currentPageIndex,
+  pageSize = DEFAULT_PAGE_SIZE,
+})
+```
+
+### meHooks
+
+Handles user auth and other queries related to the current user.
+
+```js
+// components/Me/meHooks.ts
+export function useCurrentUserQuery({ redirectOnNotAuth = true } = {}) { ... }
+export function useSignInMutation() { ... }
+export function useSignUpMutation() { ... }
+export function useSignOutMutation({ includeEmailQueryStringParam = false } = {}) { ... }
+export function useMeQuery({ isAuthenticated = true } = {}) { ... }
+export function useUpdateMeMutation() { ... }
+export function useForgotPasswordMutation() { ... }
+export function useResetPasswordMutation() { ... }
+export function useVerifyAccountMutation() { ... }
+
+```
 
 ## Generated Entity Hooks
 

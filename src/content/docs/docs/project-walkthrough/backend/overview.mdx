@@ -6,5 +6,70 @@ description: An overview of the backend
 import FileTree from '../../../../../components/file-tree.astro'
 
 <FileTree>
-- ...
+- .github
+  - workflows
+      - delete-artifacts.yaml
+      - delete-stack-on-pr-close.yaml
+      - on-pr.yaml
+      - on-push-to-main.yaml
+      - on-release-published.yaml
+- packages
+  - api
+    - routes
+      - apps.ts
+      - me.ts
+      - my-entities.ts 1 route per entity
+    - README.md
+    - app.local.ts
+    - app.ts
+    - constants.ts
+    - jest.config.js
+    - lambda.test.ts
+    - lambda.ts
+    - package-lock.json
+    - package.json
+    - try-parse-req.ts
+    - tsconfig.json
+    - types.d.ts
+  - cdk
+    - bin
+      - cdk.ts
+      - copy-outputs-to-dotenv.ts
+      - pull-stack-outputs.ts
+    - lib
+      - constructs
+        - tables
+          - WidgetTable.ts 1 table per entity
+          - UserTable.ts
+        - Auth.ts
+        - BaseTable.ts
+        - ExpressApi.ts
+        - WebApp.ts
+      - cdk-stack.ts
+      - environment-config.ts
+      - get-output-by-prefix.ts
+    - test
+      - cdk.test.ts
+    - .gitignore
+    - .npmignore
+    - README.md
+    - cdk.context.json
+    - cdk.json
+    - jest.config.js
+    - package-lock.json
+    - package.json
+    - tsconfig.json
+  - controllers
+    - user.ts
+  - models
+    - User.ts
+  - cognito
+    - cognito-post-confirmation.test.ts
+    - cognito-post-confirmation.ts
+    - cognito-pre-signup.test.ts
+    - cognito-pre-signup.ts
+  - controllers
+    - user.ts
+  - models
+    - User.ts
 </FileTree>

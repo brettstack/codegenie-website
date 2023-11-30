@@ -1,45 +1,56 @@
 ---
-import "@fontsource/inter";
-import "@fontsource/inter/500.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/inter/700.css";
-import "@fontsource/inter/800.css";
-import "@fontsource/inter/900.css";
+import '@fontsource/inter'
+import '@fontsource/inter/500.css'
+import '@fontsource/inter/600.css'
+import '@fontsource/inter/700.css'
+import '@fontsource/inter/800.css'
+import '@fontsource/inter/900.css'
 
 export interface Props {
-  title: string;
+  title: string
 }
 
-const { title } = Astro.props;
+const { title } = Astro.props
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
     <meta
       name="description"
-      content="Code Genie saves you months developing new software by providing you with everything you need to kickstart your next project, including UI, API, Auth, Database, and more."
+      content="Full stack source code generator with AWS Serverless, React, Lambda, API Gateway, Cognito Auth, DynamoDB Database, and more."
     />
 
     <title>{title}</title>
     <!-- Calendly link widget begin -->
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+    <link
+      href="https://assets.calendly.com/assets/external/widget.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://assets.calendly.com/assets/external/widget.js"
+      type="text/javascript"
+      async></script>
     <!-- Calendly link widget end -->
-  </head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8DF6WBB8HG"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8DF6WBB8HG"
+    ></script><script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
 
-    gtag('config', 'G-8DF6WBB8HG');
-  </script>
+      gtag('config', 'G-8DF6WBB8HG')
+    </script></head
+  >
+  <!-- Google tag (gtag.js) -->
+
   <body>
     <slot />
     <style is:global>

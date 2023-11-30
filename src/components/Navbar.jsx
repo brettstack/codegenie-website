@@ -48,18 +48,19 @@ export const Navbar = () => {
           transition={{ duration: 0.3 }}
           exit={{ opacity: 0 }}
         >
-          <div className="hidden md:flex h-full pb-2">
+          <ul className="hidden md:flex h-full pb-2">
             {navbarLinks.map(({ href, label, ariaLabel }) => (
-              <a
-                className="unstyled navbar-link"
-                href={href}
-                aria-label={ariaLabel}
-                key={label}
-              >
-                {label}
-              </a>
+              <li key={label}>
+                <a
+                  className="unstyled navbar-link"
+                  href={href}
+                  aria-label={ariaLabel}
+                >
+                  {label}
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </motion.div>
         <motion.div
           initial={{ opacity: 0 }}

@@ -46,6 +46,7 @@ export const Footer = () => {
                   href="https://twitter.com/AWSbrett"
                   target="_blank"
                   rel="noopener"
+                  aria-label="Twitter"
                 >
                   <TwitterIcon />
                 </a>

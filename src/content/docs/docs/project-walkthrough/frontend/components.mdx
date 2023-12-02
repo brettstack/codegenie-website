@@ -25,7 +25,7 @@ The `<SideMenu>` component renders navigation links for the top-level pages of t
 The `<UnauthenticatedLayout>` component is a layout wrapper component that includes styles for unauthenticated pages such as login, register, forgot password, etc.
 
 ### `<AppWrapper>`
-The `<AppWrapper>` component is responsible for initializing Auth, HTTP Client, Theme, React Query, and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. This component is rendered by the main app entry point `pages/_app.tsx`.
+The `<AppWrapper>` component is responsible for initializing Auth, HTTP Client, Theme, TanStack Query (FKA React Query), and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. This component is rendered by the main app entry point `pages/_app.tsx`.
 
 ### `<AvatarNameLink>`
 The `<AvatarNameLink>` component renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
@@ -111,7 +111,7 @@ The `<*UpsertModal>` component functions as both a Create and Edit modal for a r
 
 Each property renders its form field differently based on its type:
 
-- `foreignKey` properties are rendered as a searchable [Select](https://ant.design/components/select) with a list of records of the defined Entity (`foreignKey.referencedEntity`). If the Foreign Entity defines an `imageProperty`, the select options are rendered as an [`<AvatarNameLink>`](#avatarnamelink). As you type, queries are made to the [Search API]() via the [useSearch*Query hook](./hooks#usesearch-query) and are debounced and cached.
+- `foreignKey` properties are rendered as a searchable [Select](https://ant.design/components/select) with a list of records of the defined Entity (`foreignKey.referencedEntity`). If the Foreign Entity defines an `imageProperty`, the select options are rendered as an [`<AvatarNameLink>`](#avatarnamelink). As you type, queries are made to the [List API](../backend#list-api#list-api) via the [useSearch*Query hook](./hooks#usesearch-query) and are debounced and cached.
 - `contentMediaType` properties are rendered as an [Upload](https://ant.design/components/select) component and are stored as base64 encoded images. A 64kb limit is imposed due to being stored in DynamoDB. Improved image support is coming soon.
 - `enum` properties are rendered as a [Select](https://ant.design/components/select) component.
 - `date-time` and `utc-millisec` properties are renderd as a [DatePicker](https://ant.design/components/datepicker) component with the `showTime` property.

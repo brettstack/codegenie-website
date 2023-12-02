@@ -53,28 +53,94 @@ export function useVerifyAccountMutation() { ... }
 The `*Hooks` file isn't technically a component, but it's co-located within the `./components` directory since it's primarily used by the related Entity components.
 :::
 
-Hooks are provided for querying the underlying REST API.
+Hooks are provided for querying the underlying [REST API](../backend/database) to retrieve and update the [database](../backend/database) state. To assist with remote state management, these hooks use TanStack Query [Queries](https://tanstack.com/query/latest/docs/react/guides/queries) and [Mutations](https://tanstack.com/query/latest/docs/react/guides/mutations).
 
 ### `useList*Query`
 
-Calls the [List API]().
+Calls the [List API](../backend/api#list-api) and returns a list records.
+
+```js
+// components/Widget/widgetHooks.ts
+({ lastEvaluatedKey }) => axios.get('/widgets', {
+  params: {
+    lastEvaluatedKey,
+  },
+})
+
+// Related entities
+({ widgetId, lastEvaluatedKey, filter }) => axios.get(`/widgets/${widgetId}/related-widgets`, {
+  params: {
+    lastEvaluatedKey,
+  },
+})
+```
 
 ### `useSearch*Query`
 
-Calls the [Search API]().
+Calls the [List API](../backend/api#list-api) and returns a list of filtered records.
+
+```js
+// components/Widget/widgetHooks.ts
+({ lastEvaluatedKey, filter }) => axios.get('/widgets', {
+  params: {
+    lastEvaluatedKey,
+    filter,
+  },
+})
+
+// Related entities
+({ widgetId, lastEvaluatedKey, filter }) => axios.get(`/widgets/${widgetId}/related-widgets`, {
+  params: {
+    lastEvaluatedKey,
+    filter,
+  },
+})
+```
 
 ### `useGet*Query`
 
-Calls the [Get API]().
+Calls the [Get API](../backend/api#get-api) and returns an indvidual record.
+
+```js
+// components/Widget/widgetHooks.ts
+({ widgetId }) => axios.get(`/widgets/${widgetId}`)
+
+// Related entity
+({ widgetId, relatedWidgetId }) => axios.get(`/widgets/${widgetId}/related-widgets/${relatedWidgetId}`)
+```
 
 ### `useCreate*Mutation`
 
-Calls the [Create API]().
+Calls the [Create API](../backend/api#create-api) and creates a record.
+
+```js
+// components/Widget/widgetHooks.ts
+({ data }) => axios.post('/widgets', { widget: data })
+
+// Related entity
+({ widgetId, data }) => axios.post(`/widgets/${widgetId}/related-widgets`, { relatedWidget: data })
+```
 
 ### `useUpdate*Mutation`
 
-Calls the [Update API]().
+Calls the [Update API](../backend/api#update-api) and updates a record.
+
+```js
+// components/Widget/widgetHooks.ts
+({ widgetId, data }) => axios.put(`/widgets/${widgetId}`, { widget: data })
+
+// Related entity
+({ widgetId, relatedWidgetId, data }) => axios.put(`/widgets/${widgetId}/related-widgets/${relatedWidgetId}`, { relatedWidget: data })
+```
 
 ### `useDelete*Mutation`
 
-Calls the [Delete API]().
+Calls the [Delete API](../backend/api#delete-api) and deletes a record.
+
+```js
+// components/Widget/widgetHooks.ts
+({ widgetId }) => axios.delete(`/widgets/${widgetId}`)
+
+// Related entity
+({ widgetId, relatedWidgetId }) => axios.delete(`/widgets/${widgetId}/related-widgets/${relatedWidgetId}`)
+```

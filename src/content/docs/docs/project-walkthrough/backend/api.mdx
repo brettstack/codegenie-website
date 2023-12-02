@@ -3,7 +3,10 @@ title: REST API
 description: A walkthrough of the REST API
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components'
 import FileTree from '../../../../../components/file-tree.astro'
+
+Code Genie provides a Serverless Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway), utilizing the [@codegenie/serverless-express](https://github.com/brettstack/serverless-express) package.
 
 ## Project Structure
 
@@ -27,3 +30,247 @@ import FileTree from '../../../../../components/file-tree.astro'
     - tsconfig.json
     - types.d.ts
 </FileTree>
+
+## Generated Entity APIs
+
+The REST API includes routes for each Entity defined in your [Application Definition](../app-definition).
+
+```sh title="Example routes"
+# Top-level entities
+/widgets # list
+/widgets/:widgetId # individual
+
+# Child entities
+/widgets/:widgetId/related-widgets # list
+/widgets/:widgetId/related-widgets/:relatedWidgetId # individual
+
+# Grandchild entities
+/related-widgets/:relatedWidgetId/deeply-related-widgets # list
+/related-widgets/:relatedWidgetId/deeply-related-widgets/:deeplyRelatedWidgetId # individual
+
+```
+
+### List API
+
+Returns a list of records by calling the [controller's `list*` method](./database#list). See the [`useList*Query` hook](../frontend/hooks#uselistquery) and [`useSearch*Query` hook](../frontend/hooks#usesearchquery) in the frontend docs for Javascript examples.
+
+<Tabs>
+  <TabItem label="Widget">
+```http title="Request"
+GET /widgets?lastEvaluatedKey=...&filter={}
+```
+
+```json title="Response"
+{
+  "data": [{
+    "widgetId": "a1b2c3",
+    "name": "My Widget"
+    ...
+  }]
+}
+```
+  </TabItem>
+  <TabItem label="Related Widget">
+```http title="Request"
+GET /widgets/:widgetId/related-widgets?lastEvaluatedKey=...&filter={}
+```
+
+```json title="Response"
+{
+  "data": [{
+    "relatedWidgetId": "d4e5f6",
+    "name": "My Related Widget",
+    "widget": {
+      "widgetId": "a1b2c3",
+      "name": "My Widget"
+    },
+    ...
+  }]
+}
+```
+  </TabItem>
+</Tabs>
+
+#### filter
+
+The [List API](#list-api) accepts a `filter` query string parameter that filters the results from the database before returning them to the client.
+
+```json
+{
+  "operator": "AND", // default: 'OR'
+  "filters": [{
+    "property": "name",
+    "value": "search value"
+  }]
+}
+```
+
+{/* :::note
+`filter` is currently only available on top-level entities. Support for all List APIs is coming soon.
+::: */}
+
+#### lastEvaluatedKey
+
+The [List API](#list-api) returns a `lastEvaluatedKey` when there are additional pages of data. Provide this value as a query string parameter in the request to retrieve the next page.
+
+See [DynamoDB Pagination]() for more details.
+
+### Get API
+
+Returns a single record by calling the [controller's `get*` method](./database#get). See the [`useGet*Query` hook](../frontend/hooks#usegetquery) in the frontend docs for Javascript examples.
+
+<Tabs>
+  <TabItem label="Widget">
+```http title="Request"
+GET /widgets/:widgetId
+```
+
+```json title="Response"
+{
+  "data": {
+    "widgetId": "a1b2c3",
+    "name": "My Widget"
+    ...
+  }
+}
+```
+  </TabItem>
+  <TabItem label="Related Widget">
+```http title="Request"
+GET /widgets/:widgetId/related-widgets/:relatedWidgetId
+```
+
+```json title="Response"
+{
+  "data": {
+    "relatedWidgetId": "d4e5f6",
+    "name": "My Related Widget",
+    "widget": {
+      "widgetId": "a1b2c3",
+      "name": "My Widget"
+    },
+    ...
+  }
+}
+```
+  </TabItem>
+</Tabs>
+
+### Create API
+
+Creates a record with a unique id by calling the [controller's `create*` method](./database#create). See the [`useCreate*Mutation` hook](../frontend/hooks#usecreatemutation) in the frontend docs for Javascript examples.
+
+<Tabs>
+  <TabItem label="Widget">
+```http title="Request"
+POST /widgets
+{
+  "widget": {
+    "name": "My Widget"
+  }
+}
+```
+
+```json title="Response"
+{
+  "data": {
+    "widgetId": "a1b2c3",
+    "name": "My Widget"
+    ...
+  }
+}
+```
+  </TabItem>
+  <TabItem label="Related Widget">
+```http title="Request"
+POST /widgets/:widgetId/related-widgets
+{
+  "relatedWidget": {
+    "name": "My Related Widget"
+  }
+}
+```
+
+```json title="Response"
+{
+  "data": {
+    "relatedWidgetId": "d4e5f6",
+    "name": "My Related Widget"
+    ...
+  }
+}
+```
+  </TabItem>
+</Tabs>
+
+### Update API
+
+Updates a record by calling the [controller's `update*` method](./database#update). See the [`useUpdate*Mutation` hook](../frontend/hooks#useupdatemutation) in the frontend docs for Javascript examples.
+
+<Tabs>
+  <TabItem label="Widget">
+```http title="Request"
+PUT /widgets/:widgetId
+{
+  "widget": {
+    "name": "My Widget"
+  }
+}
+```
+
+```json title="Response"
+{
+  "data": {
+    "widgetId": "a1b2c3",
+    "name": "My Widget"
+    ...
+  }
+}
+```
+  </TabItem>
+  <TabItem label="Related Widget">
+```http title="Request"
+PUT /widgets/:widgetId/related-widgets/:relatedWidgetId
+{
+  "relatedWidget": {
+    "name": "My Related Widget"
+  }
+}
+```
+
+```json title="Response"
+{
+  "data": {
+    "relatedWidgetId": "d4e5f6",
+    "name": "My Related Widget"
+    ...
+  }
+}
+```
+  </TabItem>
+</Tabs>
+
+### Delete API
+
+Deletes a record by calling the [controller's `delete*` method](./database#delete). See the [`useDelete*Mutation` hook](../frontend/hooks#usedeletemutation) in the frontend docs for Javascript examples.
+
+<Tabs>
+  <TabItem label="Widget">
+```http title="Request"
+DELETE /widgets/:widgetId
+```
+
+```json title="Response"
+{}
+```
+  </TabItem>
+  <TabItem label="Related Widget">
+```http title="Request"
+DELETE /widgets/:widgetId/related-widgets/:relatedWidgetId
+```
+
+```json title="Response"
+{}
+```
+  </TabItem>
+</Tabs>

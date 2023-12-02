@@ -77,6 +77,13 @@ export default defineConfig({
           label: 'Overview',
           link: '/docs/project-walkthrough/overview'
         }, {
+          label: 'CI/CD Pipeline',
+          link: '/docs/project-walkthrough/backend/ci-cd-pipeline',
+          badge: {
+            variant: 'tip',
+            text: 'WIP'
+          }
+        }, {
           label: 'Frontend',
           items: [{
             label: 'Overview',
@@ -105,11 +112,7 @@ export default defineConfig({
             }
           }, {
             label: 'API',
-            link: '/docs/project-walkthrough/backend/api',
-            badge: {
-              variant: 'tip',
-              text: 'WIP'
-            }
+            link: '/docs/project-walkthrough/backend/api'
           }, {
             label: 'Database',
             link: '/docs/project-walkthrough/backend/database',
@@ -127,13 +130,6 @@ export default defineConfig({
           }, {
             label: 'Cloud Infrastructure (IAC)',
             link: '/docs/project-walkthrough/backend/cloud-infrastructure',
-            badge: {
-              variant: 'tip',
-              text: 'WIP'
-            }
-          }, {
-            label: 'CI/CD Pipeline',
-            link: '/docs/project-walkthrough/backend/ci-cd-pipeline',
             badge: {
               variant: 'tip',
               text: 'WIP'

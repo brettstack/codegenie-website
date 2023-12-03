@@ -30,7 +30,7 @@ The `<AppWrapper>` component is responsible for initializing Auth, HTTP Client, 
 ### `<AvatarNameLink>`
 The `<AvatarNameLink>` component renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
 
-## Generated Entity Components
+## Entity Components
 
 Components are generated for each Entity defined in your [App Definition](#../../spec/app-definition), along with standard entities such as `Me` and `User` that provide functionality for the currently signed-in user and other users in the system.
 
@@ -62,7 +62,7 @@ Each property value renders differently based on its type:
 
 ### `<*Details>`
 
-The `<*Details>` component is primarily responsible for laying out the components on a [details page](#generated-entity-pages).
+The `<*Details>` component is primarily responsible for laying out the components on a [details page](./pages#entity-pages).
 
 It first presents a [Card](https://ant.design/components/Card) with a title that shows the record's name (rendered as an [`AvatarNameLink`](#avatarnamelink) if an `imageProperty` is defined on the Entity), followed by an edit button that opens an [`<*UpsertModal>`](#upsertmodal). The card's body renders a [`<*Data>`](#data) to present all direct data for the record.
 
@@ -72,7 +72,7 @@ If the Entity defines any Child Entities, a list of [Tabs](https://ant.design/co
 
 The `<*CardList>` component fetches a list of records and presents them in a responsive grid (between 1 and 3 columns depending on screen size).
 
-The Card Title renders the record's name (rendered as an [`AvatarNameLink`](#avatarnamelink) if an `imageProperty` is defined on the Entity) and links to the [Details Page](#details-page) for the record (unless the Entity is marked with `buildDetailsPage: false`). The title also includes an Edit button (that open an [`<*UpsertModal>`](#upsertmodal)) and a Delete button (that opens a [`<*DeleteModal>`](#deletemodal)).
+The Card Title renders the record's name (rendered as an [`AvatarNameLink`](#avatarnamelink) if an `imageProperty` is defined on the Entity) and links to the [Details Page](./pages#details-page) for the record (unless the Entity is marked with `buildDetailsPage: false`). The title also includes an Edit button (that open an [`<*UpsertModal>`](#upsertmodal)) and a Delete button (that opens a [`<*DeleteModal>`](#deletemodal)).
 
 The Card's body renders a [`<*Data>`](#data) for the record and forces it to render as a single column layout, since the cards are already in a responsive column layout.
 

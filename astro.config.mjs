@@ -105,21 +105,13 @@ export default defineConfig({
           label: 'Backend',
           items: [{
             label: 'Overview',
-            link: '/docs/project-walkthrough/backend/overview',
-            badge: {
-              variant: 'tip',
-              text: 'WIP'
-            }
+            link: '/docs/project-walkthrough/backend/overview'
           }, {
             label: 'API',
             link: '/docs/project-walkthrough/backend/api'
           }, {
             label: 'Database',
-            link: '/docs/project-walkthrough/backend/database',
-            badge: {
-              variant: 'tip',
-              text: 'WIP'
-            }
+            link: '/docs/project-walkthrough/backend/database'
           }, {
             label: 'Auth/Identity',
             link: '/docs/project-walkthrough/backend/auth-identity',

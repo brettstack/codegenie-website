@@ -7,16 +7,14 @@ import FileTree from '../../../../../components/file-tree.astro'
 
 Currently only email registration is supported out-of-the-box, with SSO (social signin and SAML) support coming soon. For now, developers can implement SSO themselves by following the [Adding social identity providers to a user pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html) AWS guide.
 
+:::note
+The User Pool only stores user information required for authentication. All other user data should be stored in the `User` [DynamoDB Table](./database).
+:::
+
 ## Project Structure
 
 <FileTree>
 - packages
-  - cdk
-    - lib
-      - constructs
-        - tables
-          - UserTable.ts
-        - Auth.ts
   - cognito
     - cognito-post-confirmation.test.ts
     - cognito-post-confirmation.ts
@@ -26,4 +24,10 @@ Currently only email registration is supported out-of-the-box, with SSO (social 
     - user.ts
   - models
     - User.ts
+  - cdk # see the [Cloud Infrastructure](./cloud-infrastructure#auth) guide for more details
+    - lib
+      - constructs
+        - tables
+          - UserTable.ts
+        - Auth.ts
 </FileTree>

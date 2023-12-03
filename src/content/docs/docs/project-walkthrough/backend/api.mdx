@@ -8,6 +8,18 @@ import FileTree from '../../../../../components/file-tree.astro'
 
 Code Genie provides a Serverless Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway), utilizing the [@codegenie/serverless-express](https://github.com/brettstack/serverless-express) package.
 
+The API Gateway API is configured with an Authorizer attached to the Cognito User Pool to ensure only authenticated users have access.
+
+## Auth/Identity handler
+
+Before running any of the core route logic, an Express handler takes the `userId` and `email` from `event.requestContext.authorizer.jwt` (provided by API Gateway) and stores them in `req.cognitoUser`. This allows the route logic to easily access key information about the caller.
+
+:::caution[Token validation bypassed during local development]
+When running locally, the Express API runs on localhost and doesn't go through API Gateway, resulting in `event.requestContext.authorizer` being undefined. The handler detects this, parses the JWT token, and stores it in `event.requestContext.authorizer.jwt.claims`.
+
+Note that in this scenario, the token isn't validated since this is a task performed by API Gateway. Instead, the `claims` are set to whatever is defined in the JWT token by the client (which could be anything). Ensure that this special case is never run in production. For improved security (and at the cost of performance), consider validating the token against the Cognito User Pool within this handler.
+:::
+
 ## Project Structure
 
 <FileTree>
@@ -29,9 +41,13 @@ Code Genie provides a Serverless Express REST API hosted on [AWS Lambda](https:/
     - try-parse-req.ts
     - tsconfig.json
     - types.d.ts
+  - cdk # see the [Cloud Infrastructure](./cloud-infrastructure#api) guide for more details
+    - lib
+      - constructs
+        - ExpressApi.ts
 </FileTree>
 
-## Generated Entity APIs
+## Entity API Routes
 
 The REST API includes routes for each Entity defined in your [Application Definition](../app-definition).
 

@@ -5,14 +5,32 @@ description: An overview of the backend
 
 import FileTree from '../../../../../components/file-tree.astro'
 
+Code Genie backends are comprised of the following key services:
+
+1. A Serverless Express REST API hosted on [AWS Lambda](https://aws.amazon.com/lambda) and [API Gateway](https://aws.amazon.com/api-gateway).
+1. An infinitely scalable Serverless Database using [AWS DynamoDB](https://aws.amazon.com/dynamodb).
+1. User identity/authentication via [AWS Cognito User Pool](https://aws.amazon.com/cognito).
+
+This guide covers everything you need to know to build, deploy, and extend your application's backend.
+
+## Core Technology
+
+The backend utilizes the following core services, libraries, and frameworks:
+
+- [Express]() &ndash; The most popular API Framework in Node.js.
+- [AWS Lambda](https://aws.amazon.com/lambda) &ndash; Serverless compute for running the Express REST API.
+- [AWS API Gateway](https://aws.amazon.com/api-gateway) &ndash; Provides HTTPS access to Lambda and ensures requests are authenticated with a valid access token from Cognito.
+- [AWS Cognito User Pool](https://aws.amazon.com/cognito) &ndash; Handles user identity/authentication.
+- [AWS DynamoDB](https://aws.amazon.com/dynamodb) &ndash; Infinitely scalable database.
+- [AWS SES](https://aws.amazon.com/ses) &ndash; Sends transactional emails, such as those needed by auth flows (register, verify, forgot password, etc.).
+- [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html) &ndash; Infrastructure as Code for all of the AWS services used.
+- [Serverless Express](https://github.com/brettstack/serverless-express) &ndash; Enables Express to run on Serverless services (API Gateay and Lambda).
+- [DynamoDB Toolbox](https://github.com/jeremydaly/dynamodb-toolbox) &ndash; Simplifies querying and updating DynamoDB.
+- [Winston]() &ndash; Advanced logging including structured logging, log levels, and more.
+
+## Project Structure
+
 <FileTree>
-- .github
-  - workflows
-      - delete-artifacts.yaml
-      - delete-stack-on-pr-close.yaml
-      - on-pr.yaml
-      - on-push-to-main.yaml
-      - on-release-published.yaml
 - packages
   - api
     - routes

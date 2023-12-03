@@ -78,11 +78,7 @@ export default defineConfig({
           link: '/docs/project-walkthrough/overview'
         }, {
           label: 'CI/CD Pipeline',
-          link: '/docs/project-walkthrough/backend/ci-cd-pipeline',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
+          link: '/docs/project-walkthrough/ci-cd-pipeline'
         }, {
           label: 'Frontend',
           items: [{

@@ -5,6 +5,8 @@ import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
 import '@fontsource/inter/800.css'
 import '@fontsource/inter/900.css'
+import { SEO } from 'astro-seo'
+import codeGenieLogoLarge from '../assets/images/code-genie-logo-large.webp'
 
 export interface Props {
   title: string
@@ -12,21 +14,38 @@ export interface Props {
 
 const { title } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const description =
+  'Generate source code for a full stack AWS serverless app with Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB Database, and more.'
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
+    <SEO
+      title={title}
+      description={description}
+      openGraph={{
+        basic: {
+          title,
+          type: 'website',
+          image: codeGenieLogoLarge.src,
+        },
+        optional: {
+          description,
+        },
+      }}
+      twitter={{
+        site: '@AWSbrett',
+        creator: '@AWSbrett',
+        title: 'Code Genie',
+        // image: codeGenieLogoLarge.src
+      }}
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
-    <meta
-      name="description"
-      content="Full stack source code generator with AWS Serverless, React, Lambda, API Gateway, Cognito Auth, DynamoDB Database, and more."
-    />
-
     <title>{title}</title>
     <!-- Calendly link widget begin -->
     <link

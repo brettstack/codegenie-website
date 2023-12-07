@@ -15,7 +15,7 @@ export default defineConfig({
     react(),
     tailwind(),
     starlightBlog({
-      title: 'Code Genie',
+      title: 'Blog',
       authors: {
         brett: {
           name: 'Brett Andrews',

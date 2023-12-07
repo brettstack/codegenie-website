@@ -6,7 +6,8 @@ import '@fontsource/inter/700.css'
 import '@fontsource/inter/800.css'
 import '@fontsource/inter/900.css'
 import { SEO } from 'astro-seo'
-import codeGenieLogoLarge from '../assets/images/code-genie-logo-large.webp'
+// import codeGenieLogoLarge from '../assets/images/code-genie-logo-large.webp'
+import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.jpg'
 
 export interface Props {
   title: string
@@ -28,7 +29,7 @@ const description =
         basic: {
           title,
           type: 'website',
-          image: codeGenieLogoLarge.src,
+          image: codeGenieIntroVideoPoster.src,
         },
         optional: {
           description,

@@ -9,6 +9,7 @@ import '@fontsource/inter/900.css'
 import { SEO } from 'astro-seo'
 // import codeGenieLogoLarge from '../assets/images/code-genie-logo-large.webp'
 import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.jpg'
+import codeGenieIntroVideo from '../assets/videos/code-genie-intro.mp4'
 
 export interface Props {
   title: string
@@ -17,6 +18,7 @@ export interface Props {
 const { title } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 const ogImage = canonicalURL + codeGenieIntroVideoPoster.src
+const ogVideo = canonicalURL + codeGenieIntroVideo
 const description =
   'Generate source code for full stack AWS serverless apps with Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB, and more based on your data model.'
 ---
@@ -27,6 +29,7 @@ const description =
     <SEO
       title={title}
       description={description}
+      canonical={canonicalURL}
       openGraph={{
         basic: {
           title,
@@ -34,7 +37,9 @@ const description =
           image: ogImage,
         },
         optional: {
+          siteName: 'Code Genie',
           description,
+          video: ogVideo,
         },
       }}
       twitter={{
@@ -50,7 +55,6 @@ const description =
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <!-- Calendly link widget begin -->

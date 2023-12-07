@@ -16,12 +16,9 @@ export interface Props {
 
 const { title } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
-const ogImage = path.join(
-  canonicalURL.toString(),
-  codeGenieIntroVideoPoster.src
-)
+const ogImage = canonicalURL + codeGenieIntroVideoPoster.src
 const description =
-  'Generate source code for a full stack AWS serverless app with Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB Database, and more.'
+  'Generate source code for full stack AWS serverless apps with Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB, and more based on your data model.'
 ---
 
 <!doctype html>

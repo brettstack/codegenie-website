@@ -1,4 +1,5 @@
 ---
+import path from 'path'
 import '@fontsource/inter'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
@@ -15,6 +16,10 @@ export interface Props {
 
 const { title } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const ogImage = path.join(
+  canonicalURL.toString(),
+  codeGenieIntroVideoPoster.src
+)
 const description =
   'Generate source code for a full stack AWS serverless app with Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB Database, and more.'
 ---
@@ -29,7 +34,7 @@ const description =
         basic: {
           title,
           type: 'website',
-          image: codeGenieIntroVideoPoster.src,
+          image: ogImage,
         },
         optional: {
           description,
@@ -39,7 +44,7 @@ const description =
         site: 'AWSbrett',
         creator: 'AWSbrett',
         title: 'Code Genie',
-        image: codeGenieIntroVideoPoster.src,
+        image: ogImage,
         card: 'summary_large_image',
         description,
         imageAlt: 'Code Genie',

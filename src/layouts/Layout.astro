@@ -1,5 +1,4 @@
 ---
-import path from 'path'
 import '@fontsource/inter'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
@@ -15,6 +14,8 @@ export interface Props {
   title: string
 }
 
+const date = new Date()
+const dateIso = date.toISOString()
 const { title } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 const ogImage = canonicalURL + codeGenieIntroVideoPoster.src
@@ -50,6 +51,12 @@ const description =
         card: 'summary_large_image',
         description,
         imageAlt: 'Code Genie',
+      }}
+      extend={{
+        meta: [
+          { name: 'og:updated_time', content: dateIso },
+          { name: 'last-modified', content: dateIso },
+        ],
       }}
     />
     <meta charset="UTF-8" />

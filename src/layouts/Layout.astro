@@ -14,12 +14,18 @@ export interface Props {
   title: string
 }
 
+function removeTrailingSlash(str) {
+  return str.replace(/\/$/, '')
+}
+
 const date = new Date()
 const dateIso = date.toISOString()
 const { title } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
-const ogImage = canonicalURL + codeGenieIntroVideoPoster.src
-const ogVideo = canonicalURL + codeGenieIntroVideo
+const ogImage =
+  removeTrailingSlash(canonicalURL.toString()) + codeGenieIntroVideoPoster.src
+const ogVideo =
+  removeTrailingSlash(canonicalURL.toString()) + codeGenieIntroVideo
 const description =
   'Generate source code for full stack AWS serverless apps with Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB, and more based on your data model.'
 ---
@@ -40,12 +46,12 @@ const description =
         optional: {
           siteName: 'Code Genie',
           description,
-          video: ogVideo,
+          // video: ogVideo,
         },
       }}
       twitter={{
-        site: 'AWSbrett',
-        creator: 'AWSbrett',
+        site: '@AWSbrett',
+        creator: '@AWSbrett',
         title: 'Code Genie',
         image: ogImage,
         card: 'summary_large_image',

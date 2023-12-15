@@ -33,6 +33,17 @@ The backend utilizes the following core services, libraries, and frameworks:
 <FileTree>
 - packages
   - api
+    - controllers
+      - user.ts
+    - models
+      - User.ts
+    - errors
+      - BadRequestError.ts
+      - BaseError.ts
+      - index.ts
+      - NotFoundError.ts
+      - UnauthenticatedError.ts
+      - UserInputError.ts
     - routes
       - apps.ts
       - me.ts
@@ -77,17 +88,9 @@ The backend utilizes the following core services, libraries, and frameworks:
     - package-lock.json
     - package.json
     - tsconfig.json
-  - controllers
-    - user.ts
-  - models
-    - User.ts
   - cognito
     - cognito-post-confirmation.test.ts
     - cognito-post-confirmation.ts
     - cognito-pre-signup.test.ts
     - cognito-pre-signup.ts
-  - controllers
-    - user.ts
-  - models
-    - User.ts
 </FileTree>

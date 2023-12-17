@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 import { CodeGenieLogo } from '../assets/logos/CodeGenieLogo'
 import { GithubIcon } from '../assets/icons/GithubIcon'
+import { TwitterIcon } from '../assets/icons/TwitterIcon'
+import { DiscordIcon } from '../assets/icons/DiscordIcon'
 
 const navbarLinks = [
   { label: 'Home', href: '#home', ariaLabel: 'Home' },
@@ -72,13 +74,40 @@ export const Navbar = () => {
             {/* <a
               className="unstyled text-white custom-border-gray rounded-xl
            bg-customDarkBg2 hover:bg-customDarkBg3  border-gray-700 pl-6 pr-8 pt-2 pb-2 text-sm flex"
-              href="https://github.com/matt765/Tidestream"
+              href="https://github.com/CodeGenieApp"
               target="_blank"
               aria-label="source code"
             >
               <GithubIcon />
               <span className="pt-px">Source code</span>
             </a> */}
+            <a
+              className="inline-block w-10 h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+              href="https://twitter.com/CodeGenieCodes"
+              target="_blank"
+              rel="noopener"
+              aria-label="Twitter"
+            >
+              <TwitterIcon />
+            </a>
+            <a
+              className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+              href="https://discord.gg/y8U5yCh4"
+              target="_blank"
+              rel="noopener"
+              aria-label="GitHub"
+            >
+              <DiscordIcon />
+            </a>
+            <a
+              className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+              href="https://github.com/CodeGenieApp"
+              target="_blank"
+              rel="noopener"
+              aria-label="GitHub"
+            >
+              <GithubIcon />
+            </a>
           </div>
         </motion.div>
         <div

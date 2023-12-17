@@ -2,6 +2,8 @@
 // import { InstagramIcon } from "../assets/icons/InstagramIcon";
 import { CodeGenieLogo } from '../assets/logos/CodeGenieLogo'
 import { TwitterIcon } from '../assets/icons/TwitterIcon'
+import { GithubIcon } from '../assets/icons/GithubIcon'
+import { DiscordIcon } from '../assets/icons/DiscordIcon'
 
 const footerData = [
   {
@@ -43,12 +45,30 @@ export const Footer = () => {
               <div>
                 <a
                   className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
-                  href="https://twitter.com/AWSbrett"
+                  href="https://twitter.com/CodeGenieCodes"
                   target="_blank"
                   rel="noopener"
                   aria-label="Twitter"
                 >
                   <TwitterIcon />
+                </a>
+                <a
+                  className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+                  href="https://discord.gg/y8U5yCh4"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="GitHub"
+                >
+                  <DiscordIcon />
+                </a>
+                <a
+                  className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+                  href="https://github.com/CodeGenieApp"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="GitHub"
+                >
+                  <GithubIcon />
                 </a>
               </div>
             </div>

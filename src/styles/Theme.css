@@ -53,7 +53,7 @@ html {
 /* Navbar */
 
 .navbar-link {
-  @apply text-white lg:text-xl text-base leading-6 mr-4 ml-4 lg:mr-6 lg:ml-6 cursor-pointer font-normal lg:font-medium hover:scale-110 transition duration-300 h-full pt-2;
+  @apply text-white text-sm lg:text-xl leading-6 mr-4 ml-4 lg:mr-6 lg:ml-6 cursor-pointer font-normal lg:font-medium hover:scale-110 transition duration-300 h-full pt-2;
 }
 
 /* Preventing FOUC */

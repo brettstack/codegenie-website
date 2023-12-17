@@ -50,7 +50,7 @@ export const Navbar = () => {
           transition={{ duration: 0.3 }}
           exit={{ opacity: 0 }}
         >
-          <ul className="hidden md:flex h-full pb-2">
+          <ul className="hidden md:flex h-full">
             {navbarLinks.map(({ href, label, ariaLabel }) => (
               <li key={label}>
                 <a
@@ -71,18 +71,8 @@ export const Navbar = () => {
           exit={{ opacity: 0 }}
         >
           <div className="grow basis-0 justify-end hidden md:flex w-[180px]">
-            {/* <a
-              className="unstyled text-white custom-border-gray rounded-xl
-           bg-customDarkBg2 hover:bg-customDarkBg3  border-gray-700 pl-6 pr-8 pt-2 pb-2 text-sm flex"
-              href="https://github.com/CodeGenieApp"
-              target="_blank"
-              aria-label="source code"
-            >
-              <GithubIcon />
-              <span className="pt-px">Source code</span>
-            </a> */}
             <a
-              className="inline-block w-10 h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+              className="w-10 mr-2"
               href="https://twitter.com/CodeGenieCodes"
               target="_blank"
               rel="noopener"
@@ -91,7 +81,7 @@ export const Navbar = () => {
               <TwitterIcon />
             </a>
             <a
-              className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+              className="w-10 mr-2"
               href="https://discord.gg/y8U5yCh4"
               target="_blank"
               rel="noopener"
@@ -100,7 +90,7 @@ export const Navbar = () => {
               <DiscordIcon />
             </a>
             <a
-              className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
+              className="w-10 mr-2"
               href="https://github.com/CodeGenieApp"
               target="_blank"
               rel="noopener"
@@ -144,6 +134,35 @@ export const Navbar = () => {
                   {label}
                 </a>
               ))}
+              <div className="flex">
+                <a
+                  className="w-10"
+                  href="https://twitter.com/CodeGenieCodes"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Twitter"
+                >
+                  <TwitterIcon />
+                </a>
+                <a
+                  className="w-10"
+                  href="https://discord.gg/y8U5yCh4"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="GitHub"
+                >
+                  <DiscordIcon />
+                </a>
+                <a
+                  className="w-10"
+                  href="https://github.com/CodeGenieApp"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="GitHub"
+                >
+                  <GithubIcon />
+                </a>
+              </div>
               {/* <a
                 className="unstyled text-white custom-border-gray rounded-xl
            bg-customDarkBg2 hover:bg-customDarkBg3  border-gray-700 pl-6 pr-8 pt-2 pb-2 text-sm flex"

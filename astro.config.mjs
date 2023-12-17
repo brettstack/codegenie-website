@@ -35,7 +35,8 @@ export default defineConfig({
       social: {
         github: 'https://github.com/CodeGenieApp',
         email: 'mailto:support@codegenie.codes',
-        twitter: 'https://twitter.com/AWSbrett'
+        twitter: 'https://twitter.com/CodeGenieCodes',
+        discord: 'https://discord.gg/y8U5yCh4'
       },
       editLink: {
         baseUrl: 'https://github.com/CodeGenieApp/docs/edit/main/'

@@ -29,28 +29,12 @@ npm i -g @codegenie/generator
 npm run @codegenie/generator generate
 ``` */}
 
-## Setup AWS Credentials Profile
-
-Open `~/.aws/credentials` and add a profile entry called `code-genie-example_dev`. You can either copy-paste credentials from an existing profile, or create new credentials from the AWS IAM Console.
-
-```
-// ~/.aws/credentials
-[code-genie-example_dev]
-aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
-aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
-```
-
-See [Deployments: Setup AWS CLI Credentials Profiles](./deployments#setup-aws-cli-credentials-profiles) for more details.
-
 ## Deploy to AWS
 
 Install dependencies and deploy to your AWS account by running:
 
 ```sh
-npm i
-npm run deploy:dev
-npm run deploy:dev # Run deploy a second time during intial setup
-npm run copy-outputs-to-dotenv
+npm run init:dev
 ```
 
 See [Deployments: Deploy to AWS](./deployments#deploy-to-aws) for more details.

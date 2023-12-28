@@ -4,24 +4,44 @@ description: How to deploy
 ---
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-## Setup AWS CLI Credentials Profiles
+## Initial deployment
 
-Create AWS Credentials Profiles in `~/.aws/credentials` for the stages to which you want to deploy. Usually this will just be a `dev` profile, but you may want to create `staging` and `prod` profiles when setting those environments up for the first time.
+Code Genie apps include a simple command to enable one-command setup.
 
+```sh
+npm run init:dev
 ```
-//~/.aws/credentials
-[my-app-name_dev]
-aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
-aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
 
-[my-app-name_staging]
-aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
-aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
-
-[my-app-name_prod]
-aws_access_key_id = XXXXXXXXXXXXXXXXXXXX
-aws_secret_access_key = XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXX/XXXXXX
+{/* <Tabs>
+<TabItem label="dev">
+```sh title="Initial install and deploy"
+npm run init:dev
 ```
+</TabItem>
+<TabItem label="staging">
+```sh title="Initial install and deploy"
+npm run init:staging
+```
+</TabItem>
+<TabItem label="prod">
+```sh title="Initial install and deploy"
+npm run init:prod
+```
+</TabItem>
+</Tabs> */}
+
+This command does the following:
+
+1. Installs NPM dependencies (`npm i`)
+1. Creates a new entry in `~/.aws/credentials` called `your-app-name_dev` using credentials copied from the `default` profile.
+   * If you'd rather copy credentials from a different profile, run `COPY_AWS_PROFILE=profile-name-to-copy npm run init:dev`, or if you'd rather not copy any credentials, run `COPY_AWS_PROFILE=0 npm run init:dev` (this requires you to manually define a profile named `your-app-name_dev`).
+1. Bootstraps CDK in the AWS account (`npm run cdk:bootstrap:dev`)
+1. Deploys to AWS (`npm run deploy:dev`)
+   * Since the UI has a dependency on Cognito and the API, this setup command actually runs deploy a second time.
+   * If you specify `cdk.json#context.environmentConfig.[stage].email.[verifyUserEmail|organizationInviteEmail|sandboxApprovedToEmails]`, you will receive an email from SES in that email's inbox. You must click the link in that email for the stack to complete.
+1. Copies CloudFormation/CDK outputs to local `.env` files for running the UI and API locally.
+1. Opens the live version of the web app.
+
 :::note
 The profile name should be a `kebab-cased` version of the application name, followed by the environment name shorthand (`_dev`, `_staging`, `_prod`). See the `profile` values in `packages/cdk/cdk.json` for the exact values.
 :::
@@ -30,40 +50,9 @@ The profile name should be a `kebab-cased` version of the application name, foll
 It's recommended to use separate AWS Accounts for each stage for improved security and stability. However, if you prefer to use a single AWS Account for simplicity you can specify the same values for all profiles.
 :::
 
-## Deploy to AWS
+## Regular deployments
 
-Install dependencies and deploy to AWS by running:
-
-<Tabs>
-<TabItem label="dev">
-```sh title="Initial install and deploy"
-npm i
-npm run deploy:dev
-npm run deploy:dev # Run deploy a second time during intial setup
-npm run copy-outputs-to-dotenv
-```
-</TabItem>
-<TabItem label="staging">
-```sh title="Initial install and deploy"
-npm i
-npm run deploy:staging
-npm run deploy:staging # Run deploy a second time during intial setup
-npm run copy-outputs-to-dotenv
-```
-</TabItem>
-<TabItem label="prod">
-```sh title="Initial install and deploy"
-npm i
-npm run deploy:prod
-npm run deploy:prod # Run deploy a second time during intial setup
-npm run copy-outputs-to-dotenv
-```
-</TabItem>
-</Tabs>
-
-:::note
-The UI isn't deployed on the first run of the `deploy` command because it has dependencies on several cloud resources such as Cognito (Auth) and API Gateway (API). The second run of `npm run deploy:*` is required only during the initial setup, and subsequent changes can be deployed with a single `npm run deploy:*`.
-:::
+Run `npm run deploy:dev` to deploy changes to AWS.
 
 ## CI/CD
 

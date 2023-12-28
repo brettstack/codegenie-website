@@ -6,53 +6,71 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Initial deployment
 
-Code Genie apps include a simple command to enable one-command setup.
+Code Genie apps include a simple command to enable one-command setup:
 
 ```sh
 npm run init:dev
 ```
 
-{/* <Tabs>
-<TabItem label="dev">
-```sh title="Initial install and deploy"
-npm run init:dev
-```
-</TabItem>
-<TabItem label="staging">
-```sh title="Initial install and deploy"
-npm run init:staging
-```
-</TabItem>
-<TabItem label="prod">
-```sh title="Initial install and deploy"
-npm run init:prod
-```
-</TabItem>
-</Tabs> */}
-
 This command does the following:
 
 1. Installs NPM dependencies (`npm i`)
-1. Creates a new entry in `~/.aws/credentials` called `your-app-name_dev` using credentials copied from the `default` profile.
-   * If you'd rather copy credentials from a different profile, run `COPY_AWS_PROFILE=profile-name-to-copy npm run init:dev`, or if you'd rather not copy any credentials, run `COPY_AWS_PROFILE=0 npm run init:dev` (this requires you to manually define a profile named `your-app-name_dev`).
-1. Bootstraps CDK in the AWS account (`npm run cdk:bootstrap:dev`)
+1. Creates a new entry in the [AWS Credentials File](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) `~/.aws/credentials` called `your-app-name_dev` using credentials copied from the `default` profile.
+1. [Bootstraps CDK](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) in the AWS account (`cdk bootstrap`)
 1. Deploys to AWS (`npm run deploy:dev`)
-   * Since the UI has a dependency on Cognito and the API, this setup command actually runs deploy a second time.
-   * If you specify `cdk.json#context.environmentConfig.[stage].email.[verifyUserEmail|organizationInviteEmail|sandboxApprovedToEmails]`, you will receive an email from SES in that email's inbox. You must click the link in that email for the stack to complete.
 1. Copies CloudFormation/CDK outputs to local `.env` files for running the UI and API locally.
-1. Opens the live version of the web app.
+1. Opens the live version of the web app in your browser.
+
+:::caution[Email Verification]
+If you specify an email address in `cdk.json` (e.g. `verifyUserEmail`, `organizationInviteEmail`, `sandboxApprovedToEmails`), you will receive an email from SES in that email's inbox. You **MUST** click the link in that email for the deployment to complete.
+:::
+
+:::tip[AWS Profiles]
+If you'd rather copy credentials from a different profile, run `COPY_AWS_PROFILE=profile-name-to-copy npm run init:dev`.
+
+Alternatively, if you'd rather manually define the profiles, run `COPY_AWS_PROFILE=0 npm run init:dev`. The profile name must be a `kebab-cased` version of the application name, followed by the environment name shorthand (`_dev`, `_staging`, `_prod`). See the `profile` values in `packages/cdk/cdk.json` for the exact values.
+:::
 
 :::note
-The profile name should be a `kebab-cased` version of the application name, followed by the environment name shorthand (`_dev`, `_staging`, `_prod`). See the `profile` values in `packages/cdk/cdk.json` for the exact values.
+Since the UI has a dependency on Cognito and the API, this setup command actually runs deploy a second time.
 :::
+
+## Deploying updates
+
+After the initial deployment, you can deploy changes to AWS with:
+
+```sh
+npm run deploy:dev
+```
+
+## Deploying to staging and production
+
+Similar commands exist for `staging` and `prod`:
+
+<Tabs>
+<TabItem label="dev">
+```sh title="Initial install and deploy for dev"
+npm run init:dev
+npm run deploy:dev
+```
+</TabItem>
+<TabItem label="staging">
+```sh title="Initial install and deploy for staging"
+npm run init:staging
+npm run deploy:staging
+```
+</TabItem>
+<TabItem label="prod">
+```sh title="Initial install and deploy for prod"
+npm run init:prod
+npm run deploy:prod
+```
+</TabItem>
+</Tabs>
 
 :::tip[Use separate AWS Accounts for each stage]
-It's recommended to use separate AWS Accounts for each stage for improved security and stability. However, if you prefer to use a single AWS Account for simplicity you can specify the same values for all profiles.
+It's recommended to use separate AWS Accounts for each stage for improved security and stability. However, if you prefer to use a single AWS Account for simplicity you can specify the same `aws_access_key_id` and `aws_secret_access_key` for all 3 profiles.
 :::
-
-## Regular deployments
-
-Run `npm run deploy:dev` to deploy changes to AWS.
 
 ## CI/CD
 

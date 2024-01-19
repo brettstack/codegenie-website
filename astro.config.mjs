@@ -71,6 +71,9 @@ export default defineConfig({
         }, {
           label: 'Local Development',
           link: '/docs/guides/local-development'
+        }, {
+          label: 'Send emails from custom domain',
+          link: '/docs/guides/send-emails-from-custom-domain'
         }]
       }, {
         label: 'Project Walkthrough',

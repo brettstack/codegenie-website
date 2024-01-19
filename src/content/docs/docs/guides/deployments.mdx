@@ -21,10 +21,6 @@ This command does the following:
 1. Copies CloudFormation/CDK outputs to local `.env` files for running the UI and API locally.
 1. Opens the live version of the web app in your browser.
 
-:::caution[Email Verification]
-If you specify an email address in `cdk.json` (e.g. `verifyUserEmail`, `organizationInviteEmail`, `sandboxApprovedToEmails`), you will receive an email from SES in that email's inbox. You **MUST** click the link in that email for the deployment to complete.
-:::
-
 :::tip[AWS Profiles]
 If you'd rather copy credentials from a different profile, run `COPY_AWS_PROFILE=profile-name-to-copy npm run init:dev`.
 

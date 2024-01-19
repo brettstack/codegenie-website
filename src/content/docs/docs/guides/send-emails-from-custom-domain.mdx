@@ -1,0 +1,46 @@
+---
+title: Send emails from custom domain
+description: How to get your AWS account out of the SES Sandbox and into Production
+---
+
+By default, all AWS accounts are put into a sandbox for the <a href="https://aws.amazon.com/ses" target="_blank" rel="noopener">SES (Simple Email Service)</a> service. Before you can send emails to users from your own email address (primarily auth flow emails such as verify and forgot password) you'll need to get your AWS account approved for production SES access.
+
+Navigate to the AWS SES Console's <a href='https://console.aws.amazon.com/ses/home#/get-set-up' target="_blank" rel="noopener">Get set up</a> page and follow the steps. When you submit the support request to AWS they'll ask you a number of questions, so you can include your answers in the initial request to expedite the process:
+
+## SES production access support request template
+
+1\. Region: US West (Oregon) OR US East (Virginia) OR EU (Ireland)
+
+**US West**
+
+2\. Limit name: Desired Daily Sending Quota OR Desired Maximum Send Rate
+
+**Desired Daily Sending Quota**
+
+3\. New limit value: *requested limit*
+
+**1000**
+
+4\. Use Case Description: Describe how you plan to use Amazon SES to send email. Provide as much specific information about your use case as possible. If you don't provide specific information, there may be a delay in processing your request.
+
+**We will primarily be using SES for sending transactional emails such as user verification and forgot password via Cognito User Pools, as well as when users are invited to join an organization within our app so that they can collaborate with users within the same organization/company.**
+
+5\. Describe how you will comply with AWS Service Terms and AUP.
+
+**We will only send transactional emails based on user actions such as account registration, forgot password, or when invited to join an organization.**
+
+6\. Describe how you will only send to recipients who have specifically requested your mail.
+
+**We will only send transactional emails based on user actions such as account registration, forgot password, or when invited to join an organization. If no account exists for the email address entered during the forgot password flow or organization invite flow, we will NOT send an email to that address.**
+
+7\. Describe the process that you will follow when you receive bounce and complaint notifications.
+
+**We will monitor and investigate bounce and complaint notifications via SES dashboard. If we determine that a user of our platform is abusing our email system (for example, sending unwanted organization invites) we will ban them from our system.**
+
+8\. Mail Type: Transactional OR System Notifications OR Subscription OR Marketing OR Other
+
+**Transactional**
+
+9\. Website URL: *customer's url related to mail*
+
+***(your website)***

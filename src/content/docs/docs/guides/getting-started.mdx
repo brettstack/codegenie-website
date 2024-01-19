@@ -25,8 +25,7 @@ Curl + unzip + CD commands
 ```
 
 ```sh
-npm i -g @codegenie/generator
-npm run @codegenie/generator generate
+npm run @codegenie/cli generate --description "an awesome app"
 ``` */}
 
 ## Deploy to AWS
@@ -44,7 +43,7 @@ See [Deployments: Deploy to AWS](./deployments#deploy-to-aws) for more details.
 After deploying to your developer AWS account, start the UI locally by running:
 
 ```sh
-npm run start:ui
+npm run start-ui:dev
 ```
 
 You can then visit localhost:3001 to view your local web app and begin making changes.

@@ -10,7 +10,7 @@ description: How to develop locally
 After [deploying to your AWS account](./deployments), start the UI locally by running:
 
 ```sh
-npm run start:ui
+npm run start-ui:dev
 ```
 
 Visit localhost:3001 to view your local web app.
@@ -20,11 +20,11 @@ Visit localhost:3001 to view your local web app.
 If you want to run your UI against a local version of your API, instead run these two commands in separate terminals:
 
 ```sh title="Run API Locally"
-npm run start:api
+npm run start-api:dev
 ```
 
 ```sh title="Run UI Locally"
-npm run start:ui:offline
+npm run start-ui-local-api:dev
 ```
 
 :::note

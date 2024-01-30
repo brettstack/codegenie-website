@@ -35,4 +35,4 @@ Projects include:
 * CI/CD via GitHub Actions (WIP)
 * Much more (and even more to come)
 
-We can't wait to see what you build! Join us on [Discord](https://discord.gg/y8U5yCh4), and follow us on [Twitter](https://twitter.com/CodeGenieCodes) and [LinkedIn](https://www.linkedin.com/company/code-genie-codes) for support and announcements.
+We can't wait to see what you build! Join us on [Discord](https://discord.gg/YJ9gQhheyn), and follow us on [Twitter](https://twitter.com/CodeGenieCodes) and [LinkedIn](https://www.linkedin.com/company/code-genie-codes) for support and announcements.

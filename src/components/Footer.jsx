@@ -54,7 +54,7 @@ export const Footer = () => {
                 </a>
                 <a
                   className="inline-block w-10  h-10 mr-2 p-2 bg-customDarkBg2 custom-border-gray  hover:bg-gray-700 rounded-xl"
-                  href="https://discord.gg/y8U5yCh4"
+                  href="https://discord.gg/YJ9gQhheyn"
                   target="_blank"
                   rel="noopener"
                   aria-label="GitHub"

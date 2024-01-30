@@ -82,7 +82,7 @@ export const Navbar = () => {
             </a>
             <a
               className="w-10 mr-2"
-              href="https://discord.gg/y8U5yCh4"
+              href="https://discord.gg/YJ9gQhheyn"
               target="_blank"
               rel="noopener"
               aria-label="GitHub"
@@ -146,7 +146,7 @@ export const Navbar = () => {
                 </a>
                 <a
                   className="w-10"
-                  href="https://discord.gg/y8U5yCh4"
+                  href="https://discord.gg/YJ9gQhheyn"
                   target="_blank"
                   rel="noopener"
                   aria-label="GitHub"

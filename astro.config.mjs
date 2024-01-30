@@ -36,7 +36,8 @@ export default defineConfig({
         github: 'https://github.com/CodeGenieApp',
         email: 'mailto:support@codegenie.codes',
         twitter: 'https://twitter.com/CodeGenieCodes',
-        discord: 'https://discord.gg/y8U5yCh4'
+        discord: 'https://discord.gg/y8U5yCh4',
+        linkedin: 'https://www.linkedin.com/company/code-genie-codes'
       },
       editLink: {
         baseUrl: 'https://github.com/CodeGenieApp/docs/edit/main/'

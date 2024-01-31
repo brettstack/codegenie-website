@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-import { InvitationModal } from './InvitationModal'
 import { CheckArrowIcon } from '../assets/icons/CheckArrowIcon'
 
 const pricingData = [
@@ -14,7 +13,6 @@ const pricingData = [
 
 export const Pricing = () => {
   const [isMonthly, setIsMonthly] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleChange = () => {
     setIsMonthly(!isMonthly)
@@ -32,35 +30,12 @@ export const Pricing = () => {
         >
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-16">
-              <span className="custom-block-subtitle"><span className='text-3xl leading-4 align-text-bottom mr-2'>📧</span> <span className='align-text-bottom'>Get in touch</span></span>
+              {/* <span className="custom-block-subtitle"><span className='text-3xl leading-4 align-text-bottom mr-2'>📧</span> <span className='align-text-bottom'>Get in touch</span></span>
               <h2 className="mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading pb-1 text-white">
                 <span className="gradient-text">Custom pricing</span> available
                 now
-              </h2>
-              <p className="mb-6 text-customGrayText text-justify">
-                Code Genie is not yet generally available. We're currently
-                working closely with partners to kickstart the development of
-                their new software projects. We're also offering free builds for
-                some Nonprofits.{' '}
-                <a href="mailto:brett@codegenie.codes?subject=Code Genie Demo">
-                  Email brett@codegenie.codes to learn more
-                </a>{' '}
-                or schedule a demo.
-              </p>
-              <div className="flex justify-center">
-                <button
-                  className="w-[210px] h-12 custom-button-colored"
-                  onClick={() => {
-                    Calendly.initPopupWidget({
-                      url: 'https://calendly.com/codegenie-brett/introductory-call',
-                    })
-                    return false
-                  }}
-                >
-                  Schedule a demo
-                </button>
-              </div>
-              {/* <label className="mx-auto bg-customDarkBg3 relative flex justify-between items-center group text-xl w-44 h-12 rounded-lg pr-36 pl-1 cursor-pointer">
+              </h2> */}
+              <label className="mx-auto bg-customDarkBg3 relative flex justify-between items-center group text-xl w-44 h-12 rounded-lg pr-36 pl-1 cursor-pointer">
                 <input
                   type="checkbox"
                   className="peer appearance-none"
@@ -78,9 +53,9 @@ export const Pricing = () => {
                   </div>
                   <div className={isMonthly && 'text-gray-400'}>Yearly</div>
                 </div>
-              </label> */}
+              </label>
             </div>
-            {/* <div className="flex flex-wrap flex-col lg:flex-row -mx-4 items-center mt-20">
+            <div className="flex flex-wrap flex-col lg:flex-row -mx-4 items-center mt-20">
               <div className="w-[350px] sm:w-[380px] lg:w-1/3 px-4 mb-8 lg:mb-0">
                 <div className="p-8 bg-customDarkBg3 rounded-3xl">
                   <h4 className="mb-2 text-xl font-bold font-heading text-white text-left">
@@ -108,7 +83,7 @@ export const Pricing = () => {
                   </ul>
                   <div
                     className="inline-block text-center py-2 px-4 w-full rounded-xl rounded-t-xl custom-button-colored font-bold leading-loose mt-16"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => null}
                   >
                     Get Started
                   </div>
@@ -140,7 +115,7 @@ export const Pricing = () => {
                   </ul>
                   <div
                     className="inline-block text-center py-2 px-4 w-full custom-button-colored leading-loose transition duration-200 mt-20"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => null}
                   >
                     Get Started
                   </div>
@@ -172,19 +147,16 @@ export const Pricing = () => {
                   </ul>
                   <div
                     className="inline-block text-center py-2 px-4 w-full rounded-xl rounded-t-xl custom-button-colored font-bold leading-loose mt-16"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => null}
                   >
                     Get Started
                   </div>
                 </div>
               </div>
-            </div> */}
+            </div>
           </div>
         </motion.div>
       </div>
-      {isModalOpen && (
-        <InvitationModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
-      )}
     </section>
   )
 }

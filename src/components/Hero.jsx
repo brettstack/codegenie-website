@@ -1,15 +1,11 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-import { InvitationModal } from './InvitationModal'
 // import generatedAppScreenshot from '../assets/images/generated-app-screenshot.webp'
 // import generatedAppScreenshot from '../assets/images/generated-app-screenshot-dark.webp'
 import codeGenieIntroVideo from '../assets/videos/code-genie-intro.mp4'
 import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.jpg'
 
 export const Hero = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
   return (
     <section
       className="w-screen flex justify-center items-center bg-customDarkBg1 mb-20 xs:mb-40 sm:mb-36 lg:mb-48 xl:mb-60 hero-bg-gradient pb-0"
@@ -130,9 +126,6 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <InvitationModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
-      )}
     </section>
   )
 }

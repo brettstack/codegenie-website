@@ -1,11 +1,6 @@
 import { motion } from 'framer-motion'
-import { useState } from 'react'
-
-import { InvitationModal } from './InvitationModal'
 
 export const FeaturesDiagonal = ({ children }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
   return (
     <section className="lg:mb-16 w-full flex flex-col justify-center items-center bg-customDarkBg1">
       <div className="custom-shape-divider-bottom-1665696614">
@@ -68,9 +63,6 @@ export const FeaturesDiagonal = ({ children }) => {
           ></path>
         </svg>
       </div>
-      {isModalOpen && (
-        <InvitationModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
-      )}
     </section>
   )
 }

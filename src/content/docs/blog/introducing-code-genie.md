@@ -10,7 +10,7 @@ tags:
 
 Today we're excited to launch Code Genie -- the FASTEST way to build software! 🚀
 
-With a single ~~AI-powered command~~ wish, Code Genie generates a custom Full Stack AWS Serverless Application based on your description. In under a minute! Try it out for yourself (no account required!):
+With a single ~~AI-powered command~~ wish 🧞‍♂️, Code Genie generates a custom Full Stack AWS Serverless Application based on your description. In under a minute! Try it out for yourself:
 
 ```sh
 npx @codegenie/cli generate --name "Wildlife Rescue" \
@@ -18,7 +18,7 @@ npx @codegenie/cli generate --name "Wildlife Rescue" \
 ```
 
 :::tip[Deploy 🚀]
-You can include the `--deploy` flag to instantly deploy to AWS, or you can run `npm run init:dev` within the project directory.
+You can include the `--deploy` flag to instantly deploy to AWS, or you can run `npm run init:dev` within the project directory after it's generated.
 :::
 
 Projects include:

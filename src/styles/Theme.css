@@ -77,3 +77,16 @@ a:not(.unstyled) {
   max-width: 100vw;
   display: block;
 }
+
+.terminal {
+  background-color: #24292e;
+  color: #9ECBFF;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.terminal::selection {
+  background-color: #4CAF50;
+  color: #fff;
+}

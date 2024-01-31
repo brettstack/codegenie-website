@@ -7,6 +7,7 @@ import { InvitationModal } from './InvitationModal'
 import codeGenieIntroVideo from '../assets/videos/code-genie-intro.mp4'
 import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.jpg'
 
+const npxCommand = `npx @codegenie/cli generate --name "Wildlife Rescue" --description "An app that lets users report injured wildlife. Other users (wildlife rescuers) can see reports in their area and respond with questions and updates."`
 export const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -21,8 +22,9 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-10 font-bold">
-            Save months developing new software
+          <div className="text-customSecondary text-xs sm:text-base mb-6 mt-16 sm:mt-10 font-bold">
+          Generate Full Stack AWS Serverless Applications, <br />with a wish <span style={{textDecoration: 'line-through'}}>AI-powered command</span> <span className='text-3xl md:text-5xl'>🧞‍♂️</span>
+            {/* Save months developing new software */}
           </div>
         </motion.div>
         <motion.div
@@ -37,9 +39,9 @@ export const Hero = () => {
         <div className="mt-2 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-20 md:px-24 lg:px-24">
           for developers
         </div> */}
-          <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl mt-4 font-bold tracking-wide text-white">
+          <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl font-bold tracking-wide text-white">
             <h1>
-              Full Stack <span className="gradient-text">App Generator</span>
+              The <em className="gradient-text">fastest</em> way to <span className="gradient-text">build software</span>
             </h1>
           </div>
         </motion.div>
@@ -48,19 +50,34 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <div className="text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-10 md:px-36">
-            <p>
-              Download source code based on your data model or idea, then deploy
-              to your AWS account in minutes.
-            </p>
-            {/* <p>
-              Code Genie uses generative AI to design a data model and write
-              source code based on your idea. Download the source code for your
-              full stack application and deploy to AWS in minutes.
-            </p> */}
+          <div className='mb-14 '>
+            <div className="mb-6 text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-10">
+              <p>
+              Try it now! Swap in your own idea and run:
+              </p>
+              <div className='terminal mt-6'>
+                {npxCommand}
+              </div>
+              {/* <p>
+                Download source code based on your data model or idea, then deploy
+                to your AWS account in minutes.
+              </p> */}
+              {/* <p>
+                Code Genie uses generative AI to design a data model and write
+                source code based on your idea. Download the source code for your
+                full stack application and deploy to AWS in minutes.
+              </p> */}
+            </div>
+            {/* <div className='text-customGrayText'>
+              <pre>
+              <code>
+              {npxCommand}
+              </code>
+              </pre>
+            </div> */}
           </div>
         </motion.div>
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
@@ -72,14 +89,8 @@ export const Hero = () => {
             >
               Get Started
             </div>
-            {/* <div
-              className="w-64 sm:w-52 h-12 rounded-xl font-bold text-white border border-solid  flex justify-center items-center cursor-pointer bg-customDarkBg2 hover:bg-customDarkBg3 border-customPrimary transition"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Live demo
-            </div> */}
           </div>
-        </motion.div>
+        </motion.div> */}
         <motion.div
           initial={{ opacity: 0, y: 10, zIndex: 20 }}
           animate={{ opacity: 1, y: 0, zIndex: 20 }}

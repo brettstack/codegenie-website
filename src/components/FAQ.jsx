@@ -17,25 +17,25 @@ const FAQData = [
         provider such as{' '}
         <a href="https://www.netlify.com" target="_blank" rel="noopener">
           Netlify
-        </a>
-        , and swap Auth from Cognito to an alternative such as{' '}
-        <a href="https://auth0.com/" target="_blank" rel="noopener">
-          Auth0
-        </a>
-        . The API layer is written in{' '}
+        </a>. The API layer is written in{' '}
         <a href="https://expressjs.com/" target="_blank" rel="noopener">
           Express
         </a>
-        , making it highly portable to any hosting provider. The main challenge
-        is changing the database from{' '}
+        , making it highly portable. The main challenges are swapping the Auth from Cognito to an alternative such as{' '}
+        <a href="https://clerk.com/" target="_blank" rel="noopener">
+          Clerk
+        </a> or{' '}
+        <a href="https://auth0.com/" target="_blank" rel="noopener">
+          Auth0
+        </a>, or changing the database from{' '}
         <a
           href="https://aws.amazon.com/dynamodb/"
           target="_blank"
           rel="noopener"
         >
           DynamoDB
-        </a>
-        , as it requires a database migration (e.g. see this article on how you
+        </a>. 
+        , as they require data migration (e.g. see this article on how you
         would{' '}
         <a
           href="https://www.mongodb.com/blog/post/migrating-your-data-from-dynamodb-to-mongodb-atlas"
@@ -44,8 +44,8 @@ const FAQData = [
         >
           migrate from DynamoDB to MongoDB
         </a>
-        ). We plan on adding PostgreSQL as a database option in the future,
-        making this even more portable.
+        ). We plan on adding PostgreSQL as a database option and additional Auth options in the future,
+        making Code Genie projects even more portable.
       </>
     ),
   },
@@ -58,7 +58,7 @@ const FAQData = [
     question:
       'Does Code Genie use AI to generate the source code? What about copyright infringement?',
     answer:
-      "No. AI is only used to help you create an initial data model based on your idea. Code Genie then generates projects based on the data model to remove copyright infringement concerns. This approach also ensures deterministic results. That is, if you give the same input data model, you'll get the same output (except for improvements we make to the generated output; version locking coming soon.)",
+      "No. AI is only used to help you create an initial data model based on your idea. Code Genie then generates projects based on the data model. This approach also ensures deterministic results. That is, if you give the same input data model, you'll get the same output (except for improvements we make to the generated output; version locking coming soon). To address copyright concerns, Code Genie retains ownership of the generated source code and provides you with a license to use the code in your app.",
   },
 ]
 

@@ -3,8 +3,7 @@ import { motion } from 'framer-motion'
 export const NoCodeForDevelopers = () => {
   return (
     <section className="w-screen flex justify-center bg-customDarkBg2 relative">
-      <div className="absolute -top-16" id="pricing" />
-      <div className="bg-customDarkBg2  2xl:w-[1150px] lg:w-[1050px]  md:w-4/5 ">
+      <div className="bg-customDarkBg2 2xl:w-[1150px] lg:w-[1050px]  md:w-4/5 ">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}

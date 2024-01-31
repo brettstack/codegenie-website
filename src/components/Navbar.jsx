@@ -9,7 +9,7 @@ import { DiscordIcon } from '../assets/icons/DiscordIcon'
 const navbarLinks = [
   { label: 'Home', href: '#home', ariaLabel: 'Home' },
   { label: 'Features', href: '#features', ariaLabel: 'Features' },
-  { label: 'Pricing', href: '#pricing', ariaLabel: 'Pricing' },
+  // { label: 'Pricing', href: '#pricing', ariaLabel: 'Pricing' },
   {
     label: 'Blog',
     href: '/blog',

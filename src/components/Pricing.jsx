@@ -32,7 +32,7 @@ export const Pricing = () => {
         >
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-16">
-              <span className="custom-block-subtitle">📧 Get in touch</span>
+              <span className="custom-block-subtitle"><span className='text-3xl leading-4 align-text-bottom mr-2'>📧</span> <span className='align-text-bottom'>Get in touch</span></span>
               <h2 className="mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading pb-1 text-white">
                 <span className="gradient-text">Custom pricing</span> available
                 now

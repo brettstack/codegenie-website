@@ -1,7 +1,7 @@
 ---
 title: Introducing Code Genie 🧞‍♂️
 date: 2024-31-01
-excerpt: Today we’re excited to launch Code Genie — the FASTEST way to build software! With a single AI-powered command wish, Code Genie generates a custom Full Stack AWS Serverless Application based on your description. In under a minute!
+excerpt: Today we’re excited to launch Code Genie — the FASTEST way to build software! With a single AI-powered command wish, Code Genie generates a custom Full Stack Serverless AWS Application based on your description. In under a minute!
 authors:
   - brett
 tags:
@@ -10,7 +10,7 @@ tags:
 
 Today we're excited to launch Code Genie -- the FASTEST way to build software! 🚀
 
-With a single ~~AI-powered command~~ wish 🧞‍♂️, Code Genie generates a custom Full Stack AWS Serverless Application based on your description. In under a minute! Try it out for yourself:
+With a single ~~AI-powered command~~ wish 🧞‍♂️, Code Genie generates a custom Full Stack Serverless AWS Application based on your description. In under a minute! Try it out for yourself:
 
 ```sh
 npx @codegenie/cli generate --name "Wildlife Rescue" \

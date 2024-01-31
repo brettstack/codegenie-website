@@ -19,7 +19,7 @@ export const Features1 = () => {
         <div className="w-11/12 xl:w-10/12 2xl:w-[1280px] mx-auto md:pl-4 xl:pr-16 xl:pl-16">
           <div className="w-full xl:w-2/3 mb-12 lg:mb-0">
             <span className="custom-block-subtitle">
-              🚀 Kickstart innovation
+            <span className='text-3xl'>🚀</span> Kickstart innovation
             </span>
             <h2 className="mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
               Generate a solid{' '}
@@ -27,8 +27,7 @@ export const Features1 = () => {
               instantly
             </h2>
             <p className="mb-10 text-customGrayText leading-loose text-justify">
-              Code Genie takes care of the undifferentiated heavy lifting so
-              that you can focus on what makes your product special. Download
+              Code Genie takes care of the boring stuff so you can focus on what makes your product special. Download
               the source code for your full stack application and deploy to AWS
               to have a live app in minutes!
             </p>

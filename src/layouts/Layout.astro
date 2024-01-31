@@ -27,7 +27,7 @@ const ogImage =
 const ogVideo =
   removeTrailingSlash(canonicalURL.toString()) + codeGenieIntroVideo
 const description =
-  'Generate full stack AWS Serverless Apps + Source Code based on your Data Model. Built with Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB, and more.'
+  'Generate Full Stack Serverless AWS Apps based on your description or data model. Projects include Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB, and more.'
 ---
 
 <!doctype html>
@@ -70,20 +70,9 @@ const description =
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <!-- Calendly link widget begin -->
-    <link
-      href="https://assets.calendly.com/assets/external/widget.css"
-      rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
-    />
-    <script
-      src="https://assets.calendly.com/assets/external/widget.js"
-      type="text/javascript"
-      async></script>
-    <!-- Calendly link widget end -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8DF6WBB8HG"
-    ></script><script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8DF6WBB8HG" ></script>
+    <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {
         dataLayer.push(arguments)

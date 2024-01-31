@@ -14,7 +14,7 @@ export const NoCodeForDevelopers = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-16">
               <span className="custom-block-subtitle">
-                🧞 Like No Code, but for Developers
+              <span className='text-5xl'>🧞</span> Like No Code, but for Developers
               </span>
               <h2 className="mt-6 mb-6 text-4xl lg:text-5xl font-bold font-heading pb-1 text-white">
                 Faster than <span className="gradient-text">No Code</span>, and

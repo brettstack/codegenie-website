@@ -20,14 +20,14 @@ export const Features2 = () => (
         <div className="w-full flex justify-end mb-8">
           <div className="w-full xl:w-2/3 lg:mb-0">
             <span className="custom-block-subtitle">
-              🧑‍💻 Superb Developer Experience
+            <span className='text-3xl leading-4 mr-2'>🧑‍💻</span> <span>Superb Developer Experience</span>
             </span>
             <h2 className="mt-6 mb-8 text-4xl md:text-5xl custom-block-big-title">
               <span className="gradient-text">Technology</span> that devs know
               and love
             </h2>
             <p className="text-customGrayText leading-loose text-justify">
-              Code Genie generates source code written in languages and
+              Code Genie generates source code in languages and
               frameworks that are consistently voted by developers as their
               tools of choice. Projects are architected in a way to make
               swapping out individual tools as simple as possible, and we're

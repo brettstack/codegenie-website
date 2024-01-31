@@ -11,6 +11,11 @@ const navbarLinks = [
   { label: 'Features', href: '#features', ariaLabel: 'Features' },
   { label: 'Pricing', href: '#pricing', ariaLabel: 'Pricing' },
   {
+    label: 'Blog',
+    href: '/blog',
+    ariaLabel: 'Blog',
+  },
+  {
     label: 'Documentation',
     href: '/docs/guides/getting-started',
     ariaLabel: 'Documentation',

@@ -30,7 +30,7 @@ export const FeaturesDiagonal = ({ children }) => {
       >
         <div className="2xl:w-[1150px] xl:w-[1050px]  md:w-4/5 flex justify-center bg-customDarkBg1 pt-12 lg:pt-24 pb-8 lg:pb-20 mx-auto lg:flex-row flex-col">
           <div className="w-3/4 lg:w-1/2 flex flex-col lg:mx-unset mx-auto">
-            <span className="custom-block-subtitle">🏗️ Built for you</span>
+            <span className="custom-block-subtitle"><span className='text-3xl leading-4 mr-2'>🏗️</span> <span className='align-text-bottom'>Built for you</span></span>
             <h2 className="mt-10 mb-8 text-4xl lg:text-5xl custom-block-big-title">
               <span className="gradient-text">Relevant source code</span> based
               on your <span className="gradient-text">data model or idea</span>
@@ -42,12 +42,12 @@ export const FeaturesDiagonal = ({ children }) => {
               idea/description) and it'll do its best to design an initial data
               model for you!
             </p>
-            <div
-              className="w-[210px] h-12 custom-button-colored"
-              onClick={() => setIsModalOpen(true)}
+            <a
+              href='/docs/guides/getting-started'
+              className="w-[210px] h-12 custom-button-colored unstyled"
             >
               Get Started
-            </div>
+            </a>
           </div>
           <div className="w-4/5 lg:w-1/2 lg:pl-16 flex justify-center mx-auto pt-16 lg:pt-0 max-h-[472px]">
             {children}

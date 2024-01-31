@@ -7,7 +7,6 @@ import { InvitationModal } from './InvitationModal'
 import codeGenieIntroVideo from '../assets/videos/code-genie-intro.mp4'
 import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.jpg'
 
-const npxCommand = `npx @codegenie/cli generate --name "Wildlife Rescue" --description "An app that lets users report injured wildlife. Other users (wildlife rescuers) can see reports in their area and respond with questions and updates."`
 export const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -22,8 +21,8 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-customSecondary text-xs sm:text-base mb-6 mt-16 sm:mt-10 font-bold">
-          Generate Full Stack AWS Serverless Applications, <br />with a wish <span style={{textDecoration: 'line-through'}}>AI-powered command</span> <span className='text-3xl md:text-5xl'>🧞‍♂️</span>
+          <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-10 font-bold">
+          Generate Full Stack Serverless AWS Applications, with a wish <span style={{textDecoration: 'line-through'}}>AI-powered command</span> <span className='text-3xl md:text-5xl'>🧞‍♂️</span>
             {/* Save months developing new software */}
           </div>
         </motion.div>
@@ -56,7 +55,7 @@ export const Hero = () => {
               Try it now! Swap in your own idea and run:
               </p>
               <div className='terminal mt-6'>
-                {npxCommand}
+                npx @codegenie/cli generate --name "Wildlife Rescue" --description "An app that lets users report injured wildlife. Other users (wildlife rescuers) can see reports in their area and respond with questions and updates."
               </div>
               {/* <p>
                 Download source code based on your data model or idea, then deploy
@@ -84,8 +83,8 @@ export const Hero = () => {
         >
           <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-14 justify-center">
             <div
+              href='/docs/guides/getting-started'
               className="custom-button-colored w-64 sm:w-52 h-12 mr-0 sm:mr-4 lg:mr-6 mb-2 sm:mb-0"
-              onClick={() => setIsModalOpen(true)}
             >
               Get Started
             </div>

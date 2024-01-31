@@ -20,7 +20,7 @@ export const Features3 = () => {
         <div className="w-11/12 xl:w-10/12 2xl:w-[1280px] mx-auto md:pl-4 xl:pr-16 xl:pl-16">
           <div className="w-full xl:w-2/3 mb-12 lg:mb-0">
             <span className="custom-block-subtitle">
-              ☁️ Scale from zero to infinity
+              <span className='text-3xl leading-4 align-text-bottom mr-2'>☁️</span> <span className='align-text-bottom'>Scale from zero to infinity</span>
             </span>
             <h2 className="mt-6 mb-8 text-4xl lg:text-5xl custom-block-big-title">
               Backed by <span className="gradient-text">AWS Serverless</span>

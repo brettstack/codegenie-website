@@ -1,10 +1,5 @@
 ---
-import '@fontsource/inter'
-import '@fontsource/inter/500.css'
-import '@fontsource/inter/600.css'
-import '@fontsource/inter/700.css'
-import '@fontsource/inter/800.css'
-import '@fontsource/inter/900.css'
+import { AstroFont } from 'astro-font'
 import { SEO } from 'astro-seo'
 // import codeGenieLogoLarge from '../assets/images/code-genie-logo-large.webp'
 import codeGenieIntroVideoPoster from '../assets/videos/code-genie-intro-poster.jpg'
@@ -80,8 +75,21 @@ const description =
       gtag('js', new Date())
 
       gtag('config', 'G-8DF6WBB8HG')
-    </script></head
-  >
+    </script>
+    <AstroFont
+      config={[
+        {
+          src: [],
+          name: "Inter",
+          preload: false,
+          display: "swap",
+          fallback: "sans-serif",
+          cssVariable: "font-inter",
+          googleFontsURL: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900',
+        },
+      ]}
+    />
+  </head>
   <!-- Google tag (gtag.js) -->
 
   <body>

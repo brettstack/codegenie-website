@@ -18,7 +18,7 @@ module.exports = {
         customDarkBgTransparentLighter: "rgb(48, 49, 54, 0.7)"  
       },
       fontFamily: {
-        Inter: "Inter",
+        Inter: "var(--font-inter)",
       },
       screens: {
         xs: "530px",

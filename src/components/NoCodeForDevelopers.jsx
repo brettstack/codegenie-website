@@ -23,8 +23,7 @@ export const NoCodeForDevelopers = () => {
                 Code Genie is able to do in minutes what takes days or weeks
                 with No Code platforms (and months with traditional software
                 development). Additionally, you're not locked into a No Code
-                vendor's inherent limitations and costly licensing fees, since
-                you own the source code.
+                vendor's inherent limitations and costly ongoing licensing fees.
               </p>
             </div>
           </div>

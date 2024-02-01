@@ -17,8 +17,8 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-10 font-bold">
-          Generate Full Stack Serverless AWS Applications, with a wish <span style={{textDecoration: 'line-through'}}>AI-powered command</span> <span className='text-3xl md:text-5xl'>🧞‍♂️</span>
+          <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-10">
+          Generate Full Stack Serverless AWS Applications, with a <span style={{textDecoration: 'line-through'}}>wish</span> AI-powered command <span className='text-3xl md:text-5xl'>🧞‍♂️</span>
             {/* Save months developing new software */}
           </div>
         </motion.div>
@@ -34,7 +34,7 @@ export const Hero = () => {
         <div className="mt-2 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-20 md:px-24 lg:px-24">
           for developers
         </div> */}
-          <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl font-bold tracking-wide text-white">
+          <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl tracking-wide text-white">
             <h1>
               The <em className="gradient-text">fastest</em> way to <span className="gradient-text">build software</span>
             </h1>
@@ -45,8 +45,8 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <div className='mb-14 '>
-            <div className="mb-6 text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-10">
+          <div className='mb-4 '>
+            <div className="mb-6 text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-4">
               <p>
               Try it now! Swap in your own idea and run:
               </p>
@@ -72,20 +72,20 @@ export const Hero = () => {
             </div> */}
           </div>
         </motion.div>
-        {/* <motion.div
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-14 justify-center">
-            <div
+          <div className="flex flex-col gap-2 sm:flex-row mb-14 mt-4 justify-center">
+            <a
               href='/docs/guides/getting-started'
-              className="custom-button-colored w-64 sm:w-52 h-12 mr-0 sm:mr-4 lg:mr-6 mb-2 sm:mb-0"
+              className="w-[320px] h-12 custom-button-colored unstyled"
             >
-              Get Started
-            </div>
+              See the Getting Started guide
+            </a>
           </div>
-        </motion.div> */}
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 10, zIndex: 20 }}
           animate={{ opacity: 1, y: 0, zIndex: 20 }}

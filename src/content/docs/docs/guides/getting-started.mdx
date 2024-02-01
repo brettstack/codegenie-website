@@ -3,7 +3,7 @@ title: Getting Started
 description: Get Started with Code Genie
 ---
 
-This guide walks you through using the example app to generate your first application with Code Genie, deploying it to your AWS Account, and running it locally for development.
+This guide walks you through generating your first app with Code Genie, deploying it to your AWS Account, and running it locally for development.
 
 ## Prerequisites
 
@@ -12,46 +12,59 @@ Before continuing you'll need an [AWS Account](https://aws.amazon.com/resources/
 - [Node.js 20+](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 - [AWS CLI](https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html)
 
-## Download and generate example app
+## Generate a todo app
 
-:::caution[Coming soon]
-Self-service project generation is still under development. Until then, contact brett@codegenie.codes to discuss your project requirements.
-:::
+Run the Code Genie CLI command below to generate a todo application. This should take less than a minute to complete.
 
-{/* *Coming Soon:* Download and unzip example Code Genie App Definition
-
-```sh
-Curl + unzip + CD commands
+```sh title="Generate todo app"
+npx @codegenie/cli generate --name "Todo" --description "A todo app that lets you create lists and items"
 ```
 
-```sh
-npm run @codegenie/cli generate --description "an awesome app"
-``` */}
+Once the command completes, open the new `./todo` project directory in your favorite IDE. Depending on your environment, you may be able to simply run `code ./todo`.
 
-## Deploy to AWS
+## Initialize app and deploy to AWS
 
-Install dependencies and deploy to your AWS account by running:
+Run the command below to install dependencies and deploy the app to your AWS account:
 
-```sh
+```sh title="Initialize todo app"
+cd ./todo
 npm run init:dev
 ```
 
-See [Deployments: Deploy to AWS](./deployments#deploy-to-aws) for more details.
+This command can take up to 10 minutes to run since it's installing dependencies and deploying to AWS for the first time. See [Deployments: Deploy to AWS](./deployments#deploy-to-aws) for more details. While it's deploying, you can familiarize yourself with the [Project Structure](../project-walkthrough/overview).
+
+After it completes, your browser will open your web app's Getting Started page with lots of great tips on what to do next (for now, just follow along in this guide). Take a minute to explore your Todo app by first registering for an account via your app's home page.
+
+## Modify the App Definition and Data Model within the .codegenie directory
+The generate command we ran at the start of this guide is only intended to give us a starting point for modeling our application. It does a decent job of doing this based on a description (and you can give describe your app in more detail to get better results), however, it's unlikely to be perfect.
+
+Modify one or more of the properties of the entities listed in `.codegenie/entities/*.yml` and then regenerate the project by running:
+
+```sh title="Regenerate todo app and redeploy"
+npx @codegenie/cli generate
+npm run deploy:dev
+```
+
+See [App Definition](../spec/app-definition) for more details on modeling your application. While generating an app based on a description may seem like magic, the true power of Code Genie lies in modeling your app definition yourself.
 
 ## Make changes
 
-After deploying to your developer AWS account, start the UI locally by running:
+After the deployment completes, start the UI locally by running:
 
 ```sh
-npm run start-ui:dev
+npm run start-ui-local-api:dev
 ```
 
-You can then visit localhost:3001 to view your local web app and begin making changes.
+In a separate terminal, start the API locally by running:
 
-See [Local Development](./local-development) for more details.
+```sh
+npm run start-api:dev
+```
+
+Open localhost:3001 to view your local web app and begin making changes to your UI and API. See [Local Development](./local-development) for more details.
 
 ## Next steps
 
-The next step is up to you! If you want to play around with the example app and learn more about the generated source code: check out the [Project Walkthrough guides](../project-walkthrough/overview).
+The next step is up to you! If you want to play around with the todo app and learn more about the generated source code: check out the [Project Walkthrough guides](../project-walkthrough/overview).
 
-If you'd rather start developing your own application, head over to the [App Definition and Data Modeling guide](../spec/app-definition).
+If you'd rather start developing your own application, start by running `npx @codegenie/cli generate --name "..." --description "..."` with as much detail as possible (so long as it's under 500 characters) and then head over to the [App Definition](../spec/app-definition) guide and model your app with more details.

@@ -1,0 +1,397 @@
+---
+title: 'Create AWS Cognito User Pool Resources with CDK'
+date: 2024-02-31
+excerpt: how to
+authors:
+  - brett
+tags:
+  - cognito
+  - aws
+draft: true
+---
+import { Image } from 'astro:assets';
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-linked-accounts/cognito-example-sign-in.webp';
+
+[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides user identity and auth -- a core component of almost every application. This series of articles covers a full stack solution enabling users to sign in with Email + Password, Google Sign In, and SSO/SAML, and link them all to the same user within the app.
+
+<figure style={{margin: '2rem auto', width: '360px'}}>
+  <Image
+    src={signInPage}
+    alt="Sign in page"
+  />
+  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in the [React Cognito User Pools](aws-cognito-react-web-app) article.</figcaption>
+</figure>
+
+:::tip
+The complete source code is available by generating a [Code Genie](https://codegenie.codes) app and specifying `'Google'` and `'SAML'` `idp` options:
+
+```sh title="Generate a To-Do List app with Code Genie"
+npx @codegenie/cli generate --name "Todo"
+--idp 'Google' --idp 'SAML'
+--description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
+```
+:::
+
+We'll use [CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html) to create our Cognito User Pool and related AWS resources.
+
+## CDK Infrastructure as Code (IAC)
+
+<Tabs>
+<TabItem label='User Pool'>
+```typescript {26-27}
+...
+const googleIDPMetadataPath = path.resolve(__dirname, '../../GoogleIDPMetadata.xml')
+const googleIDPMetadataExists = existsSync(googleIDPMetadataPath)
+const cognitoPackageDir = path.resolve(__dirname, '../../../cognito')
+const GOOGLE_SAML_IDENTITY_PROVIDER_NAME = 'GoogleSaml'
+
+interface AuthProps {
+  userTable: ITable
+  webAppUrl: string
+}
+
+export default class Auth extends Construct {
+  readonly userPool: UserPool
+  readonly userPoolClient: UserPoolClient
+  constructor(scope: Construct, id: string, props: AuthProps) {
+    super(scope, id)
+
+    this.userPool = this.createUserPool()
+    this.userPoolClient = this.createUserPoolClient({ additionalOauthCallbackUrls: props.additionalOauthCallbackUrls })
+    this.addDomainName()
+    this.addTriggers({ userTable: props.userTable })
+  }
+
+  createUserPool() {
+    const userPool = new UserPool(this, 'UserPool', {
+      signInCaseSensitive: false,
+      removalPolicy: getRemovalPolicy({ node: this.node }),
+      passwordPolicy: {
+        minLength: 8,
+      },
+      selfSignUpEnabled: true,
+      signInAliases: {
+        username: false,
+        email: true,
+      },
+    })
+
+    new CfnOutput(this, 'UserPoolId', { key: 'UserPoolId', value: userPool.userPoolId })
+
+    return userPool
+  }
+  ...
+}
+```
+You can ignore the first 4 lines that deal with the Google SAML Metadata and Name for now. They'll be used later in [Cognito User Pool Identity Providers with CDK](#cognito-user-pool-identity-providers-with-cdk)
+
+:::tip
+Always specify `signInCaseSensitive: false`. By default, User Pools treat usernames/emails as case sensitive, resulting in foo@bar.com and Foo@bar.com being treated as two separate users.
+
+For production environments, specify `removalPolicy: cdk.RemovalPolicy.RETAIN` to protect against accidentally deleting your User Pool (and users along with it).
+:::
+
+:::note
+[Scroll up](#create-cognito-user-pool-resources-with-cdk) to see the other code tabs
+:::
+
+</TabItem>
+<TabItem label='User Pool Client'>
+```typescript {15-19} {25-28}
+createUserPoolClient({ webAppUrl }: { webAppUrl: string }) {
+  const environmentConfig = getEnvironmentConfig(this.node)
+  const googleIdentityProvider = this.createGoogleIdentityProvider()
+  const googleSamlIdentityProvider = this.createGoogleSamlIdentityProvider()
+  const supportedIdentityProviders: {name: string}[] = []
+
+  if (googleIdentityProvider) {
+    supportedIdentityProviders.push({ name: googleIdentityProvider.providerName })
+  }
+
+  if (googleSamlIdentityProvider) {
+    supportedIdentityProviders.push({ name: googleSamlIdentityProvider.providerName })
+  }
+
+  const callbackUrls = ['http://localhost:3001/']
+
+  if (webAppUrl) {
+    callbackUrls.push(webAppUrl)
+  }
+
+  const userPoolClient = this.userPool.addClient('UserPoolClient', {
+    idTokenValidity: Duration.days(1),
+    refreshTokenValidity: Duration.days(90),
+    supportedIdentityProviders,
+    oAuth: {
+      callbackUrls: callbackUrls,
+      logoutUrls: callbackUrls,
+    },
+  })
+
+  if (googleIdentityProvider) {
+    userPoolClient.node.addDependency(googleIdentityProvider)
+  }
+
+  if (googleSamlIdentityProvider) {
+    userPoolClient.node.addDependency(googleSamlIdentityProvider)
+  }
+
+  new CfnOutput(this, 'UserPoolClientId', { key: 'UserPoolClientId', value: userPoolClient.userPoolClientId })
+
+  return userPoolClient
+}
+```
+
+We specify up to 2 OAuth callback URLs:
+
+1. `http://localhost:3001/` for local development. Consider removing this for production.
+1. `webAppUrl` The live web app URL. In Code Genie, this is passed in as either the web app's custom domain name (if one is defined in cdk.json for the environment we're deploying) or the default Amplify Hosting URL.
+
+:::note
+[Scroll up](#create-cognito-user-pool-resources-with-cdk) to see the other code tabs
+:::
+</TabItem>
+<TabItem label='Identity Providers'>
+```typescript {10-17}
+createGoogleIdentityProvider() {
+  const { auth } = getEnvironmentConfig(this.node)
+
+  if (!auth.googleClientId && !auth.googleClientId) return
+
+  const googleIdentityProvider = new UserPoolIdentityProviderGoogle(this, 'GoogleIdp', {
+    userPool: this.userPool,
+    clientId: auth.googleClientId,
+    clientSecret: auth.googleClientSecret,
+    scopes: ['profile', 'email', 'openid'],
+    attributeMapping: {
+      email: ProviderAttribute.GOOGLE_EMAIL,
+      fullname: ProviderAttribute.GOOGLE_NAME,
+      familyName: ProviderAttribute.GOOGLE_FAMILY_NAME,
+      givenName: ProviderAttribute.GOOGLE_GIVEN_NAME,
+      profilePicture: ProviderAttribute.GOOGLE_PICTURE,
+    },
+  })
+  new CfnOutput(this, 'GoogleIdpName', { key: 'GoogleIdpName', value: googleIdentityProvider.providerName })
+
+  return googleIdentityProvider
+}
+```
+
+Define the scopes and attributes from the External IDP that we want to store against our User in our User Pool. We're grabbing the `profilePicture` so that we can display the user's profile picture against their name.
+
+```typescript {2} {7} {10-15}
+createGoogleSamlIdentityProvider() {
+  if (!googleIDPMetadataExists) return null
+  const googleIdpMetadataContents = readFileSync(googleIDPMetadataPath, 'utf-8')
+  const userPoolIdentityProviderSamlMetadata = UserPoolIdentityProviderSamlMetadata.file(googleIdpMetadataContents)
+
+  const googleSamlIdentityProvider = new UserPoolIdentityProviderSaml(this, 'GoogleSamlIdp', {
+    name: GOOGLE_SAML_IDENTITY_PROVIDER_NAME,
+    userPool: this.userPool,
+    metadata: userPoolIdentityProviderSamlMetadata,
+    attributeMapping: {
+      email: ProviderAttribute.GOOGLE_EMAIL,
+      fullname: ProviderAttribute.GOOGLE_NAME,
+      familyName: ProviderAttribute.GOOGLE_FAMILY_NAME,
+      givenName: ProviderAttribute.GOOGLE_GIVEN_NAME,
+    },
+  })
+  new CfnOutput(this, 'GoogleSamlIdpName', { key: 'GoogleSamlIdpName', value: googleSamlIdentityProvider.providerName })
+
+  return googleSamlIdentityProvider
+}
+```
+
+There's a circular dependency between the Cognito User Pool and the SAML App you create in Google Cloud/Workspace. Exit early if no `GoogleIDPMetadata.xml` file exists. When you create the SAML App, you'll need to provide the `UserPoolRedirectUrlACS` and `UserPoolEntityId` values from `cdk-outputs.development.json`. Download the SAML App's metadata file and redeploy your CDK Stack.
+
+We must hardcode the SAML Identity Provider name (`GOOGLE_SAML_IDENTITY_PROVIDER_NAME`) to prevent a second circular dependency between the SAML Identity Provider and the `PreSignup` Cognito Trigger (which we'll meet soon). It doesn't seem like this should be a circular dependency since both resources are attached to the User Pool and the SAML Identity Provider has nothing to do with Triggers, but CDK will give you a "Circular dependency between resources" nonetheless.
+
+Our attribute mappings for the SAML Identity Provider are similar to the Google Identity Provider. Unfortunately we don't have access to a profile picture, and even though we're requesting `fullname` here, Google doesn't allow you to map it when creating the SAML App. We'll handle this later.
+
+:::note
+[Scroll up](#create-cognito-user-pool-resources-with-cdk) to see the other code tabs
+:::
+</TabItem>
+<TabItem label='Triggers'>
+```typescript {21-23} {25} {41-50}
+addTriggers({ userTable }: { userTable: ITable }) {
+  this.addPreSignupTrigger()
+  this.addPreTokenGenerationTrigger({  userTable  })
+}
+
+// Pre Signup https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-sign-up.html
+addPreSignupTrigger() {
+  const { auth, logRetentionInDays } = getEnvironmentConfig(this.node)
+  const isSourceMapsEnabled = getIsSourceMapsEnabled({ node: this.node })
+
+  const cognitoPreSignupLogGroup = new LogGroup(this, 'PreSignupLogGroup', {
+    retention: logRetentionInDays,
+  })
+
+  const environment: StringMap = {}
+
+  if (isSourceMapsEnabled) {
+    environment.NODE_OPTIONS = '--enable-source-maps'
+  }
+
+  if (auth?.autoVerifyUsers) {
+    environment.AUTO_VERIFY_USERS = '1'
+  }
+
+  environment.GOOGLE_SAML_IDENTITY_PROVIDER_NAME = GOOGLE_SAML_IDENTITY_PROVIDER_NAME
+
+  const cognitoPreSignupFunction = new NodejsFunction(this, 'PreSignupFunction', {
+    runtime: Runtime.NODEJS_20_X,
+    handler: 'handler',
+    entry: path.join(cognitoPackageDir, 'cognito-pre-signup.ts'),
+    timeout: Duration.seconds(10),
+    memorySize: 1024,
+    logGroup: cognitoPreSignupLogGroup,
+    bundling: {
+      sourceMap: isSourceMapsEnabled,
+    },
+    environment,
+  })
+  const updateCognitoUserPoolPolicyStatement = new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      'cognito-idp:AdminUpdateUserAttributes',
+      'cognito-idp:AdminLinkProviderForUser',
+      'cognito-idp:AdminCreateUser',
+      'cognito-idp:AdminSetUserPassword',
+      'cognito-idp:ListUsers',
+    ],
+    resources: [
+      `arn:aws:cognito-idp:${Aws.REGION}:${Aws.ACCOUNT_ID}:userpool/*`,
+    ],
+  })
+  cognitoPreSignupFunction.addToRolePolicy(updateCognitoUserPoolPolicyStatement)
+  this.userPool.addTrigger(UserPoolOperation.PRE_SIGN_UP, cognitoPreSignupFunction)
+}
+```
+
+Setting `AUTO_VERIFY_USERS` in development and testing environments is really convenient. It's just as convenient in production, but there are good reasons to require email confirmation (such as GDPR).
+
+We add our `GOOGLE_SAML_IDENTITY_PROVIDER_NAME` environment variable since we'll need that in the Lambda Function's code.
+
+Our Lambda Function requires 5 permissions for the User Pool. Unfortunately we can't specify `this.userPool.userPoolArn` as the resource since CDK once again complains about a circular dependency. We're left with granting access to all User Pools within the same account and region.
+
+```typescript {34-36} {48}
+addPreTokenGenerationTrigger({ userTable }: { userTable: ITable }) {
+  // Pre Token Generation https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-token-generation.html
+  const { logRetentionInDays } = getEnvironmentConfig(this.node)
+  const isSourceMapsEnabled = getIsSourceMapsEnabled({ node: this.node })
+  const cognitoPreTokenGenerationLogGroup = new LogGroup(this, 'PreTokenGenerationLogGroup', {
+    retention: logRetentionInDays,
+  })
+
+  const environment: StringMap = {
+    USER_TABLE: userTable.tableName,
+  }
+
+  if (isSourceMapsEnabled) {
+    environment.NODE_OPTIONS = '--enable-source-maps'
+  }
+
+  const cognitoPreTokenGenerationFunction = new NodejsFunction(this, 'PreTokenGenerationFunction', {
+    runtime: Runtime.NODEJS_20_X,
+    handler: 'handler',
+    entry: path.join(cognitoPackageDir, 'cognito-pre-token-generation.ts'),
+    timeout: Duration.seconds(10),
+    memorySize: 1024,
+    logGroup: cognitoPreTokenGenerationLogGroup,
+    bundling: {
+      sourceMap: isSourceMapsEnabled,
+    },
+    environment,
+  })
+
+  // Give the Lambda function permission to read and write to DynamoDB
+  const dynamoDBReadWritePolicy = new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      'dynamodb:GetItem',
+      'dynamodb:PutItem',
+      'dynamodb:UpdateItem',
+    ],
+    resources: [
+      userTable.tableArn,
+    ],
+  })
+  cognitoPreTokenGenerationFunction.addToRolePolicy(dynamoDBReadWritePolicy)
+
+  // Give the Lambda function permission to update Cognito User Attributes
+  const updateCognitoUserPoolPolicyStatement = new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      'cognito-idp:AdminUpdateUserAttributes',
+    ],
+    resources: [
+      `arn:aws:cognito-idp:${Aws.REGION}:${Aws.ACCOUNT_ID}:userpool/*`,
+    ],
+  })
+  cognitoPreTokenGenerationFunction.addToRolePolicy(updateCognitoUserPoolPolicyStatement)
+  this.userPool.addTrigger(UserPoolOperation.PRE_TOKEN_GENERATION, cognitoPreTokenGenerationFunction)
+}
+```
+
+:::tip
+You can create your own CDK Constructs to abstract away some of the repetitiveness you see in these Node.js Lambda Functions.
+:::
+
+:::note
+[Scroll up](#create-cognito-user-pool-resources-with-cdk) to see the other code tabs
+:::
+</TabItem>
+
+<TabItem label='cdk.json'>
+```json
+{
+  "app": "ts-node --prefer-ts-exts bin/cdk.ts",
+  "context": {
+    "environmentConfig": {
+      "development": {...},
+      "staging": {...},
+      "production": {
+        "auth": {
+          "autoVerifyUsers": false,
+          "googleClientId": "",
+          "googleClientSecret": ""
+        },
+        "logRetentionInDays": 14,
+        "ui": {
+          "domainName": "app.example.com"
+        }
+      }
+    }
+  }
+}
+```
+</TabItem>
+</Tabs>
+
+## Create External Identity Providers
+<Tabs>
+<TabItem label='Google Sign-in'>
+1. Login to Google Cloud Console and select or create the relevant project.
+1. <a href='https://console.cloud.google.com/apis/credentials/oauthclient?' target="_blank" rel="noopener">Create OAuth client ID</a>:
+    1. Select "Web application" as the "Application type" and enter a name
+    1. Click "Add URI" under "Authorised JavaScript origins". Copy the value for `UserPoolRedirectUrlACS` from `cdk-outputs.dev.json` and paste in only the domain part (i.e remove the '/saml2/idpresponse').
+    1. Click "Add URI" under "Authorised redirect URIs". Copy the same value from above, but this time add "/oauth2/idpresponse" to the end.
+    1. Click Save
+1. Configure <a href='https://console.cloud.google.com/apis/credentials/oauthclient?' target="_blank" rel="noopener">OAuth consent screen</a>:
+    1. Select User Type "External" and mark it for "Production"
+    1. Under "Authorised domains" add "amazoncognito.com"
+    1. Save
+</TabItem>
+<TabItem label='Google SAML'>
+1. Login to Google Workspace Admin and navigate to [Apps => Web and Mobile Apps](https://admin.google.com/ac/apps/unified).
+1. Click "Add app" => "Add custom SAML App". Enter a name for your app.
+1. Download the metadata file to `./packages/cdk` and click Continue.
+1. From `cdk-outputs.development.json`, copy the values for `UserPoolRedirectUrlACS` and `UserPoolEntityId` and paste them into the respective fields in the Service Provider Details form and click Continue.
+1. Add attribute mappings: Primary email => email; First name => first_name; Last name => family_name. Click Finish.
+1. Click the User Access card; select "ON for everyone" and click Save.
+1. Run `npm run deploy:dev`
+</TabItem>
+</Tabs>

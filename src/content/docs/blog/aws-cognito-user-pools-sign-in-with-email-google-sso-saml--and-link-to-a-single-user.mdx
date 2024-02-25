@@ -1,0 +1,394 @@
+---
+title: 'AWS Cognito User Pools: Sign in with Email, Google, or SSO (SAML) and link to a single user'
+date: 2024-02-31
+excerpt: how to
+authors:
+  - brett
+tags:
+  - cognito
+  - aws
+  - lambda
+draft: true
+---
+import { Image } from 'astro:assets';
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-linked-accounts/cognito-example-sign-in.webp';
+
+[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides user identity and auth -- a core component of almost every application. This series of article cover a full stack solution enabling users to sign in with Email + Password, Google Sign In, and SSO/SAML, and link them all to the same user within the app.
+
+<figure style={{margin: '2rem auto', width: '360px'}}>
+  <Image
+    src={signInPage}
+    alt="Sign in page"
+  />
+  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI. This article deals mostly with the backend, but there are no pretty backend pictures.</figcaption>
+</figure>
+
+:::tip
+The complete source code is available by generating a [Code Genie](https://codegenie.codes) app and specifying `'Google'` and `'SAML'` `idp` options:
+
+```sh title="Generate a To-Do List app with Code Genie"
+npx @codegenie/cli generate --name "Todo"
+--idp 'Google' --idp 'SAML'
+--description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
+```
+:::
+
+:::note[Terminology]
+This example uses both Google Social Sign in, and Google SSO/SAML. So that we don't confuse the two, I'll just refer to the latter as the "SAML" Identity Provider (IDP) going forward. The terms "Federated" and "External" are used interchangeably.
+:::
+
+Let's start with the interesting stuff first before we grind out some CDK, click-ops our way through creating External IDPs, and finally add Cognito auth to a React Next.js web app.
+
+## Cognito Triggers
+
+The core of this solution relies on two Cognito Triggers. The high-level flow looks like this:
+
+1. The <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-sign-up.html" target="_blank" rel="noopener">Pre sign-up Trigger</a> fires when a user signs up using Google, SAML, or Email + Password. It's also triggered when an existing user signs in using a new external identity for the first time (e.g. if a user signs up using SAML and then later signs in using Google SSO with the same email).
+    1. If they're signing up with Email + Password, no special logic is run.
+    1. If they're signing up via Google or SAML and they haven't already signed up using a different method with the same email: a native Cognito User is created for that email.
+    1. The External Identity is linked to the native Cognito User for that email.
+1. The <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-token-generation.html" target="_blank" rel="noopener">Pre token generation Trigger</a> fires on every sign in.
+    {/* 1. If this is their first time signing in, a User record is created in DynamoDB. */}
+    1. If the user has External Identities linked to their account, the account is marked as verified.
+
+:::note[Cognito workarounds]
+The reason we must create a native Cognito User is because Cognito doesn't allow linking a native Cognito User to an existing Federated Identity. To handle the scenario where a user first signs in with an External IDP and then later wants to sign in with Email + Password, we manually create a native Cognito User, and then link the External Identity. Users that choose to later sign in with Email+Pass can set their password via the "Forgot Password" flow to sign in with their Email + Password.
+
+Additionally, there is an unfortunate Cognito "feature" that sets all User attributes to their default value when signing in with an External IDP that doesn't return that value. For `email_verified` this is `false`. We must keep `email_verified=true`, otherwise the user won't be able to sign in with their Email + Password or use the "Forgot Password" flow.
+
+#AWSWishlist: fix these ☝️
+:::
+
+### Lambda Handlers
+
+<Tabs style={{textWrap: 'nowrap'}}>
+<TabItem label="Pre Sign-up">
+
+```typescript
+import { randomBytes } from 'crypto'
+import {
+  AdminCreateUserCommand,
+  AdminLinkProviderForUserCommand,
+  AdminSetUserPasswordCommand,
+  CognitoIdentityProviderClient,
+  ListUsersCommand,
+  MessageActionType,
+} from '@aws-sdk/client-cognito-identity-provider'
+import type { PreSignUpTriggerEvent } from 'aws-lambda'
+import UnsupportedIdentityProviderNameException from './exceptions/UnsupportedIdentityProviderNameException'
+import getFullName from './getFullName'
+
+// NOTE: Cognito's adminLinkProviderForUser API requires the provider name to have the correct capitalization (e.g. Google, Facebook, MySamlIdp),
+// however, the providerName received in the event from Cognito is lowercased, e.g. google_1234.
+const providerNamesLowerCaseLookup = {
+  'google': 'Google',
+  // 'facebook': 'Facebook',
+}
+
+// GOOGLE_SAML_IDENTITY_PROVIDER_NAME is defined later in CDK and passed through as an environment variable.
+const { GOOGLE_SAML_IDENTITY_PROVIDER_NAME } = process.env
+
+if (GOOGLE_SAML_IDENTITY_PROVIDER_NAME) {
+  providerNamesLowerCaseLookup[GOOGLE_SAML_IDENTITY_PROVIDER_NAME.toLowerCase()] = GOOGLE_SAML_IDENTITY_PROVIDER_NAME
+}
+
+const cognitoIdpClient = new CognitoIdentityProviderClient({ region: 'us-west-2' })
+
+export async function handler (event: PreSignUpTriggerEvent) {
+  switch(event.triggerSource) {
+  case 'PreSignUp_ExternalProvider':
+    await handleExternalProvider({ event })
+    break
+  case 'PreSignUp_SignUp':
+  case 'PreSignUp_AdminCreateUser':
+    if (process.env.AUTO_VERIFY_USERS) {
+      event.response.autoConfirmUser = true
+      event.response.autoVerifyEmail = true
+    }
+  }
+
+  return event
+}
+
+async function handleExternalProvider({ event }: { event: PreSignUpTriggerEvent }) {
+  const {
+    userName,
+    userPoolId,
+    request: {
+      userAttributes,
+    },
+  } = event
+
+  const { email, name, given_name: givenName, family_name: familyName } = userAttributes
+  const [providerName, providerUserId] = userName.split('_')
+  const providerNameWithCorrectCapitalization = providerNamesLowerCaseLookup[providerName.toLowerCase()]
+
+  if (!providerNameWithCorrectCapitalization) {
+    throw new UnsupportedIdentityProviderNameException({ providerName, validIdentityProviderNamesMap: providerNamesLowerCaseLookup })
+  }
+
+  const cognitoUsersWithEmail = await listCognitoUsersWithEmail({ userPoolId, email })
+
+  if (cognitoUsersWithEmail.Users?.length) {
+    const cognitoUsername = cognitoUsersWithEmail.Users[0].Username || 'username-not-found'
+
+    await linkCognitoUserAccounts({
+      cognitoUsername,
+      userPoolId,
+      providerName: providerNameWithCorrectCapitalization,
+      providerUserId,
+    })
+  } else {
+    // No existing native Cognito user. Create one now in case they want to login with their email address in the future.
+    // Cognito doesn't support linking a new native Cognito User to an existing Federated User, so it must be done now.
+    // This approach allows users to use the Forgot Password flow to reset their password and sign in with email + password.
+    const newNativeCognitoUser = await createCognitoUser({
+      userPoolId,
+      email,
+      givenName,
+      familyName,
+      name,
+    })
+
+    const newNativeCognitoUserUsername = newNativeCognitoUser.User?.Username || 'username-not-found'
+
+    await linkCognitoUserAccounts({
+      cognitoUsername: newNativeCognitoUserUsername,
+      userPoolId,
+      providerName: providerNameWithCorrectCapitalization,
+      providerUserId,
+    })
+  }
+
+  return event
+}
+
+function listCognitoUsersWithEmail ({ userPoolId, email }: { userPoolId: string, email: string }) {
+  return cognitoIdpClient.send(new ListUsersCommand({
+    UserPoolId: userPoolId,
+    Filter: `email = '${email}'`,
+  }))
+}
+
+function linkCognitoUserAccounts ({
+  cognitoUsername,
+  userPoolId,
+  providerName,
+  providerUserId,
+}: {
+  cognitoUsername: string
+  userPoolId: string
+  providerName: string
+  providerUserId: string
+}) {
+  return cognitoIdpClient.send(new AdminLinkProviderForUserCommand({
+    SourceUser: {
+      ProviderName: providerName,
+      ProviderAttributeName: 'Cognito_Subject',
+      ProviderAttributeValue: providerUserId,
+    },
+    DestinationUser: {
+      ProviderName: 'Cognito',
+      ProviderAttributeValue: cognitoUsername,
+    },
+    UserPoolId: userPoolId,
+  }))
+}
+
+async function createCognitoUser ({
+  userPoolId,
+  email,
+  givenName,
+  familyName,
+  name,
+}: {
+  userPoolId: string
+  email: string
+  givenName: string
+  familyName: string
+  name: string
+}) {
+  const fullName = getFullName({ name, givenName, familyName })
+  const createdCognitoUser = await cognitoIdpClient.send(new AdminCreateUserCommand({
+    UserPoolId: userPoolId,
+    // Don't send an email with the temporary password
+    MessageAction: MessageActionType.SUPPRESS,
+    Username: email,
+    UserAttributes: [
+      {
+        Name: 'name',
+        Value: fullName,
+      },
+      {
+        Name: 'email',
+        Value: email,
+      },
+      {
+        Name: 'email_verified',
+        Value: 'true',
+      },
+    ],
+  }))
+
+  // Set password to confirm user; AdminConfirmSignUp doesn't work on manually created users
+  await setCognitoUserPassword({ userPoolId, email })
+
+  return createdCognitoUser
+}
+
+function setCognitoUserPassword ({ userPoolId, email }: { userPoolId: string, email: string }) {
+  const password = randomBytes(16).toString('hex')
+
+  return cognitoIdpClient.send(new AdminSetUserPasswordCommand({
+    Password: password,
+    UserPoolId: userPoolId,
+    Username: email,
+    Permanent: true,
+  }))
+}
+```
+:::note
+That was a lot of code, but we're not done yet! Don't forget to [scroll back up](#lambda-handlers) and see the Pre Token Generation Lambda Handler.
+:::
+</TabItem>
+<TabItem label="Pre Token Generation">
+```typescript
+import { AdminUpdateUserAttributesCommand, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider'
+import axios from 'axios'
+import type { PreTokenGenerationTriggerEvent } from 'aws-lambda'
+import { createUser, getUser, updateUser } from '../api/controllers/user'
+import { StringMap } from '../common/types'
+import getFullName from './getFullName'
+
+const cognitoIdpClient = new CognitoIdentityProviderClient({ region: 'us-west-2' })
+
+interface Identity {
+  providerType: 'Google' | 'Facebook' | 'SAML' | 'OIDC' | string
+}
+
+export async function handler (event: PreTokenGenerationTriggerEvent) {
+  const {
+    userPoolId,
+    userName,
+    request: {
+      userAttributes,
+    },
+  } = event
+  const promises: Promise<any>[] = [syncUserToDynamo(userAttributes)]
+
+  const { identities, email } = userAttributes
+
+  if (email && identities) {
+    const identitiesArray: Identity[] = JSON.parse(identities)
+    const hasExternalIdentity = identitiesArray.some(identity => ['Google', 'Facebook', 'SAML', 'OIDC'].includes(identity.providerType))
+
+    if (hasExternalIdentity) {
+      // Cognito has a "feature" that sets all attributes to their default values when not present on the external identity provider.
+      // This results in the email_verified being set to false on each login, which causes features like forgot password to not work.
+      // Force it back to email_verified=true.
+      promises.push(setUserEmailVerifiedTrue({
+        userPoolId,
+        username: userName,
+      }))
+    }
+  }
+
+  await Promise.all(promises)
+
+  return event
+}
+
+async function setUserEmailVerifiedTrue ({
+  userPoolId,
+  username,
+}: {
+  userPoolId: string
+  username: string
+}) {
+  return cognitoIdpClient.send(new AdminUpdateUserAttributesCommand({
+    UserPoolId: userPoolId,
+    Username: username,
+    UserAttributes: [{Name: 'email_verified', Value: 'true'}],
+  }))
+}
+
+async function syncUserToDynamo (userAttributes: StringMap) {
+  const {
+    sub: userId,
+    email,
+    given_name: givenName,
+    family_name: familyName,
+    name,
+    picture,
+  } = userAttributes
+
+  const fullName = getFullName({ name, givenName, familyName })
+  const existingUser = await getUser({ userId })
+
+  if (existingUser) {
+    // If the user doesn't have an avatar set and one is available from the external IDP: set it to the user's avatar
+    // NOTE: Uploading user avatar to S3 instead of storing the base64 in DynamoDB is a better solution.
+    if (picture && !existingUser.data.avatar) {
+      const base64EncodedProfilePicture = await fetchAndBase64EncodeImage(picture)
+      await updateUser({ userId, user: { avatar: base64EncodedProfilePicture }})
+    }
+    return
+  }
+
+  const user: any = {
+    name: fullName,
+    email,
+  }
+
+  if (picture) {
+    const base64EncodedProfilePicture = await fetchAndBase64EncodeImage(picture)
+
+    if (base64EncodedProfilePicture) {
+      user.avatar = base64EncodedProfilePicture
+    }
+  }
+
+  return createUser({ userId, user })
+}
+
+async function fetchAndBase64EncodeImage(imageUrl) {
+  try {
+    const image = await axios.get(imageUrl, {responseType: 'arraybuffer'})
+    const base64 = Buffer.from(image.data).toString('base64')
+    return base64 ? `data:image/png;base64, ${base64}` : null
+  } catch(error: unknown) {
+    // If we encounter an error while fetching/encoding the image, it's better to just log and continue.
+    // The user won't have their profile picture, but at least they'll be registered/logged in!
+    console.error('cognito.preTokenGeneration.syncUserToDynamo.fetchAndBase64EncodeImage.error', {
+      errorName: (error as Error).name,
+      errorMessage: (error as Error).message,
+    })
+  }
+}
+```
+</TabItem>
+<TabItem label="getFullName">
+```typescript
+// Google SAML doesn't allow mapping the full name field, so we instead must construct this ourselves based on Given Name and Family Name.
+export default function getFullName({ name, givenName, familyName}) {
+  let fullName = name
+
+  // If the name is JUST the given name, AND a family name exists: concatenate them into full name.
+  // This is especially useful in Google SAML where it doesn't include a full name attribute.
+  if (givenName && familyName && (!fullName || fullName === givenName)) {
+    fullName = `${givenName} ${familyName}`
+  } else if (!fullName) {
+    fullName = givenName || familyName
+  }
+
+  return fullName
+}
+```
+</TabItem>
+</Tabs>
+
+## End
+
+Multi-account linking between external identity providers and native Cognito Users isn't simple, but it is possible thanks to Lambda Triggers.
+If you want to try this out yourselfj

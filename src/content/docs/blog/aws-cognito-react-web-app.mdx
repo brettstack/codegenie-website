@@ -1,0 +1,814 @@
+---
+title: 'Create a React Web App with AWS Cognito User Pools Auth'
+date: 2024-02-31
+excerpt: how to
+authors:
+  - brett
+tags:
+  - cognito
+  - aws
+draft: true
+---
+import { Image } from 'astro:assets';
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-linked-accounts/cognito-example-sign-in.webp';
+
+[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides user identity and auth -- a core component of almost every application. This series of article cover a full stack solution enabling users to sign in with Email + Password, Google Sign In, and SSO/SAML, and link them all to the same user within the app.
+
+<figure style={{margin: '2rem auto', width: '360px'}}>
+  <Image
+    src={signInPage}
+    alt="Sign in page"
+  />
+  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in the [React Cognito User Pools](aws-cognito-react-web-app) article.</figcaption>
+</figure>
+
+:::tip
+The complete source code is available by generating a [Code Genie](https://codegenie.codes) app and specifying `'Google'` and `'SAML'` `idp` options:
+
+```sh title="Generate a To-Do List app with Code Genie"
+npx @codegenie/cli generate --name "Todo"
+--idp 'Google' --idp 'SAML'
+--description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
+```
+:::
+
+## React Cognito Auth
+
+To add Cognito Auth to our React web app (specifically Next.js in this case)  we'll use the <a href="https://docs.amplify.aws/" target="_blank" rel="noopener">Amplify JavaScript Library</a>, which simplifies the complex <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-authentication-flow.html" target="_blank" rel="noopener">OAuth flow</a>.
+
+The work required boils down to:
+
+1. Configuring the Amplify library with details about our Cognito User Pool
+1. Configuring Axios with the base URL of our API endpoint, and attaching the Authorizers header on each API request.
+1. Adding pages for Login, Register, Verify, Forgot Password, Reset Password. See [Code Genie pages docs](/docs/project-walkthrough/frontend/pages) for more details.
+1. Wrapping each of the Amplify methods we use with [TanStack Query](https://tanstack.com/query/latest/docs/react/guides/queries) `useQuery` hooks for improved state management. See [Code Genie hooks docs](/docs/project-walkthrough/frontend/hooks) for more details.
+
+<Tabs>
+<TabItem label='_app.tsx'>
+```typescript
+import { Amplify } from 'aws-amplify'
+import { fetchAuthSession } from 'aws-amplify/auth'
+import axios from 'axios'
+
+const oauthRedirectUrl = ['http://localhost:3001/']
+
+if (global.window?.location.origin) oauthRedirectUrl.push(global.window.location.origin)
+
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: process.env.NEXT_PUBLIC_CognitoUserPoolId!,
+      userPoolClientId: process.env.NEXT_PUBLIC_CognitoUserPoolClientId!,
+      loginWith: {
+        oauth: {
+          redirectSignIn: oauthRedirectUrl,
+          redirectSignOut: oauthRedirectUrl,
+          domain: 'example.auth.us-west-2.amazoncognito.com',
+          responseType: 'code',
+          scopes: ['aws.cognito.signin.user.admin', 'email', 'openid', 'phone', 'profile'],
+        },
+      },
+    },
+  },
+}, {
+  ssr: false,
+})
+
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_ApiEndpoint
+
+// Set Authorization header on all requests if user is signed in; othwerise, redirect to login page
+axios.interceptors.request.use(async (config) => {
+  try {
+    const authSession = await fetchAuthSession()
+    config.headers.Authorization = authSession.tokens?.idToken?.toString()
+  } catch (e) {
+    const redirectRoute = getRedirectToLoginPageUrl()
+    global.window.location.href = redirectRoute
+  }
+
+  return config
+})
+...
+```
+</TabItem>
+<TabItem label='Login'>
+```tsx
+import React, { useEffect, useRef } from 'react'
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  InputRef,
+  Typography,
+} from 'antd'
+import Link from 'next/link'
+import UnauthenticatedPage from '../components/layouts/UnauthenticatedPage'
+import { useSignInMutation, useSignInWithGoogleMutation, useSignInWithSsoMutation } from '../components/Me/meHooks'
+import { useRouter } from 'next/router'
+import { GoogleOutlined, LockOutlined } from '@ant-design/icons'
+
+export default function LoginPage() {
+  const [form] = Form.useForm()
+  const passwordInputRef = useRef<InputRef>(null)
+  const signInMutation = useSignInMutation()
+  const signInWithGoogleMutation = useSignInWithGoogleMutation()
+  const signInWithSsoMutation = useSignInWithSsoMutation()
+  const router = useRouter()
+  const queryParamEmail = (router.query.email as string) || ''
+  const isSigningIn = signInMutation.isLoading || signInWithGoogleMutation.isLoading || signInWithSsoMutation.isLoading
+
+  useEffect(() => {
+    if (queryParamEmail) {
+      form.setFieldsValue({
+        email: queryParamEmail,
+      })
+      passwordInputRef.current?.focus()
+    }
+  }, [queryParamEmail])
+
+  return (
+    <UnauthenticatedPage pageTitle='Login'>
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <Button
+          icon={<GoogleOutlined />}
+          disabled={isSigningIn}
+          loading={signInWithGoogleMutation.isLoading}
+          type='primary'
+          onClick={() => signInWithGoogleMutation.mutate()}
+        >
+          Sign in with Google
+        </Button>
+        <Button
+          icon={<LockOutlined />}
+          disabled={isSigningIn}
+          loading={signInWithSsoMutation.isLoading}
+          onClick={() => signInWithSsoMutation.mutate()}
+        >
+          SSO
+        </Button>
+      </div>
+      <Divider><Typography.Text type='secondary' italic>or sign in with email</Typography.Text></Divider>
+      <Form
+        layout='vertical'
+        name='login_form'
+        initialValues={{ remember: true }}
+        onFinish={signInMutation.mutate}
+        form={form}
+        disabled={isSigningIn}
+      >
+        <Form.Item
+          label='Email'
+          name='email'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Email is required.',
+              type: 'email',
+            },
+          ]}
+        >
+          <Input type='email' />
+        </Form.Item>
+        <Form.Item
+          label='Password'
+          name='password'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Password is required.',
+            },
+          ]}
+        >
+          <Input.Password ref={passwordInputRef} />
+        </Form.Item>
+        <Form.Item>
+          <Form.Item name='remember' valuePropName='checked' noStyle>
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+          <Button
+            loading={signInMutation.isLoading}
+            style={{ float: 'right' }}
+            type='primary'
+            htmlType='submit'
+          >
+            Sign in
+          </Button>
+        </Form.Item>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Link href='/register'>Register</Link>
+          <Link href='/forgot-password'>Forgot your password?</Link>
+        </div>
+      </Form>
+    </UnauthenticatedPage>
+  )
+}
+```
+</TabItem>
+<TabItem label='Register'>
+```tsx
+import React from 'react'
+import {
+  Button,
+  Form,
+  Input,
+} from 'antd'
+import Link from 'next/link'
+import UnauthenticatedPage from '../components/layouts/UnauthenticatedPage'
+import { useSignUpMutation } from '../components/Me/meHooks'
+
+export default function App() {
+  const signUpMutation = useSignUpMutation()
+
+  return (
+    <UnauthenticatedPage pageTitle='Register'>
+      <Form
+        layout='vertical'
+        name='register_form'
+        onFinish={signUpMutation.mutate}
+        validateTrigger='onBlur'
+      >
+        <Form.Item
+          label='Name'
+          name='name'
+          required={false}
+          rules={[
+            { required: true, message: 'Please enter your name.' },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label='Email'
+          name='email'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your email.',
+              type: 'email',
+            },
+          ]}
+        >
+          <Input type='email' />
+        </Form.Item>
+        <Form.Item
+          style={{ marginBottom: '10px' }}
+          label='Password'
+          name='password'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your password.',
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item style={{ margin: '0' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button style={{ marginRight: '1rem' }}>
+              <Link href='/'>Back to login</Link>
+            </Button>
+            <Button
+              type='primary'
+              disabled={signUpMutation.isLoading}
+              loading={signUpMutation.isLoading}
+              htmlType='submit'
+              className='login-form-button'
+            >
+              Register
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
+    </UnauthenticatedPage>
+  )
+}
+```
+</TabItem>
+<TabItem label='Verify'>
+```tsx
+import React, { useEffect } from 'react'
+import {
+  Button,
+  Typography,
+  Form,
+  Input,
+} from 'antd'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+import UnauthenticatedPage from '../components/layouts/UnauthenticatedPage'
+import { useVerifyAccountMutation } from '../components/Me/meHooks'
+
+const { Title } = Typography
+
+export default function VerifyPage() {
+  const [form] = Form.useForm()
+  const router = useRouter()
+  const verifyAccountMutation = useVerifyAccountMutation()
+  const queryParamEmail = (router.query.email as string) || ''
+  const queryParamCode = (router.query.code as string) || ''
+
+  useEffect(() => {
+    if (queryParamEmail && queryParamCode) {
+      verifyAccountMutation.mutate({ email: queryParamEmail, code: queryParamCode })
+    }
+    form.setFieldsValue({
+      email: queryParamEmail,
+      code: queryParamCode,
+    })
+  }, [queryParamEmail, queryParamCode])
+
+  return (
+    <UnauthenticatedPage pageTitle='Verify Account'>
+      <Title level={3}>Verify your account</Title>
+      {queryParamCode ? null : <p>Check your inbox for a verification email that includes a verification code, and enter it here. Alternatively, simply click the link in the email.</p>}
+      <Form
+        layout='vertical'
+        name='verifyAccountForm'
+        form={form}
+        onFinish={verifyAccountMutation.mutate}
+      >
+        <Form.Item
+          label='Email'
+          name='email'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Email is required.',
+              type: 'email',
+            },
+          ]}
+        >
+          <Input type='email' />
+        </Form.Item>
+        <Form.Item
+          label='Verification Code'
+          name='code'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Code is required.',
+              max: 6,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item style={{ margin: '0' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button style={{ marginRight: '1rem' }}>
+              <Link href='/'>Back to login</Link>
+            </Button>
+            <Button
+              type='primary'
+              disabled={verifyAccountMutation.isLoading}
+              loading={verifyAccountMutation.isLoading}
+              htmlType='submit'
+              className='verify-account-form-button'
+            >
+              Verify Account
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
+    </UnauthenticatedPage>
+  )
+}
+```
+</TabItem>
+<TabItem label='Forgot Password'>
+```tsx
+import React from 'react'
+import {
+  Button,
+  Typography,
+  Form,
+  Input,
+} from 'antd'
+import Link from 'next/link'
+import UnauthenticatedPage from '../components/layouts/UnauthenticatedPage'
+import { useForgotPasswordMutation } from '../components/Me/meHooks'
+
+const { Title } = Typography
+
+export default function ForgotPassword() {
+  const forgotPasswordMutation = useForgotPasswordMutation()
+
+  return (
+    <UnauthenticatedPage pageTitle='Forgot Password'>
+      <Title level={3}>Forgot your password?</Title>
+      <Form
+        layout='vertical'
+        name='forgotPasswordForm'
+        onFinish={forgotPasswordMutation.mutate}
+      >
+        <Form.Item
+          label='Email'
+          name='email'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your email.',
+              type: 'email',
+            },
+          ]}
+        >
+          <Input type='email' />
+        </Form.Item>
+        <Form.Item style={{ margin: '0' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button style={{ marginRight: '1rem' }}>
+              <Link href='/'>Back to login</Link>
+            </Button>
+            <Button
+              type='primary'
+              disabled={forgotPasswordMutation.isLoading}
+              loading={forgotPasswordMutation.isLoading}
+              htmlType='submit'
+              className='forgot-password-form-button'
+            >
+              Reset Password
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
+    </UnauthenticatedPage>
+  )
+}
+```
+</TabItem>
+<TabItem label='Reset Password'>
+```tsx
+import React, { useEffect } from 'react'
+import {
+  Button,
+  Typography,
+  Form,
+  Input,
+} from 'antd'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+import UnauthenticatedPage from '../components/layouts/UnauthenticatedPage'
+import { useResetPasswordMutation } from '../components/Me/meHooks'
+
+const { Title } = Typography
+
+export default function RestPassword() {
+  const [form] = Form.useForm()
+  const router = useRouter()
+  const queryParamEmail = (router.query.email as string) || ''
+  useEffect(() => {
+    form.setFieldsValue({
+      email: queryParamEmail,
+    })
+  }, [queryParamEmail])
+  const resetPasswordMutation = useResetPasswordMutation()
+
+  return (
+    <UnauthenticatedPage pageTitle='Reset Password'>
+      <Title level={3}>Reset your password</Title>
+      <Form
+        layout='vertical'
+        name='reset_password_form'
+        form={form}
+        onFinish={resetPasswordMutation.mutate}
+      >
+        <Form.Item
+          label='Email'
+          name='email'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your email.',
+              type: 'email',
+            },
+          ]}
+        >
+          <Input type='email' />
+        </Form.Item>
+        <Form.Item
+          label='Reset code'
+          name='code'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your reset code.',
+              max: 6,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          style={{ marginBottom: '10px' }}
+          label='New Password'
+          name='password'
+          required={false}
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your password.',
+            },
+          ]}
+        >
+          <Input.Password autoComplete='new-password' />
+        </Form.Item>
+        <Form.Item style={{ margin: '0' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button style={{ marginRight: '1rem' }}>
+              <Link href='/'>Back to login</Link>
+            </Button>
+            <Button
+              type='primary'
+              disabled={resetPasswordMutation.isLoading}
+              loading={resetPasswordMutation.isLoading}
+              htmlType='submit'
+              className='forgot-password-form-button'
+            >
+              Reset Password
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
+    </UnauthenticatedPage>
+  )
+}
+```
+</TabItem>
+<TabItem label='Hooks'>
+```typescript
+'use client'
+
+import axios from 'axios'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  confirmResetPassword,
+  confirmSignUp,
+  getCurrentUser,
+  resetPassword,
+  signIn,
+  signInWithRedirect,
+  signOut,
+  signUp,
+} from 'aws-amplify/auth'
+import { useRouter } from 'next/router'
+import { notification } from 'antd'
+
+const api = {
+  getMe: () => axios.get('/me'),
+  updateMe: ({ data }) => axios.put('/me', { me: data }),
+}
+
+export function useCurrentUserQuery({ redirectOnNotAuth = true } = {}) {
+  const router = useRouter()
+  const currentUserQuery = useQuery(['currentUser'], async () => {
+    try {
+      const currentAuthenticatedUser = await getCurrentUser()
+      return currentAuthenticatedUser
+    } catch (error) {
+      if (redirectOnNotAuth) {
+        router.push('/')
+      }
+      return null
+    }
+  }, {
+    retry: false,
+  })
+  return currentUserQuery
+}
+
+export function useSignInWithGoogleMutation() {
+  const signInWithGoogleMutation = useMutation(() => {
+    signInWithRedirect({ provider: 'Google' })
+    return new Promise(() => null)
+  },
+  {
+    onError: (err: Error) => {
+      notification.error({
+        message: 'Sign in with Google failed',
+        description: err.message,
+        placement: 'topRight',
+      })
+    },
+  })
+
+  return signInWithGoogleMutation
+}
+
+export function useSignInWithSsoMutation() {
+  const signInWithSsoMutation = useMutation(() => {
+    signInWithRedirect({
+      provider: {
+        custom: process.env.NEXT_PUBLIC_GoogleSamlIdpName!,
+      },
+    })
+    return new Promise(() => null)
+  },
+  {
+    onError: (err: Error) => {
+      notification.error({
+        message: 'Sign in with SSO failed',
+        description: err.message,
+        placement: 'topRight',
+      })
+    },
+  })
+
+  return signInWithSsoMutation
+}
+
+export function useSignInMutation() {
+  const currentUserQuery = useCurrentUserQuery({ redirectOnNotAuth: false })
+  const signInMutation = useMutation(async ({ email, password }: any) => {
+    await signIn({ username: email, password })
+    await currentUserQuery.refetch()
+  },
+  {
+    onError: (err: Error) => {
+      notification.error({
+        message: 'Login failed',
+        description: err.message,
+        placement: 'topRight',
+      })
+    },
+  })
+
+  return signInMutation
+}
+
+export function useSignUpMutation() {
+  const signInMutation = useSignInMutation()
+  const router = useRouter()
+  const signUpMutation = useMutation(async ({ name, password, email }: any) => {
+    await signUp({
+      username: email,
+      password,
+      options: {
+        userAttributes: { email, name },
+      },
+    })
+
+    if (process.env.NEXT_PUBLIC_AUTO_VERIFY_USERS) {
+      await signInMutation.mutateAsync({ email, password })
+      router.push('/posts')
+      return
+    }
+
+    router.push(`/verify?email=${encodeURIComponent(email)}`)
+  },
+  {
+    onError: async (err: Error) => notification.error({
+      message: 'Error',
+      description: err.message,
+      placement: 'topRight',
+    }),
+  })
+
+  return signUpMutation
+}
+
+export function useSignOutMutation({ includeEmailQueryStringParam = false } = {}) {
+  const queryClient = useQueryClient()
+  const currentUserQuery = useCurrentUserQuery({ redirectOnNotAuth: false })
+  const signOutMutation = useMutation(async () => {
+    try {
+      await signOut({ global: true })
+    } catch (error: any) {
+      notification.error({
+        message: 'Error trying to logout',
+        description: error.message,
+        placement: 'topRight',
+      })
+    } finally {
+      queryClient.cancelQueries()
+      queryClient.clear()
+      queryClient.invalidateQueries()
+      queryClient.removeQueries()
+      window.localStorage.clear()
+      const signInRoute = includeEmailQueryStringParam ? `/?${currentUserQuery.data?.username}` : '/'
+      global.window.location.href = signInRoute
+    }
+  })
+
+  return signOutMutation
+}
+
+export function useMeQuery({ isAuthenticated = true } = {}) {
+  const meQuery = useQuery(['me'], async () => {
+    const apiResponse = await api.getMe()
+    return apiResponse.data
+  }, { retry: false, enabled: isAuthenticated })
+  return meQuery
+}
+
+export function useUpdateMeMutation() {
+  const queryClient = useQueryClient()
+  const updateMeMutation = useMutation<any, any, any>(async ({ userId, data }) => {
+    try {
+      const response = await api.updateMe({ data })
+
+      await Promise.all([
+        queryClient.invalidateQueries(['me']),
+      ])
+
+      return response
+    } catch (error: any) {
+      notification.error({
+        message: 'Update failed',
+        description: error?.response?.data?.message || error?.message || 'Unknown error',
+        placement: 'topRight',
+      })
+    }
+  })
+
+  return updateMeMutation
+}
+
+export function useForgotPasswordMutation() {
+  const router = useRouter()
+  const forgotPasswordMutation = useMutation(
+    async ({ email }: { email: string }) => {
+      await resetPassword({ username: email })
+      notification.success({
+        message: 'Password reset link sent',
+        description: 'Instructions have been sent to your email.',
+        placement: 'topRight',
+      })
+      await router.push(`/reset-password?email=${email}`)
+    },
+    {
+      onError: async (err: Error) => {
+        notification.error({
+          message: 'Forgot password failed',
+          description: err.message,
+          placement: 'topRight',
+        })
+      },
+    },
+  )
+
+  return forgotPasswordMutation
+}
+
+export function useResetPasswordMutation() {
+  const signInMutation = useSignInMutation()
+  const router = useRouter()
+  const resetPasswordMutation = useMutation(async ({ email, code, password }: { email: string, code: string, password: string }) => {
+    await confirmResetPassword({
+      username: email.trim(),
+      confirmationCode: code.trim(),
+      newPassword: password.trim(),
+    })
+    await signInMutation.mutateAsync({ email, password })
+    router.push('/')
+  },
+  {
+    onError: async (err: Error) => notification.error({
+      message: 'Error resetting password',
+      description: err.message,
+      placement: 'topRight',
+    }),
+  })
+
+  return resetPasswordMutation
+}
+
+export function useVerifyAccountMutation() {
+  const router = useRouter()
+  const verifyAccountMutation = useMutation(async ({ email, code }: { email: string, code: string }) => {
+    await confirmSignUp({
+      username: email.trim(),
+      confirmationCode: code.trim(),
+    })
+    notification.success({
+      message: 'Account confirmed! 🙌',
+      description: 'You may now sign in.',
+      placement: 'topRight',
+    }),
+    router.push(`/?email=${encodeURIComponent(email)}`)
+  },
+  {
+    onError: async (err: Error) => notification.error({
+      message: 'Error confirming account',
+      description: err.message,
+      placement: 'topRight',
+    }),
+  })
+
+  return verifyAccountMutation
+}
+```
+</TabItem>
+</Tabs>

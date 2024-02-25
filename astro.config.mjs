@@ -14,17 +14,6 @@ export default defineConfig({
   integrations: [
     react(),
     tailwind(),
-    starlightBlog({
-      title: 'Blog',
-      authors: {
-        brett: {
-          name: 'Brett Andrews',
-          title: 'Founder, Code Genie',
-          url: 'https://twitter.com/AWSBrett',
-          picture: '/brett-amazon-badge-photo-profile-pic-square-128.webp'
-        },
-      },
-    }),
     starlight({
       title: 'Code Genie Documentation',
       description: 'Code Genie docs',
@@ -147,7 +136,21 @@ export default defineConfig({
             text: 'WIP'
           }
         }]
-      }]
+      }
+    ],
+    plugins: [
+      starlightBlog({
+        title: 'Blog',
+        authors: {
+          brett: {
+            name: 'Brett Andrews',
+            title: 'Founder, Code Genie',
+            url: 'https://twitter.com/AWSBrett',
+            picture: '/brett-amazon-badge-photo-profile-pic-square-128.webp'
+          },
+        },
+      }),
+    ],
     }),
     sitemap(),
     prefetch({

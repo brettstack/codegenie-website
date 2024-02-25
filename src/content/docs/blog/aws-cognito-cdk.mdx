@@ -8,6 +8,7 @@ tags:
   - cognito
   - aws
 draft: true
+published: false
 ---
 import { Image } from 'astro:assets';
 import { Tabs, TabItem } from '@astrojs/starlight/components'
@@ -19,6 +20,7 @@ import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-
   <Image
     src={signInPage}
     alt="Sign in page"
+    loading='eager'
   />
   <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in the [React Cognito User Pools](aws-cognito-react-web-app) article.</figcaption>
 </figure>

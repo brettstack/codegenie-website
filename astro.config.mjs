@@ -15,7 +15,7 @@ export default defineConfig({
     react(),
     tailwind(),
     starlight({
-      title: 'Code Genie Documentation',
+      title: 'Code Genie',
       description: 'Code Genie docs',
       favicon: '/favicon.ico',
       logo: {

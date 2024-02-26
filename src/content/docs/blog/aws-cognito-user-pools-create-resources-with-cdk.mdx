@@ -20,16 +20,16 @@ import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-
     alt="Sign in page"
     loading='eager'
   />
-  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in the [React Cognito User Pools](./aws-cognito-user-pools-add-auth-to-a-react-app) article.</figcaption>
+  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in the [React Cognito User Pools](/blogaws-cognito-user-pools-add-auth-to-a-react-app) article.</figcaption>
 </figure>
 
 [Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides applications with user identity and auth. This series of articles cover a full stack solution that enables users to sign in with their Email + Password, Google Sign In, or SSO (SAML), and link all methods to the same user within the app:
 
 1. Create Resources with CDK 👈 You are here
-1. [Sign in with Email, Google, or SAML and link to a single user](./aws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user)
-1. [Add Auth to a React App](./aws-cognito-user-pools-add-auth-to-a-react-app)
+1. [Sign in with Email, Google, or SAML and link to a single user](/blogaws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user)
+1. [Add Auth to a React App](/blogaws-cognito-user-pools-add-auth-to-a-react-app)
 
-This article focuses on using <a href='https://docs.aws.amazon.com/cdk/v2/guide/home.html' target="_blank" rel="noopener">CDK</a> to create our Cognito User Pool resources as Infrastructre as Code (IAC). If you're already familiar with this you should consider moving onto the next part of this series [Sign in with Email, Google, or SAML and link to a single user](./aws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user), since IAC can be a little lengthy (and boring).
+This article focuses on using <a href='https://docs.aws.amazon.com/cdk/v2/guide/home.html' target="_blank" rel="noopener">CDK</a> to create our Cognito User Pool resources as Infrastructre as Code (IAC). If you're already familiar with this you should consider moving onto the next part of this series [Sign in with Email, Google, or SAML and link to a single user](/blogaws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user), since IAC can be a little lengthy (and boring).
 
 :::tip
 The complete source code is available by generating a Code Genie app and specifying `'Google'` and `'SAML'` `idp` options:
@@ -555,7 +555,7 @@ export interface StringMap {
 
 ## End
 
-Now that we've created our AWS Cognito User Pool and both External (Sign in with Google) and Internal (SAML) Google Apps, we're ready to move onto more interesting topics: [Sign in with Email, Google, or SAML and link to a single user](./aws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user). This next article focuses on the Lambda Handler logic of the Lambda Functions we created with CDK.
+Now that we've created our AWS Cognito User Pool and both External (Sign in with Google) and Internal (SAML) Google Apps, we're ready to move onto more interesting topics: [Sign in with Email, Google, or SAML and link to a single user](/blogaws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user). This next article focuses on the Lambda Handler logic of the Lambda Functions we created with CDK.
 
 :::tip
 The complete source code is available by generating a Code Genie app and specifying `'Google'` and `'SAML'` `idp` options:

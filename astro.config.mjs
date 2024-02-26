@@ -38,11 +38,6 @@ export default defineConfig({
       customCss: [
         './src/styles/starlight.css',
       ],
-      components: {
-        MarkdownContent: 'starlight-blog/overrides/MarkdownContent.astro',
-        Sidebar: 'starlight-blog/overrides/Sidebar.astro',
-        ThemeSelect: 'starlight-blog/overrides/ThemeSelect.astro',
-      },
       sidebar: [{
         label: 'Guides',
         items: [{

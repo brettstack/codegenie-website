@@ -1,6 +1,6 @@
 ---
-title: 'Create a React Web App with AWS Cognito User Pools Auth'
-date: 2024-02-31
+title: 'AWS Cognito User Pools: Add Auth to a React App'
+date: 2024-02-29
 excerpt: Use Amplify JS Auth module to create all of the pages and hooks required to implement a complete Cognuito auth flow.
 authors:
   - brett
@@ -13,7 +13,11 @@ import { Image } from 'astro:assets';
 import { Tabs, TabItem } from '@astrojs/starlight/components'
 import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-linked-accounts/cognito-example-sign-in.webp';
 
-[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides user identity and auth -- a core component of almost every application. This series of articles cover a full stack solution enabling users to sign in with Email + Password, Google Sign In, and SSO/SAML, and link them all to the same user within the app.
+[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides applications with user identity and auth. This series of articles cover a full stack solution that enables users to sign in with their Email + Password, Google Sign In, or SSO (SAML), and link all methods to the same user within the app:
+
+1. [Create Resources with CDK](aws-cognito-user-pools-create-resources-with-cdk)
+1. [Sign in with Email, Google, or SAML and link to a single user](aws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user)
+1. Add Auth to a React App 👈 You are here
 
 <figure style={{margin: '2rem auto', width: '360px'}}>
   <Image
@@ -21,7 +25,7 @@ import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-
     alt="Sign in page"
     loading='eager'
   />
-  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in the [React Cognito User Pools](aws-cognito-react-web-app) article.</figcaption>
+  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in this article.</figcaption>
 </figure>
 
 :::tip

@@ -45,9 +45,9 @@ npx @codegenie/cli generate --name "Todo"
 
 ## Cognito User Pool CDK (IAC)
 
-<Tabs>
-<TabItem label='User Pool'>
-```typescript {47-49}
+Let's start with the basic setup of the Auth construct before we dive into the details defined in the class methods:
+
+```typescript {20-26} {29-32} title='packages/cdk/lib/constructs/Auth.ts'
 import { existsSync, readFileSync } from 'fs'
 import path = require('path')
 import { Aws, CfnOutput, Duration } from 'aws-cdk-lib'
@@ -67,13 +67,22 @@ import { Construct } from 'constructs'
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam'
 import { ITable } from 'aws-cdk-lib/aws-dynamodb'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
-import { getEnvironmentConfig, getIsDeletionProtectionEnabled, getIsSourceMapsEnabled, getRemovalPolicy } from '../environment-config'
+// These methods are responsible for getting environment-specific config (.e.g dev, staging, prod)
+import {
+  getEnvironmentConfig,
+  getIsDeletionProtectionEnabled,
+  getIsSourceMapsEnabled,
+  getRemovalPolicy
+} from '../environment-config'
 import type { StringMap } from '../../../common/types'
 
+// SAML-related variables
+const GOOGLE_SAML_IDENTITY_PROVIDER_NAME = 'GoogleSaml'
 const googleIDPMetadataPath = path.resolve(__dirname, '../../GoogleIDPMetadata.xml')
 const googleIDPMetadataExists = existsSync(googleIDPMetadataPath)
+
+// Cognito Lambda Functions path
 const cognitoPackageDir = path.resolve(__dirname, '../../../cognito')
-const GOOGLE_SAML_IDENTITY_PROVIDER_NAME = 'GoogleSaml'
 
 interface AuthProps {
   userTable: ITable
@@ -91,7 +100,13 @@ export default class Auth extends Construct {
     this.addDomainName()
     this.addTriggers({ userTable: props.userTable })
   }
+  ...additional methods defined below
+}
+```
 
+### User Pool
+
+```typescript {3-5} title='packages/cdk/lib/constructs/Auth.ts'
   createUserPool() {
     const userPool = new UserPool(this, 'UserPool', {
       signInCaseSensitive: false,
@@ -111,8 +126,6 @@ export default class Auth extends Construct {
 
     return userPool
   }
-  // See the other tabs above for the remaining code
-}
 ```
 
 :::tip
@@ -121,13 +134,9 @@ Always specify `signInCaseSensitive: false`. By default, User Pools treat userna
 For production environments, specify `deletionProtection: true` and `removalPolicy: cdk.RemovalPolicy.RETAIN` to protect against accidentally deleting your User Pool (and users along with it). Here we are conditionally setting it based on environment, since we generally don't want/need protection in development environments.
 :::
 
-:::note
-[Scroll up](#cognito-user-pool-cdk-iac) to see the other code tabs
-:::
+### User Pool Client
 
-</TabItem>
-<TabItem label='User Pool Client'>
-```typescript {15-19}
+```typescript {15-19} title='packages/cdk/lib/constructs/Auth.ts'
 createUserPoolClient({ webAppUrl }: { webAppUrl: string }) {
   const environmentConfig = getEnvironmentConfig(this.node)
   const googleIdentityProvider = this.createGoogleIdentityProvider()
@@ -177,12 +186,9 @@ We specify up to 2 OAuth callback URLs:
 1. `http://localhost:3001/` for local development. Consider removing this for production.
 1. `webAppUrl` The live web app URL. In Code Genie, this is passed in as either the web app's custom domain name (if one is defined in cdk.json for the environment we're deploying) or the default Amplify Hosting URL.
 
-:::note
-[Scroll up](#cognito-user-pool-cdk-iac) to see the other code tabs
-:::
-</TabItem>
-<TabItem label='Identity Providers'>
-```typescript {9-17}
+### Identity Providers
+
+```typescript {9-17} title='packages/cdk/lib/constructs/Auth.ts'
 createGoogleIdentityProvider() {
   const { auth } = getEnvironmentConfig(this.node)
 
@@ -212,7 +218,7 @@ Define the scopes and attributes from the External IDP that we want to store aga
 :::tip
 Consider storing the Google Client Secret in <a href='https://aws.amazon.com/secrets-manager/' target="_blank" rel="noopener">AWS Secrets Manager</a> and using the `clientSecretValue` prop instead. See the <a href='https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cognito-readme.html#identity-providers' target="_blank" rel="noopener">CDK Cognito User Pool Identity Provider docs</a> for more details.
 :::
-```typescript {2} {7} {10-15}
+```typescript {2} {7} {10-15} title='packages/cdk/lib/constructs/Auth.ts'
 createGoogleSamlIdentityProvider() {
   if (!googleIDPMetadataExists) return null
   const googleIdpMetadataContents = readFileSync(googleIDPMetadataPath, 'utf-8')
@@ -241,12 +247,9 @@ We must hardcode the SAML Identity Provider name (`GOOGLE_SAML_IDENTITY_PROVIDER
 
 Our attribute mappings for the SAML Identity Provider are similar to the Google Identity Provider. Unfortunately we don't have access to a profile picture, and even though we're requesting `fullname` here, Google doesn't allow you to map it when creating the SAML App. We'll handle this later.
 
-:::note
-[Scroll up](#cognito-user-pool-cdk-iac) to see the other code tabs
-:::
-</TabItem>
-<TabItem label='Triggers'>
-```typescript {21-23} {25} {41-50}
+### Triggers
+
+```typescript {21-23} {25} {41-50} title='packages/cdk/lib/constructs/Auth.ts'
 addTriggers({ userTable }: { userTable: ITable }) {
   this.addPreSignupTrigger()
   this.addPreTokenGenerationTrigger({  userTable  })
@@ -309,7 +312,7 @@ We add our `GOOGLE_SAML_IDENTITY_PROVIDER_NAME` environment variable since we'll
 
 Our Lambda Function requires 5 permissions for the User Pool. Unfortunately we can't specify `this.userPool.userPoolArn` as the resource since CDK once again complains about a circular dependency. We're left with granting access to all User Pools within the same account and region.
 
-```typescript {34-36} {48}
+```typescript {34-36} {48} title='packages/cdk/lib/constructs/Auth.ts'
 addPreTokenGenerationTrigger({ userTable }: { userTable: ITable }) {
   // Pre Token Generation https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-token-generation.html
   const { logRetentionInDays } = getEnvironmentConfig(this.node)
@@ -372,13 +375,9 @@ addPreTokenGenerationTrigger({ userTable }: { userTable: ITable }) {
 You can create your own CDK Constructs to abstract away some of the repetitiveness you see in these Node.js Lambda Functions.
 :::
 
-:::note
-[Scroll up](#cognito-user-pool-cdk-iac) to see the other code tabs
-:::
-</TabItem>
+### Environment Config
 
-<TabItem label='Environment Config'>
-```typescript
+```typescript title='packages/cdk/lib/environment-config.ts'
 import * as cdk from 'aws-cdk-lib/core'
 import type { Node } from 'constructs'
 
@@ -496,7 +495,7 @@ export function getIsDeletionProtectionEnabled({
 
 The `cdk.json` looks like this:
 
-```json
+```json title='packages/cdk/cdk.json'
 {
   "app": "ts-node --prefer-ts-exts bin/cdk.ts",
   "context": {
@@ -518,19 +517,16 @@ The `cdk.json` looks like this:
   }
 }
 ```
-</TabItem>
-<TabItem label='StringMap'>
-```typescript
+### StringMap
+
+```typescript title='packages/common/types.ts'
 export interface StringMap {
   [name: string]: string
 }
 ```
-</TabItem>
-</Tabs>
-
 ## Create External Identity Providers
-<Tabs>
-<TabItem label='Google Sign-in'>
+
+### Google Sign-in
 1. Login to Google Cloud Console and select or create the relevant project.
 1. <a href='https://console.cloud.google.com/apis/credentials/oauthclient?' target="_blank" rel="noopener">Create OAuth client ID</a>:
     1. Select "Web application" as the "Application type" and enter a name
@@ -541,8 +537,8 @@ export interface StringMap {
     1. Select User Type "External" and mark it for "Production"
     1. Under "Authorised domains" add "amazoncognito.com"
     1. Save
-</TabItem>
-<TabItem label='Google SAML'>
+
+### Google SAML
 1. Login to Google Workspace Admin and navigate to [Apps => Web and Mobile Apps](https://admin.google.com/ac/apps/unified).
 1. Click "Add app" => "Add custom SAML App". Enter a name for your app.
 1. Download the metadata file to `./packages/cdk` and click Continue.
@@ -550,8 +546,6 @@ export interface StringMap {
 1. Add attribute mappings: Primary email => email; First name => first_name; Last name => family_name. Click Finish.
 1. Click the User Access card; select "ON for everyone" and click Save.
 1. Run `npm run deploy:dev`
-</TabItem>
-</Tabs>
 
 ## End
 

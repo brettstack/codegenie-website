@@ -13,12 +13,6 @@ import { Image } from 'astro:assets';
 import { Tabs, TabItem } from '@astrojs/starlight/components'
 import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-linked-accounts/cognito-example-sign-in.webp';
 
-[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides applications with user identity and auth. This series of articles cover a full stack solution that enables users to sign in with their Email + Password, Google Sign In, or SSO (SAML), and link all methods to the same user within the app:
-
-1. [Create Resources with CDK](/blog/aws-cognito-user-pools-create-resources-with-cdk)
-1. Sign in with Email, Google, or SAML and link to a single user 👈 You are here
-1. [Add Auth to a React App](/blog/aws-cognito-user-pools-add-auth-to-a-react-app)
-
 <figure style={{margin: '2rem auto', width: '360px'}}>
   <Image
     src={signInPage}
@@ -28,48 +22,44 @@ import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-
   <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in the [React Cognito User Pools](/blog/aws-cognito-user-pools-add-auth-to-a-react-app) article.</figcaption>
 </figure>
 
+[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides applications with user identity and auth. This series of articles cover a full stack solution that enables users to sign in with their Email + Password, Google Sign In, or SSO (SAML), and link all methods to the same user within the app:
+
+1. [Create Resources with CDK](/blog/aws-cognito-user-pools-create-resources-with-cdk)
+1. Sign in with Email, Google, or SAML and link to a single user 👈 You are here
+1. [Add Auth to a React App](/blog/aws-cognito-user-pools-add-auth-to-a-react-app)
+
+This article focuses on the Cognito Triggers (Lambda Functions) responsible for handling special logic when users register or sign in.
+
 :::tip
-The complete source code is available by generating a [Code Genie](https://codegenie.codes) app and specifying `'Google'` and `'SAML'` `idp` options:
+The complete source code is available by generating a Code Genie app and specifying `'Google'` and `'SAML'` `idp` options:
 
 ```sh title="Generate a To-Do List app with Code Genie"
 npx @codegenie/cli generate --name "Todo"
 --idp 'Google' --idp 'SAML'
 --description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
 ```
+
+[Code Genie](https://codegenie.codes) generates a Full Stack AWS Serverless application based on your own data model, including a React (Next.js) Web App, Serverless Express REST API, DynamoDB Database, and Cognito Auth.
 :::
 
 :::note[Terminology]
 This example uses both Google Social Sign in, and Google SSO/SAML. So that we don't confuse the two, I'll just refer to the latter as the "SAML" Identity Provider (IDP) going forward. The terms "Federated" and "External" are used interchangeably.
 :::
 
-Let's start with the interesting stuff first before we grind out some CDK, click-ops our way through creating External IDPs, and finally add Cognito auth to a React Next.js web app.
-
 ## Cognito Triggers
 
 The core of this solution relies on two Cognito Triggers. The high-level flow looks like this:
 
 1. The <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-sign-up.html" target="_blank" rel="noopener">Pre sign-up Trigger</a> fires when a user signs up using Google, SAML, or Email + Password. It's also triggered when an existing user signs in using a new external identity for the first time (e.g. if a user signs up using SAML and then later signs in using Google SSO with the same email).
-    1. If they're signing up with Email + Password, no special logic is run.
+    1. If they're signing up with Email + Password, exit.
     1. If they're signing up via Google or SAML and they haven't already signed up using a different method with the same email: a native Cognito User is created for that email.
     1. The External Identity is linked to the native Cognito User for that email.
 1. The <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-token-generation.html" target="_blank" rel="noopener">Pre token generation Trigger</a> fires on every sign in.
     {/* 1. If this is their first time signing in, a User record is created in DynamoDB. */}
     1. If the user has External Identities linked to their account, the account is marked as verified.
 
-:::note[Cognito workarounds]
-The reason we must create a native Cognito User is because Cognito doesn't allow linking a native Cognito User to an existing Federated Identity. To handle the scenario where a user first signs in with an External IDP and then later wants to sign in with Email + Password, we manually create a native Cognito User, and then link the External Identity. Users that choose to later sign in with Email+Pass can set their password via the "Forgot Password" flow to sign in with their Email + Password.
-
-Additionally, there is an unfortunate Cognito "feature" that sets all User attributes to their default value when signing in with an External IDP that doesn't return that value. For `email_verified` this is `false`. We must keep `email_verified=true`, otherwise the user won't be able to sign in with their Email + Password or use the "Forgot Password" flow.
-
-#AWSWishlist: fix these ☝️
-:::
-
-### Lambda Handlers
-
-<Tabs style={{textWrap: 'nowrap'}}>
-<TabItem label="Pre Sign-up">
-
-```typescript
+### Pre Sign-up Lambda Handler
+```typescript title='packages/cognito/cognito-pre-signup.ts'
 import { randomBytes } from 'crypto'
 import {
   AdminCreateUserCommand,
@@ -90,8 +80,8 @@ const providerNamesLowerCaseLookup = {
   // 'facebook': 'Facebook',
 }
 
-// GOOGLE_SAML_IDENTITY_PROVIDER_NAME is defined later in CDK and passed through as an environment variable.
-const { GOOGLE_SAML_IDENTITY_PROVIDER_NAME } = process.env
+// Env vars are passed in via CDK defined in the previous article
+const { AUTO_VERIFY_USERS, GOOGLE_SAML_IDENTITY_PROVIDER_NAME } = process.env
 
 if (GOOGLE_SAML_IDENTITY_PROVIDER_NAME) {
   providerNamesLowerCaseLookup[GOOGLE_SAML_IDENTITY_PROVIDER_NAME.toLowerCase()] = GOOGLE_SAML_IDENTITY_PROVIDER_NAME
@@ -106,7 +96,7 @@ export async function handler (event: PreSignUpTriggerEvent) {
     break
   case 'PreSignUp_SignUp':
   case 'PreSignUp_AdminCreateUser':
-    if (process.env.AUTO_VERIFY_USERS) {
+    if (AUTO_VERIFY_USERS) {
       event.response.autoConfirmUser = true
       event.response.autoVerifyEmail = true
     }
@@ -252,12 +242,25 @@ function setCognitoUserPassword ({ userPoolId, email }: { userPoolId: string, em
   }))
 }
 ```
+
+This handler starts by checking the `event.triggerSource` to determine if the signup is using an External Identity Provider (e.g. Google) or if it's an Email + Password signup. If the signup is from an Email + Password and the `AUTO_VERIFY_USERS` environment variable is set, the account is automatically verified and confirmed. The user doesn't receive a verification email and is instantly signed in, reducing friction during the critical user registration flow. However, this may result in other issues including not being GDPR compliant, so it's advised to only do this in development/preview environments.
+
+If the signup is from an External Identity Provider we first get the provider name from the `event.userName` property. This property's value looks like `'google_108986458847054040795'`, so we split on _ to get the `providerName` and `providerUserId` (the user's ID within the External IDP). We then lookup `providerUserId` in the `providerNamesLowerCaseLookup` map to get the correct capitalization of the provider which is required by Cognito's `adminLinkProviderForUser` API. This is an unfortunate extra step we're forced to do and it would be great if the Cognito Trigger included the correct capitliazation of the provider name for us. If no matching provider is found within the map, we throw an error.
+
 :::note
-That was a lot of code, but we're not done yet! Don't forget to [scroll back up](#lambda-handlers) and see the Pre Token Generation Lambda Handler.
+Every other resource that I found on this topic suggests simply uppercasing the first character in `providerName`. This works if you're only using the native External IDPs (Google, Facebook, Apple, Amazon) but it doesn't work if you have a SAML/OIDC provider and specify a name like `'GoogleSaml'` (which is what we named it in our previous article).
 :::
-</TabItem>
-<TabItem label="Pre Token Generation">
-```typescript
+
+Next we query Cognito for an existing account under that Email, and if one exists we simply link the External IDP account to it. Otherwise, we create a native Cognito User with a random password and then link the External IDP account.
+
+:::note
+This approach handles both scenarios: 1) a user first registers with Email + Password and later signs in with Google/SAML; 2) a user first registers with Google/SAML and later tries to sign in with Email + Password.
+
+Cognito doesn't support linking an Email + Password account to an "External" account. By creating a native Cognito account in scenario 2, we enable the user to login with their email address in the future. Ideally, the user would be able to go through the normal Register with Email + Password flow and things would "just work". Unfortunately, they must use the Forgot Password flow to reset their password before they can sign in with this method.
+:::
+
+### Pre Token Generation Lambda Handler
+```typescript title='packages/cognito/cognito-pre-token-generation.ts'
 import { AdminUpdateUserAttributesCommand, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider'
 import axios from 'axios'
 import type { PreTokenGenerationTriggerEvent } from 'aws-lambda'
@@ -371,9 +374,28 @@ async function fetchAndBase64EncodeImage(imageUrl) {
   }
 }
 ```
-</TabItem>
-<TabItem label="getFullName">
-```typescript
+
+This handler's primary purposes are to create a user record in DynamoDB if one doesn't exist (`syncUserToDynamo`), and to ensure the Cognito user remains verified (`setUserEmailVerifiedTrue`). Both operations are executed in parallel to improve performance thanks to our `await Promise.all`.
+
+`syncUserToDynamo` queries DynamoDB for a User item with the Cognito User's ID (`event.request.userAttributes.sub`), and if one doesn't exist it's inserted into DynamoDB. If a user already exists but doesn't have a profile picture set and one is available through the sign in method they're using (e.g. they first signed in with Email or SAML which doesn't expose a profile picture, and then signed in with Google), it updates DynamoDB with the profile picture. You could also choose to sync other data here, e.g. if you want to update the user's name or other data to match what's in the External IDP.
+
+If the Cognito User has External Identities linked to it, `setUserEmailVerifiedTrue` is called to force the `email_verified` attribute back to true. There is an unfortunate Cognito "feature" that sets all User attributes to their default value when signing in with an External IDP that doesn't return that value. For `email_verified` this is `false`. We must keep `email_verified=true`, otherwise the user won't be able to sign in with their Email + Password or use the "Forgot Password" flow.
+
+:::tip
+It's recommended to store User data in DynamoDB, and let Cognito just handle the auth.
+
+Consider using S3 instead of DynamoDB for storing the user avatar.
+:::
+
+:::note
+The `createUser, getUser, updateUser` functions are just wrappers around a [DynamoDB Toolbox](https://github.com/jeremydaly/dynamodb-toolbox) User Entity
+:::
+
+### getFullName
+
+A small helper function for getting the user's full name from the External IDP when it doesn't support mapping one.
+
+```typescript title='packages/cognito/getFullName.ts'
 // Google SAML doesn't allow mapping the full name field, so we instead must construct this ourselves based on Given Name and Family Name.
 export default function getFullName({ name, givenName, familyName}) {
   let fullName = name
@@ -389,10 +411,20 @@ export default function getFullName({ name, givenName, familyName}) {
   return fullName
 }
 ```
-</TabItem>
-</Tabs>
 
 ## End
 
 Multi-account linking between external identity providers and native Cognito Users isn't simple, but it is possible thanks to Lambda Triggers.
 If you want to try this out yourselfj
+
+:::tip
+The complete source code is available by generating a Code Genie app and specifying `'Google'` and `'SAML'` `idp` options:
+
+```sh title="Generate a To-Do List app with Code Genie"
+npx @codegenie/cli generate --name "Todo"
+--idp 'Google' --idp 'SAML'
+--description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
+```
+
+[Code Genie](https://codegenie.codes) generates a Full Stack AWS Serverless application based on your own data model, including a React (Next.js) Web App, Serverless Express REST API, DynamoDB Database, and Cognito Auth.
+:::

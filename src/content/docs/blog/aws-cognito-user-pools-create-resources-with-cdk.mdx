@@ -306,7 +306,7 @@ addPreSignupTrigger() {
 }
 ```
 
-Setting `AUTO_VERIFY_USERS` in development and testing environments is really convenient. It's just as convenient in production, but there are good reasons to require email confirmation (such as GDPR).
+Setting `AUTO_VERIFY_USERS` in development and testing environments is really convenient. It's just as convenient in production, but there are good reasons to require email confirmation (such as GDPR compliance).
 
 We add our `GOOGLE_SAML_IDENTITY_PROVIDER_NAME` environment variable since we'll need that in the Lambda Function's code.
 

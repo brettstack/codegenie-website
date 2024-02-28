@@ -51,12 +51,14 @@ This example uses both Google Social Sign in, and Google SSO/SAML. So that we do
 The core of this solution relies on two Cognito Triggers. The high-level flow looks like this:
 
 1. The <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-sign-up.html" target="_blank" rel="noopener">Pre sign-up Trigger</a> fires when a user signs up using Google, SAML, or Email + Password. It's also triggered when an existing user signs in using a new external identity for the first time (e.g. if a user signs up using SAML and then later signs in using Google SSO with the same email).
-    1. If they're signing up with Email + Password, exit.
+    1. If they're signing up with Email + Password, continue.
     1. If they're signing up via Google or SAML and they haven't already signed up using a different method with the same email: a native Cognito User is created for that email.
     1. The External Identity is linked to the native Cognito User for that email.
 1. The <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-token-generation.html" target="_blank" rel="noopener">Pre token generation Trigger</a> fires on every sign in.
-    {/* 1. If this is their first time signing in, a User record is created in DynamoDB. */}
+    1. If this is their first time signing in, a User record is created in DynamoDB.
     1. If the user has External Identities linked to their account, the account is marked as verified.
+
+We'll first look at the code for each trigger and then discuss the details.
 
 ### Pre Sign-up Lambda Handler
 ```typescript title='packages/cognito/cognito-pre-signup.ts'
@@ -73,8 +75,6 @@ import type { PreSignUpTriggerEvent } from 'aws-lambda'
 import UnsupportedIdentityProviderNameException from './exceptions/UnsupportedIdentityProviderNameException'
 import getFullName from './getFullName'
 
-// NOTE: Cognito's adminLinkProviderForUser API requires the provider name to have the correct capitalization (e.g. Google, Facebook, MySamlIdp),
-// however, the providerName received in the event from Cognito is lowercased, e.g. google_1234.
 const providerNamesLowerCaseLookup = {
   'google': 'Google',
   // 'facebook': 'Facebook',
@@ -127,55 +127,26 @@ async function handleExternalProvider({ event }: { event: PreSignUpTriggerEvent 
   if (cognitoUsersWithEmail.Users?.length) {
     const cognitoUsername = cognitoUsersWithEmail.Users[0].Username || 'username-not-found'
 
-    await linkCognitoUserAccounts({
-      cognitoUsername,
-      userPoolId,
-      providerName: providerNameWithCorrectCapitalization,
-      providerUserId,
-    })
+    await linkCognitoUserAccounts({ cognitoUsername, userPoolId, providerName: providerNameWithCorrectCapitalization, providerUserId })
   } else {
-    // No existing native Cognito user. Create one now in case they want to login with their email address in the future.
-    // Cognito doesn't support linking a new native Cognito User to an existing Federated User, so it must be done now.
-    // This approach allows users to use the Forgot Password flow to reset their password and sign in with email + password.
-    const newNativeCognitoUser = await createCognitoUser({
-      userPoolId,
-      email,
-      givenName,
-      familyName,
-      name,
-    })
+    const newNativeCognitoUser = await createCognitoUser({ userPoolId, email, givenName, familyName, name })
 
     const newNativeCognitoUserUsername = newNativeCognitoUser.User?.Username || 'username-not-found'
 
-    await linkCognitoUserAccounts({
-      cognitoUsername: newNativeCognitoUserUsername,
-      userPoolId,
-      providerName: providerNameWithCorrectCapitalization,
-      providerUserId,
-    })
+    await linkCognitoUserAccounts({ cognitoUsername: newNativeCognitoUserUsername, userPoolId, providerName: providerNameWithCorrectCapitalization, providerUserId })
   }
 
   return event
 }
 
-function listCognitoUsersWithEmail ({ userPoolId, email }: { userPoolId: string, email: string }) {
+function listCognitoUsersWithEmail ({ userPoolId, email }) {
   return cognitoIdpClient.send(new ListUsersCommand({
     UserPoolId: userPoolId,
     Filter: `email = '${email}'`,
   }))
 }
 
-function linkCognitoUserAccounts ({
-  cognitoUsername,
-  userPoolId,
-  providerName,
-  providerUserId,
-}: {
-  cognitoUsername: string
-  userPoolId: string
-  providerName: string
-  providerUserId: string
-}) {
+function linkCognitoUserAccounts ({ cognitoUsername, userPoolId, providerName, providerUserId }) {
   return cognitoIdpClient.send(new AdminLinkProviderForUserCommand({
     SourceUser: {
       ProviderName: providerName,
@@ -190,19 +161,7 @@ function linkCognitoUserAccounts ({
   }))
 }
 
-async function createCognitoUser ({
-  userPoolId,
-  email,
-  givenName,
-  familyName,
-  name,
-}: {
-  userPoolId: string
-  email: string
-  givenName: string
-  familyName: string
-  name: string
-}) {
+async function createCognitoUser ({ userPoolId, email, givenName, familyName, name }) {
   const fullName = getFullName({ name, givenName, familyName })
   const createdCognitoUser = await cognitoIdpClient.send(new AdminCreateUserCommand({
     UserPoolId: userPoolId,
@@ -231,7 +190,7 @@ async function createCognitoUser ({
   return createdCognitoUser
 }
 
-function setCognitoUserPassword ({ userPoolId, email }: { userPoolId: string, email: string }) {
+function setCognitoUserPassword ({ userPoolId, email }) {
   const password = randomBytes(16).toString('hex')
 
   return cognitoIdpClient.send(new AdminSetUserPasswordCommand({
@@ -243,20 +202,29 @@ function setCognitoUserPassword ({ userPoolId, email }: { userPoolId: string, em
 }
 ```
 
-This handler starts by checking the `event.triggerSource` to determine if the signup is using an External Identity Provider (e.g. Google) or if it's an Email + Password signup. If the signup is from an Email + Password and the `AUTO_VERIFY_USERS` environment variable is set, the account is automatically verified and confirmed. The user doesn't receive a verification email and is instantly signed in, reducing friction during the critical user registration flow. However, this may result in other issues including not being GDPR compliant, so it's advised to only do this in development/preview environments.
+This handler starts by checking the `event.triggerSource` to determine if the signup is from an External Identity Provider (e.g. Google) or if it's with Email + Password. If the signup is with Email + Password and the `AUTO_VERIFY_USERS` environment variable is set, the account is automatically verified and confirmed. The user doesn't receive a verification email and is instantly signed in, reducing friction during the critical user registration flow.
 
-If the signup is from an External Identity Provider we first get the provider name from the `event.userName` property. This property's value looks like `'google_108986458847054040795'`, so we split on _ to get the `providerName` and `providerUserId` (the user's ID within the External IDP). We then lookup `providerUserId` in the `providerNamesLowerCaseLookup` map to get the correct capitalization of the provider which is required by Cognito's `adminLinkProviderForUser` API. This is an unfortunate extra step we're forced to do and it would be great if the Cognito Trigger included the correct capitliazation of the provider name for us. If no matching provider is found within the map, we throw an error.
+:::caution
+There are good reasons to require email confirmation (such as GDPR compliance). It's advised to only auto-verify in development/preview environments (Code Genie projects are configured this way out-of-the-box)
+:::
+
+If the signup is from an External IDP we first get the provider name from the `event.userName` property. This property's value looks like `'google_108986458847054040795'`, so we split on `'_'` to get the `providerName` and `providerUserId` (the user's ID within the External IDP). We then lookup `providerName` in the `providerNamesLowerCaseLookup` map to get the correct capitalization required by Cognito's `adminLinkProviderForUser` API. If no matching provider is found within the map, we throw an error.
 
 :::note
-Every other resource that I found on this topic suggests simply uppercasing the first character in `providerName`. This works if you're only using the native External IDPs (Google, Facebook, Apple, Amazon) but it doesn't work if you have a SAML/OIDC provider and specify a name like `'GoogleSaml'` (which is what we named it in our previous article).
+This is an unfortunate extra step we're forced to do and it would be great if the Cognito Trigger included the correct capitliazation of the provider name for us.
+
+Every other resource that I found on this topic suggests simply uppercasing the first character in `providerName`. This doesn't work if you have a SAML/OIDC provider and specify a name like `'GoogleSaml'` (which is what we named it in our previous article).
 :::
 
 Next we query Cognito for an existing account under that Email, and if one exists we simply link the External IDP account to it. Otherwise, we create a native Cognito User with a random password and then link the External IDP account.
 
 :::note
-This approach handles both scenarios: 1) a user first registers with Email + Password and later signs in with Google/SAML; 2) a user first registers with Google/SAML and later tries to sign in with Email + Password.
+This approach handles both scenarios where:
 
-Cognito doesn't support linking an Email + Password account to an "External" account. By creating a native Cognito account in scenario 2, we enable the user to login with their email address in the future. Ideally, the user would be able to go through the normal Register with Email + Password flow and things would "just work". Unfortunately, they must use the Forgot Password flow to reset their password before they can sign in with this method.
+1. a user first registers with Email + Password and later signs in with Google/SAML
+1. a user first registers with Google/SAML and later signs in with Email + Password
+
+Cognito doesn't support linking an Email + Password account to an "External" account. By first creating a native Cognito account in scenario 2, we enable the user to login with their email address in the future. Ideally, the user would be able to go through the normal Register with Email + Password flow and things would "just work". Unfortunately, they must use the Forgot Password flow to reset their password before they can sign in with this method.
 :::
 
 ### Pre Token Generation Lambda Handler
@@ -265,7 +233,6 @@ import { AdminUpdateUserAttributesCommand, CognitoIdentityProviderClient } from 
 import axios from 'axios'
 import type { PreTokenGenerationTriggerEvent } from 'aws-lambda'
 import { createUser, getUser, updateUser } from '../api/controllers/user'
-import { StringMap } from '../common/types'
 import getFullName from './getFullName'
 
 const cognitoIdpClient = new CognitoIdentityProviderClient({ region: 'us-west-2' })
@@ -282,7 +249,9 @@ export async function handler (event: PreTokenGenerationTriggerEvent) {
       userAttributes,
     },
   } = event
-  const promises: Promise<any>[] = [syncUserToDynamo(userAttributes)]
+  // Don't await here so that we can run the Dynamo and Cognito operations in parallel
+  const syncUserToDynamoPromise = syncUserToDynamo(userAttributes)
+  let setUserEmailVerifiedTruePromise
 
   const { identities, email } = userAttributes
 
@@ -294,25 +263,16 @@ export async function handler (event: PreTokenGenerationTriggerEvent) {
       // Cognito has a "feature" that sets all attributes to their default values when not present on the external identity provider.
       // This results in the email_verified being set to false on each login, which causes features like forgot password to not work.
       // Force it back to email_verified=true.
-      promises.push(setUserEmailVerifiedTrue({
-        userPoolId,
-        username: userName,
-      }))
+      setUserEmailVerifiedTruePromise = setUserEmailVerifiedTrue({ userPoolId, username: userName })
     }
   }
 
-  await Promise.all(promises)
+  await Promise.all([syncUserToDynamoPromise, setUserEmailVerifiedTruePromise])
 
   return event
 }
 
-async function setUserEmailVerifiedTrue ({
-  userPoolId,
-  username,
-}: {
-  userPoolId: string
-  username: string
-}) {
+async function setUserEmailVerifiedTrue ({ userPoolId, username }) {
   return cognitoIdpClient.send(new AdminUpdateUserAttributesCommand({
     UserPoolId: userPoolId,
     Username: username,
@@ -320,7 +280,7 @@ async function setUserEmailVerifiedTrue ({
   }))
 }
 
-async function syncUserToDynamo (userAttributes: StringMap) {
+async function syncUserToDynamo (userAttributes) {
   const {
     sub: userId,
     email,
@@ -377,7 +337,7 @@ async function fetchAndBase64EncodeImage(imageUrl) {
 
 This handler's primary purposes are to create a user record in DynamoDB if one doesn't exist (`syncUserToDynamo`), and to ensure the Cognito user remains verified (`setUserEmailVerifiedTrue`). Both operations are executed in parallel to improve performance thanks to our `await Promise.all`.
 
-`syncUserToDynamo` queries DynamoDB for a User item with the Cognito User's ID (`event.request.userAttributes.sub`), and if one doesn't exist it's inserted into DynamoDB. If a user already exists but doesn't have a profile picture set and one is available through the sign in method they're using (e.g. they first signed in with Email or SAML which doesn't expose a profile picture, and then signed in with Google), it updates DynamoDB with the profile picture. You could also choose to sync other data here, e.g. if you want to update the user's name or other data to match what's in the External IDP.
+`syncUserToDynamo` queries DynamoDB for a User item with the Cognito User's ID (`event.request.userAttributes.sub`), and if one doesn't exist it's inserted into DynamoDB. If a user already exists but doesn't have a profile picture set and one is available through the sign in method they're using, it updates DynamoDB with the profile picture (this happens when they first signed in with Email or SAML which doesn't expose a profile picture, and then signed in with Google). You could also choose to sync other data here, e.g. if you want to update the user's name or other data to match what's in the External IDP.
 
 If the Cognito User has External Identities linked to it, `setUserEmailVerifiedTrue` is called to force the `email_verified` attribute back to true. There is an unfortunate Cognito "feature" that sets all User attributes to their default value when signing in with an External IDP that doesn't return that value. For `email_verified` this is `false`. We must keep `email_verified=true`, otherwise the user won't be able to sign in with their Email + Password or use the "Forgot Password" flow.
 
@@ -388,7 +348,7 @@ Consider using S3 instead of DynamoDB for storing the user avatar.
 :::
 
 :::note
-The `createUser, getUser, updateUser` functions are just wrappers around a [DynamoDB Toolbox](https://github.com/jeremydaly/dynamodb-toolbox) User Entity
+The `createUser, getUser, updateUser` functions are just wrappers around a <a href="https://github.com/jeremydaly/dynamodb-toolbox" target="_blank" rel="noopener">DynamoDB Toolbox Entity</a>.
 :::
 
 ### getFullName
@@ -414,7 +374,7 @@ export default function getFullName({ name, givenName, familyName}) {
 
 ## End
 
-Multi-account linking between external identity providers and native Cognito Users isn't simple, but it is possible thanks to Lambda Triggers.
+Multi-account linking between External Identity Providers and native Cognito Users isn't simple, but it is possible thanks to Lambda Triggers.
 If you want to try this out yourselfj
 
 :::tip

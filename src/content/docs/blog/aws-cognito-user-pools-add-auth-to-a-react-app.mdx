@@ -1,6 +1,6 @@
 ---
 title: 'AWS Cognito User Pools: Add Auth to a React App'
-date: 2024-02-29
+date: 2024-03-02
 excerpt: Use Amplify JS Auth module to create all of the pages and hooks required to implement a complete Cognuito auth flow.
 authors:
   - brett
@@ -13,29 +13,33 @@ import { Image } from 'astro:assets';
 import { Tabs, TabItem } from '@astrojs/starlight/components'
 import signInPage from '../../../assets/images/blog/aws-cognito-google-sso-saml-linked-accounts/cognito-example-sign-in.webp';
 
-[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides applications with user identity and auth. This series of articles cover a full stack solution that enables users to sign in with their Email + Password, Google Sign In, or SSO (SAML), and link all methods to the same user within the app:
-
-1. [Create Resources with CDK](/blog/aws-cognito-user-pools-create-resources-with-cdk)
-1. [Sign in with Email, Google, or SAML and link to a single user](/blog/aws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user)
-1. Add Auth to a React App 👈 You are here
-
 <figure style={{margin: '2rem auto', width: '360px'}}>
   <Image
     src={signInPage}
     alt="Sign in page"
     loading='eager'
   />
-  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI we build in this article.</figcaption>
+  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Pretty picture of the Login UI.</figcaption>
 </figure>
 
+[Cognito User Pools](https://aws.amazon.com/cognito/) is an AWS service that provides applications with user identity and auth. This series of articles cover a full stack solution that enables users to sign in with their Email + Password, Google Sign In, or SSO (SAML), and link all methods to the same user within the app:
+
+1. [Create Resources with CDK](/blog/aws-cognito-user-pools-create-resources-with-cdk)
+1. [Sign in with Email, Google, or SAML and link to a single user](/blog/aws-cognito-user-pools-sign-in-with-email-google-saml--and-link-to-a-single-user)
+1. Add Auth to a React App 👈 You are here
+
+This article focuses on integrating Cognito User Pools with a <a href="https://react.dev/" target="_blank" rel="noopener">React</a> (<a href="https://nextjs.org/" target="_blank" rel="noopener">Next.js</a>) Web App, though the fundamentals remain the same for all frameworks. The example also uses the <a href="https://ant.design/" target="_blank" rel="noopener">Ant Design UI Framework</a> to make everything look good.
+
 :::tip
-The complete source code is available by generating a [Code Genie](https://codegenie.codes) app and specifying `'Google'` and `'SAML'` `idp` options:
+The complete source code is available by generating a Code Genie app and specifying `'Google'` and `'SAML'` `idp` options:
 
 ```sh title="Generate a To-Do List app with Code Genie"
 npx @codegenie/cli generate --name "Todo"
 --idp 'Google' --idp 'SAML'
 --description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
 ```
+
+[Code Genie](https://codegenie.codes) generates a Full Stack AWS Serverless application based on your own data model, including a React (Next.js) Web App, Serverless Express REST API, DynamoDB Database, and Cognito Auth.
 :::
 
 ## React Cognito Auth
@@ -49,9 +53,9 @@ The work required boils down to:
 1. Adding pages for Login, Register, Verify, Forgot Password, Reset Password. See [Code Genie pages docs](/docs/project-walkthrough/frontend/pages) for more details.
 1. Wrapping each of the Amplify methods we use with [TanStack Query](https://tanstack.com/query/latest/docs/react/guides/queries) `useQuery` hooks for improved state management. See [Code Genie hooks docs](/docs/project-walkthrough/frontend/hooks) for more details.
 
-<Tabs>
-<TabItem label='_app.tsx'>
-```typescript
+### _app.tsx
+
+```typescript title='packages/ui/pages/_app.tsx'
 import { Amplify } from 'aws-amplify'
 import { fetchAuthSession } from 'aws-amplify/auth'
 import axios from 'axios'
@@ -69,6 +73,7 @@ Amplify.configure({
         oauth: {
           redirectSignIn: oauthRedirectUrl,
           redirectSignOut: oauthRedirectUrl,
+          // replace 'example' with the regionallyUniqueDomainPrefix value defined in CDK
           domain: 'example.auth.us-west-2.amazoncognito.com',
           responseType: 'code',
           scopes: ['aws.cognito.signin.user.admin', 'email', 'openid', 'phone', 'profile'],
@@ -96,9 +101,10 @@ axios.interceptors.request.use(async (config) => {
 })
 ...
 ```
-</TabItem>
-<TabItem label='Login'>
-```tsx
+
+### Login Page
+
+```tsx title='packages/ui/pages/index.tsx'
 import React, { useEffect, useRef } from 'react'
 import {
   Button,
@@ -213,9 +219,10 @@ export default function LoginPage() {
   )
 }
 ```
-</TabItem>
-<TabItem label='Register'>
-```tsx
+
+### Register Page
+
+```tsx title='packages/ui/pages/register.tsx'
 import React from 'react'
 import {
   Button,
@@ -296,9 +303,10 @@ export default function App() {
   )
 }
 ```
-</TabItem>
-<TabItem label='Verify'>
-```tsx
+
+### Verify Page
+
+```tsx title='packages/ui/pages/verify.tsx'
 import React, { useEffect } from 'react'
 import {
   Button,
@@ -389,9 +397,10 @@ export default function VerifyPage() {
   )
 }
 ```
-</TabItem>
-<TabItem label='Forgot Password'>
-```tsx
+
+### Forgot Password Page
+
+```tsx title='packages/ui/pages/forgot-password.tsx'
 import React from 'react'
 import {
   Button,
@@ -451,9 +460,10 @@ export default function ForgotPassword() {
   )
 }
 ```
-</TabItem>
-<TabItem label='Reset Password'>
-```tsx
+
+### Reset Password Page
+
+```tsx title='packages/ui/pages/reset-password.tsx'
 import React, { useEffect } from 'react'
 import {
   Button,
@@ -551,9 +561,10 @@ export default function RestPassword() {
   )
 }
 ```
-</TabItem>
-<TabItem label='Hooks'>
-```typescript
+
+### Hooks
+
+```typescript title='packages/ui/components/Me/meHooks.ts'
 'use client'
 
 import axios from 'axios'
@@ -815,5 +826,77 @@ export function useVerifyAccountMutation() {
   return verifyAccountMutation
 }
 ```
-</TabItem>
-</Tabs>
+
+## Custom Verify User Email
+
+While not strictly part of the React implementation, we need to use a custom Verify User email so that we can link to the correct page and prefill the email and code. Modify the CDK from the first article in this series with this `addCustomMessageTrigger` method and Lambda Function:
+
+```typescript
+export const handler = async (event, context) => {
+  if (event.triggerSource === 'CustomMessage_SignUp') {
+    return handleVerifyUserEmail(event)
+  }
+
+  return event
+}
+
+function handleVerifyUserEmail(event) {
+  const { codeParameter, userAttributes } = event.request
+  const verifyLink = `https://example.com/verify?email=${encodeURIComponent(userAttributes.email)}&code=${codeParameter}`
+
+  const emailMessage = `<div style='text-align: center'>
+  <p>Please verify your email address to complete account setup.</p>
+  <p>Your verification code is</p>
+  <h3>${codeParameter}</h3>
+  <p>Navigate to <a href="${verifyLink}">${verifyLink}</a>.</p>
+</div>`
+  event.response.emailMessage = emailMessage
+  event.response.emailSubject ='Verify your account ✅'
+
+  return event
+}
+```
+
+```typescript title='packages/cdk/lib/constructs/Auth.ts'
+addCustomMessageTrigger() {
+  // Custom message https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-custom-message.html
+  const { logRetentionInDays } = getEnvironmentConfig(this.node)
+  const isSourceMapsEnabled = getIsSourceMapsEnabled({ node: this.node })
+  const cognitoCustomMessageLogGroup = new LogGroup(this, 'CustomMessageLogGroup', {
+    retention: logRetentionInDays,
+  })
+  const environment: StringMap = {}
+
+  if (isSourceMapsEnabled) {
+    environment.NODE_OPTIONS = '--enable-source-maps'
+  }
+
+  const cognitoCustomMessageFunction = new NodejsFunction(this, 'CustomMessageFunction', {
+    runtime: Runtime.NODEJS_20_X,
+    handler: 'handler',
+    entry: path.join(cognitoPackageDir, 'cognito-custom-message.ts'),
+    timeout: Duration.seconds(10),
+    memorySize: 1024,
+    logGroup: cognitoCustomMessageLogGroup,
+    bundling: {
+      sourceMap: isSourceMapsEnabled,
+    },
+    environment,
+  })
+  this.userPool.addTrigger(UserPoolOperation.CUSTOM_MESSAGE, cognitoCustomMessageFunction)
+}
+```
+
+## End
+
+After reading this series of articles you should understand how a full stack identity solution with AWS Cognito User Pools works. If you haven't done so already, you can generate a full stack project with this solution and more with a single Code Genie command:
+
+:::tip
+```sh title="Generate a To-Do List app with Code Genie"
+npx @codegenie/cli generate --name "Todo"
+--idp 'Google' --idp 'SAML'
+--description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
+```
+
+[Code Genie](https://codegenie.codes) generates a Full Stack AWS Serverless application based on your own data model, including a React (Next.js) Web App, Serverless Express REST API, DynamoDB Database, and Cognito Auth.
+:::

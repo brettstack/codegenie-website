@@ -21,7 +21,8 @@ export default defineConfig({
       description: 'Code Genie docs',
       favicon: '/favicon.ico',
       logo: {
-        src: './src/assets/images/code-genie-logo.webp'
+        src: './src/assets/images/code-genie-logo.webp',
+        // replacesTitle: true
       },
       social: {
         github: 'https://github.com/CodeGenieApp',
@@ -30,6 +31,16 @@ export default defineConfig({
         discord: 'https://discord.gg/YJ9gQhheyn',
         linkedin: 'https://www.linkedin.com/company/code-genie-codes'
       },
+      head: [
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image', content: ogImage },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'twitter:image', content: ogImage },
+        },
+      ],
       editLink: {
         baseUrl: 'https://github.com/CodeGenieApp/docs/edit/main/'
       },
@@ -146,20 +157,6 @@ export default defineConfig({
             picture: '/brett-amazon-badge-photo-profile-pic-square-128.webp'
           },
         },
-        head: [
-          {
-            tag: 'meta',
-            attrs: { property: 'og:image', content: ogImage },
-          },
-          {
-            tag: 'meta',
-            attrs: { property: 'twitter:image', content: ogImage },
-          },
-          {
-            tag: 'meta',
-            attrs: { property: 'twitter:card', content: 'summary_large_image' },
-          },
-        ],
       }),
     ],
     }),

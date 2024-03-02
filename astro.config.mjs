@@ -7,7 +7,8 @@ import sitemap from "@astrojs/sitemap";
 import prefetch from "@astrojs/prefetch";
 
 import robotsTxt from "astro-robots-txt";
-
+const description =
+  'Generate Full Stack Serverless AWS Apps based on your description or data model. Projects include Next.js, React, Express, Lambda, API Gateway, Cognito Auth, DynamoDB, and more.'
 const ogImage = 'https://codegenie.codes/og.jpg'
 
 // https://astro.build/config
@@ -18,7 +19,7 @@ export default defineConfig({
     tailwind(),
     starlight({
       title: 'Code Genie',
-      description: 'Code Genie docs',
+      description,
       favicon: '/favicon.ico',
       logo: {
         src: './src/assets/images/code-genie-logo.webp',

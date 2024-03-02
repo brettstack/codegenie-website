@@ -8,6 +8,8 @@ import prefetch from "@astrojs/prefetch";
 
 import robotsTxt from "astro-robots-txt";
 
+const ogImage = 'https://codegenie.codes/og.jpg'
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://codegenie.codes',
@@ -144,6 +146,20 @@ export default defineConfig({
             picture: '/brett-amazon-badge-photo-profile-pic-square-128.webp'
           },
         },
+        head: [
+          {
+            tag: 'meta',
+            attrs: { property: 'og:image', content: ogImage },
+          },
+          {
+            tag: 'meta',
+            attrs: { property: 'twitter:image', content: ogImage },
+          },
+          {
+            tag: 'meta',
+            attrs: { property: 'twitter:card', content: 'summary_large_image' },
+          },
+        ],
       }),
     ],
     }),

@@ -34,8 +34,8 @@ This article focuses on integrating Cognito User Pools with a <a href="https://r
 The complete source code is available by generating a Code Genie app and specifying `'Google'` and `'SAML'` `idp` options:
 
 ```sh title="Generate a To-Do List app with Code Genie"
-npx @codegenie/cli generate --name "Todo"
---idp 'Google' --idp 'SAML'
+npx @codegenie/cli generate --name "Todo" \
+--idp 'Google' --idp 'SAML' \
 --description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
 ```
 
@@ -893,8 +893,8 @@ After reading this series of articles you should understand how a full stack ide
 
 :::tip
 ```sh title="Generate a To-Do List app with Code Genie"
-npx @codegenie/cli generate --name "Todo"
---idp 'Google' --idp 'SAML'
+npx @codegenie/cli generate --name "Todo" \
+--idp 'Google' --idp 'SAML' \
 --description "A todo list app that lets users create lists and add items to the list. Items should have a title, description, be markable as completed, have a due date, and have an image."
 ```
 

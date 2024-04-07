@@ -5,6 +5,8 @@ description: A walkthrough of the branding and theming option
 
 import FileTree from '../../../../../components/file-tree.astro'
 
+You can specify a logo and a primary brand color in your App Definition, and Code Genie will incorporate those into your generated project.
+
 <FileTree>
 - public
   - icons
@@ -32,13 +34,11 @@ import FileTree from '../../../../../components/file-tree.astro'
   - themes.ts
 </FileTree>
 
-You can specify a logo and a primary brand color in your App Definition, and Code Genie will incorporate those into your generated project.
-
 ## Theme
 
 Your project includes Dark and Light themes, and you can customize themes further to match your branding by modifying the design tokens in `./packages/ui/themes/base.ts`. See [Ant Design's Customize Theme Guide](https://ant.design/docs/react/customize-theme) for more information.
 
-See [theme.yaml](../spec/app-definition#themeyaml) in the App Definition spec for more details.
+See the [theme option](../../spec/app-definition#theme) in the App Definition spec for more details.
 
 ## Icons
 
@@ -49,4 +49,4 @@ Code Genie generates icons of various sizes and formats for you to use in differ
 - Iphone
 - Windows
 
-See [logo.png](../spec/app-definition#logopng) in the App Definition spec for more details.
+See [logo.png](../../spec/app-definition#logopng) in the App Definition spec for more details.

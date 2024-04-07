@@ -10,18 +10,18 @@ import FileTree from '../../../../../components/file-tree.astro'
   - Widget
     - widgetHooks.ts
 - lib
-  - usePages.ts
+  - usePagination.ts
 </FileTree>
 
 ## Standard Hooks
 
-### usePages
+### usePagination
 
 Assists with [Table](./components#table) pagination.
 
 ```js
-// usePages.ts
-usePages({
+// usePagination.ts
+usePagination({
   items,
   lastEvaluatedKey,
   currentPageIndex,

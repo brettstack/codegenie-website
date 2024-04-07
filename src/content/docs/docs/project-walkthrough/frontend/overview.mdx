@@ -47,20 +47,19 @@ The frontend package exists within the `./packages/ui` directory.
     - MeUpsertModal.tsx
     - meHooks.ts
   - layouts
+    - AuthenticatedPage.tsx
     - SideMenu.tsx
-    - UnauthenticatedLayout.tsx
-  - AppWrapper.tsx
+    - UnauthenticatedPage.tsx
   - AvatarNameLink.tsx
-  - GlobalLoadingIndicator.tsx
-  - PageHeading.tsx
-  - PageTitle.tsx
-  - SubHeader.tsx
-  - UserHeader.tsx
+  - BuiltWithCodeGenie.tsx
+  - ErrorBoundary.tsx
+  - RelativeDateWithAbsoluteHover.tsx
 - lib
   - getPageTitle.ts
+  - getRedirectRoute.ts
   - numberFormatter.ts
   - upload.ts
-  - usePages.ts
+  - usePagination.ts
 - pages
   - widgets 1 page directory per entity
     - [widgetId]
@@ -71,13 +70,14 @@ The frontend package exists within the `./packages/ui` directory.
     - index.tsx
   - _app.tsx
   - _document.tsx
+  - 404.tsx
   - account.tsx
   - forgot-password.tsx
+  - getting-started.tsx
   - index.tsx
-  - profile.tsx
   - register.tsx
   - reset-password.tsx
-  - verify-account.tsx
+  - verify.tsx
 - public
   - icons
     - ... auto-generated icons from logo.png

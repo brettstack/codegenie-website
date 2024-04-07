@@ -5,10 +5,8 @@ description: A walkthrough of the Authentication, Authorization, Identity
 
 import FileTree from '../../../../../components/file-tree.astro'
 
-Currently only email registration is supported out-of-the-box, with SSO (social signin and SAML) support coming soon. For now, developers can implement SSO themselves by following the [Adding social identity providers to a user pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html) AWS guide.
-
-:::note
-The User Pool only stores user information required for authentication. All other user data should be stored in the `User` [DynamoDB Table](./database).
+:::note WIP
+These docs are currently incomplete, and offer only a high level overview currently.
 :::
 
 ## Project Structure
@@ -32,3 +30,11 @@ The User Pool only stores user information required for authentication. All othe
           - UserTable.ts
         - Auth.ts
 </FileTree>
+
+Code Genie projects use [Cognito User Pools](https://aws.amazon.com/cognito/) to handle User Identity.
+
+The API Gateway API is configured with a Cognito Authorizer.
+
+:::note
+The User Pool only stores user information required for authentication. All other user data should be stored in the `User` [DynamoDB Table](./database).
+:::

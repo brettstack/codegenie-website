@@ -12,20 +12,23 @@ All Code Genie projects come with a core set of standard components required for
 <FileTree>
 - components
   - layouts
+    - AuthenticatedPage.tsx
     - SideMenu.tsx
-    - UnauthenticatedLayout.tsx
-  - AppWrapper.tsx
+    - UnauthenticatedPage.tsx
   - AvatarNameLink.tsx
+  - BuiltWithCodeGenie.tsx
+  - ErrorBoundary.tsx
+  - RelativeDateWithAbsoluteHover.tsx
 </FileTree>
+
+### `<AuthenticatedLayout>`
+The `<AuthenticatedLayout>` component is a layout wrapper component that includes styles for pages that require users to be logged in.
 
 ### `<SideMenu>`
 The `<SideMenu>` component renders navigation links for the top-level pages of the application.
 
 ### `<UnauthenticatedLayout>`
 The `<UnauthenticatedLayout>` component is a layout wrapper component that includes styles for unauthenticated pages such as login, register, forgot password, etc.
-
-### `<AppWrapper>`
-The `<AppWrapper>` component is responsible for initializing Auth, HTTP Client, Theme, TanStack Query (FKA React Query), and Global Layout. It also checks whether the user is currently logged in and either shows the requested page or the login page. This component is rendered by the main app entry point `pages/_app.tsx`.
 
 ### `<AvatarNameLink>`
 The `<AvatarNameLink>` component renders an image + name pair. If no image exists, it renders the first characters of the first and last words of the name.
@@ -94,15 +97,17 @@ A loading indicator is shown while the data is initially being loaded, and an em
 
 Tables also support pagination with page caching, and nested tables for referencing child records.
 
-```yaml
-// .codegenie/entities/Widget.yaml
-x-codeGenie:
-  hasMany:
-    RelatedWidget:
-      $ref: ./related-widget.yaml
-  ui:
-    table:
-      nested: RelatedWidget
+```typescript
+// .codegenie/app.ts
+{
+  entities: {
+    Widget: {
+      ui: {
+        nestedTableEntity: 'ChildWidget'
+      }
+    }
+  }
+}
 ```
 
 ### `<*UpsertModal>`

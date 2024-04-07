@@ -58,13 +58,6 @@ export default defineConfig({
           label: 'Getting Started',
           link: '/docs/guides/getting-started',
         }, {
-          label: 'Define an Application',
-          link: '/docs/guides/define-an-application',
-          badge: {
-            variant: 'tip',
-            text: 'WIP'
-          }
-        }, {
           label: 'Deployments',
           link: '/docs/guides/deployments'
         }, {
@@ -81,7 +74,11 @@ export default defineConfig({
           link: '/docs/project-walkthrough/overview'
         }, {
           label: 'CI/CD Pipeline',
-          link: '/docs/project-walkthrough/ci-cd-pipeline'
+          link: '/docs/project-walkthrough/ci-cd-pipeline',
+          badge: {
+            variant: 'tip',
+            text: 'WIP'
+          }
         }, {
           label: 'Frontend',
           items: [{

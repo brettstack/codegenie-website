@@ -12,22 +12,27 @@ Before continuing you'll need an [AWS Account](https://aws.amazon.com/resources/
 - [Node.js 20+](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 - [AWS CLI](https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html)
 
-## Generate a todo app
+## Generate a ToDo app
 
-Run the Code Genie CLI command below to generate a todo application. This should take less than a minute to complete.
+Run the Code Genie CLI command below to generate a ToDo application:
 
-```sh title="Generate todo app"
-npx @codegenie/cli generate --name "Todo" --description "A todo app that lets you create lists and items"
+```sh title="Generate ToDo app"
+mkdir todo && cd todo
+npx @codegenie/cli generate \
+--name "Todoodle" \
+--description "A todo list app that lets users create lists and add items to the list. \
+Items should have a title, description, be markable as completed, have a due date, and have an image."
 ```
 
-Once the command completes, open the new `./todo` project directory in your favorite IDE. Depending on your environment, you may be able to simply run `code ./todo`.
+:::
+Try to keep the description focused on the kind of data that your app deals with, rather than the custom business logic requirements. Code Genie creates project foundations based on data models, and doesn't add custom business logic (yet).
+:::
 
 ## Initialize app and deploy to AWS
 
 Run the command below to install dependencies and deploy the app to your AWS account:
 
-```sh title="Initialize todo app"
-cd ./todo
+```sh title="Initialize ToDo app"
 npm run init:dev
 ```
 
@@ -35,17 +40,17 @@ This command can take up to 10 minutes to run since it's installing dependencies
 
 After it completes, your browser will open your web app's Getting Started page with lots of great tips on what to do next (for now, just follow along in this guide). Take a minute to explore your Todo app by first registering for an account via your app's home page.
 
-## Modify the App Definition and Data Model within the .codegenie directory
-The generate command we ran at the start of this guide is only intended to give us a starting point for modeling our application. It does a decent job of doing this based on a description (and you can give describe your app in more detail to get better results), however, it's unlikely to be perfect.
+## (optional) Modify the App Definition and Data Model within the .codegenie directory
+The generate command we ran earlier gave us a starting point for modeling our application. While generating an app based on a description may seem like magic, the true power of Code Genie is unlocked by accurately modeling your app definition.
 
-Modify one or more of the properties of the entities listed in `.codegenie/entities/*.yml` and then regenerate the project by running:
+Modify one or more of the Entity properties defined in `.codegenie/app.ts` and then regenerate the project by running:
 
-```sh title="Regenerate todo app and redeploy"
+```sh title="Regenerate ToDo app and redeploy"
 npx @codegenie/cli generate
 npm run deploy:dev
 ```
 
-See [App Definition](../spec/app-definition) for more details on modeling your application. While generating an app based on a description may seem like magic, the true power of Code Genie lies in modeling your app definition yourself.
+See [App Definition](../spec/app-definition) for more details on modeling your application.
 
 ## Make changes
 
@@ -65,6 +70,6 @@ Open localhost:3001 to view your local web app and begin making changes to your 
 
 ## Next steps
 
-The next step is up to you! If you want to play around with the todo app and learn more about the generated source code: check out the [Project Walkthrough guides](../project-walkthrough/overview).
+The next step is up to you! If you want to play around with the ToDo app and learn more about the generated source code: check out the [Project Walkthrough guides](../project-walkthrough/overview).
 
 If you'd rather start developing your own application, start by running `npx @codegenie/cli generate --name "..." --description "..."` with as much detail as possible (so long as it's under 500 characters) and then head over to the [App Definition](../spec/app-definition) guide and model your app with more details.

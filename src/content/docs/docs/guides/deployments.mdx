@@ -18,17 +18,17 @@ This command does the following:
 1. Creates a new entry in the [AWS Credentials File](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) `~/.aws/credentials` called `your-app-name_dev` using credentials copied from the `default` profile.
 1. [Bootstraps CDK](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) in the AWS account (`cdk bootstrap`)
 1. Deploys to AWS (`npm run deploy:dev`)
-1. Copies CloudFormation/CDK outputs to local `.env` files for running the UI and API locally.
+1. Copies CloudFormation/CDK outputs to local `.env` files for running the UI and API locally (`npm run copy-outputs-to-dotenv:dev`)
 1. Opens the live version of the web app in your browser.
 
 :::tip[AWS Profiles]
-If you'd rather copy credentials from a different profile, run `COPY_AWS_PROFILE=profile-name-to-copy npm run init:dev`.
+If you'd rather copy credentials from a different profile, instead run `COPY_AWS_PROFILE=profile-name-to-copy npm run init:dev`.
 
 Alternatively, if you'd rather manually define the profiles, run `COPY_AWS_PROFILE=0 npm run init:dev`. The profile name must be a `kebab-cased` version of the application name, followed by the environment name shorthand (`_dev`, `_staging`, `_prod`). See the `profile` values in `packages/cdk/cdk.json` for the exact values.
 :::
 
 :::note
-Since the UI has a dependency on Cognito and the API, this setup command actually runs deploy a second time.
+Since the UI has a dependency on Cognito and the API, the init command actually runs deploy a second time.
 :::
 
 ## Deploying updates

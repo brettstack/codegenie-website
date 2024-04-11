@@ -33,7 +33,11 @@ These docs are currently incomplete, and offer only a high level overview curren
 
 Code Genie projects use [Cognito User Pools](https://aws.amazon.com/cognito/) to handle User Identity.
 
-The API Gateway API is configured with a Cognito Authorizer.
+The API Gateway API is configured with a Cognito Authorizer, verifying and caching the JWT.
+
+The Express API grabs the claims from the JWT. It trusts the validity of the JWT since it has already been validated by APIGW.
+
+The frontend uses the <a href="https://docs.amplify.aws/" target="_blank" rel="noopener">Amplify JavaScript Library's Auth Module</a> Amplify Auth.
 
 :::note
 The User Pool only stores user information required for authentication. All other user data should be stored in the `User` [DynamoDB Table](./database).

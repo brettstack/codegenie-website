@@ -1,0 +1,430 @@
+---
+title: 'Creating AWS CloudWatch Dashboards and Alarms with CDK'
+date: 2024-04-12
+excerpt: Use CDK to create CloudWatch Alarms and a Dashboard for a full stack application.
+authors:
+  - brett
+tags:
+  - cloudwatch
+  - cdk
+  - aws
+  - iac
+---
+import { Image } from 'astro:assets';
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import demoDashboard from '../../../assets/images/blog/dashboard-1440.webp';
+
+Monitoring is a crucial part of software operations, but can also be one of the most tedious to implement. If you're using a traditional config-based IAC tool such as CloudFormation, SAM, Serverless, Terraform, et al. you'll find yourself copy-pasting dozens of lines for each new metric that you want to graph and alert on.
+
+Modern IAC tools such as CDK enable you to define your infrastructure using actual code (often TypeScript) rather than config (JSON, YAML). I like to refer to these two approaches to IAC as IACode and IAConfig respecively.
+
+In this article we'll cover how to build a CloudWatch Dashboard and Alarms to monitor a Full Stack Serverless AWS application consisting of API Gateway, Lambda, Cognito, DynamoDB, and a web app hosted on Amplify Hosting. Here's what the end result looks like (though you'll need to use your imagination to fill in the empty charts with pretty lines).
+
+<figure>
+  <Image
+    src={demoDashboard}
+    alt="Demo Dashboard"
+    loading='eager'
+  />
+  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Example dashboard that would look so much more interesting if it had actual data.</figcaption>
+</figure>
+
+## Monitoring Construct
+
+Enough preamble. Let's get into the code.
+
+```typescript {23-28} {31} {38-41} {54} {63} title="packages/cdk/lib/constructs/Monitoring.ts"
+import { Construct } from 'constructs'
+import {
+  Alarm,
+  AlarmRule,
+  AlarmState,
+  AlarmStatusWidget,
+  CompositeAlarm,
+  Dashboard,
+  GraphWidget,
+  Metric,
+  TextWidget,
+  TextWidgetBackground,
+} from 'aws-cdk-lib/aws-cloudwatch'
+import { IFunction } from 'aws-cdk-lib/aws-lambda'
+import { IHttpApi } from 'aws-cdk-lib/aws-apigatewayv2'
+import { IApp } from '@aws-cdk/aws-amplify-alpha'
+import { ITableV2 } from 'aws-cdk-lib/aws-dynamodb'
+import { Topic } from 'aws-cdk-lib/aws-sns'
+import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
+import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions'
+
+interface DashboardProps {
+  amplifyApp: IApp
+  api: IHttpApi
+  userPoolId: string
+  userPoolClientId: string
+  functions: Array<IFunction>
+  tables: Array<ITableV2>
+}
+
+const ALARM_NOTIFICATION_EMAIL = 'you@example.com'
+
+export default class Monitoring extends Construct {
+  public readonly dashboard: Dashboard
+  public readonly alarmSnsTopic: Topic
+  constructor(scope: Construct, id: string, props: DashboardProps) {
+    super(scope, id)
+    this.alarmSnsTopic = new Topic(scope, 'AlarmTopic')
+    this.alarmSnsTopic.addSubscription(
+      new EmailSubscription(ALARM_NOTIFICATION_EMAIL),
+    )
+    this.dashboard = new Dashboard(this, 'Dashboard', {
+      start: '-P10D',
+    })
+
+    const { alarms: apiAlarms } = this.addApiWidgets({ api: props.api })
+    const { alarms: lambdaAlarms } = this.addLambdaWidgets({ functions: props.functions })
+    this.addTableWidgets({ tables: props.tables })
+    this.addCognitoWidgets({ userPoolId: props.userPoolId, userPoolClientId: props.userPoolClientId })
+    this.addWebAppWidgets({ amplifyApp: props.amplifyApp })
+    this.addAlarmStatusWidget({ alarms: [...apiAlarms, ...lambdaAlarms] })
+  }
+
+  addHeading(heading: string) {
+    this.dashboard.addWidgets(new TextWidget({
+      markdown: `# ${heading}`,
+      width: 24,
+      height: 1,
+      background: TextWidgetBackground.TRANSPARENT,
+    }))
+  }
+
+  subscribeAlarm(alarm: Alarm | CompositeAlarm) {
+    alarm.addAlarmAction(new SnsAction(this.alarmSnsTopic))
+  }
+  /*
+  ...
+  */
+}
+```
+
+The Monitoring class receives details on other resources within our app such as our Amplify Hosting App, API Gateway, Cognito User Pool and Client, and a list of Lambda Functions and DynamoDB Tables we want to monitor.
+
+The constructor creates an SNS Topic that's set up to send an email whenever it receives a message (i.e whenever an alarm is triggered). Make sure you replace `ALARM_NOTIFICATION_EMAIL` with the email address you want to receive notifications.
+
+:::note[Notifications]
+You can configure SNS to notify other services such as Slack or your Incident Response tool instead of email, however, that's not the focus of this blog. For solo/hobby projects, email is fine.
+:::
+
+We're also creating the `Dashboard` resource and calling methods to add widgets and alarms (we'll get to the implementation of these next).
+
+Finally, we have some helper methods for adding headings to our Dashboard and subscribing alarms to our SNS Topic.
+
+Next we'll get into creating metrics, alarms, and dashboard widgets for our API Gateway resource.
+
+## API Gateway Metrics, Alarms and Dashboard Widgets
+
+```typescript {23-26}
+addApiWidgets({ api }: { api: IHttpApi }) {
+  this.addHeading('API Gateway')
+  const clientErrorsMetric = api.metricClientError()
+  const serverErrorsMetric = api.metricServerError()
+  const clientErrorsAlarm = clientErrorsMetric.createAlarm(this, 'ApiClientErrorsAlarm', {
+    evaluationPeriods: 3,
+    threshold: 10,
+  })
+  this.subscribeAlarm(clientErrorsAlarm)
+  const serverErrorsAlarm = serverErrorsMetric.createAlarm(this, 'ApiServerErrorsAlarm', {
+    evaluationPeriods: 1,
+    threshold: 1,
+  })
+  this.subscribeAlarm(serverErrorsAlarm)
+  
+  this.dashboard.addWidgets(
+    new GraphWidget({
+      width: 12,
+      left: [
+        clientErrorsMetric,
+        serverErrorsMetric,
+      ],
+      leftAnnotations: [
+        clientErrorsAlarm.toAnnotation(),
+        serverErrorsAlarm.toAnnotation(),
+      ],
+    }),
+    new GraphWidget({
+      width: 12,
+      left: [
+        api.metricLatency(),
+        api.metricIntegrationLatency(),
+      ],
+    }),
+    new GraphWidget({
+      width: 12,
+      left: [
+        api.metricCount(),
+      ],
+    }),
+    new GraphWidget({
+      width: 12,
+      left: [
+        api.metricDataProcessed(),
+      ],
+    }),
+  )
+
+  return {
+    alarms: [serverErrorsAlarm, clientErrorsAlarm],
+  }
+}
+```
+
+Many CDK Constructs come with helper `metric*` methods that return metrics for the most popular standard metrics of each AWS service. In API Gateway's case, **all** of the standard metrics we're interested in have these helper metrics. Thank you CDK Team! 🙏
+
+We create alarms for both Client Errors and Server Errors. The thresholds are low and you should tweak them to meet your needs (maybe you don't want to alarm on Client Errors at all since they're often not actionable). We also add these error metrics to our dashboard and add "red lines" (horizontal annotations) so that we can see how close we get to breaching our alarms. Once again, the CDK Team shows great attention to detail by including a `toAnnotation()` method on their alarms to make this super easy. 🙌
+
+:::tip[Short and Long alarms]
+A best practice for creating alarms is to create two flavors of each alarm: a short/spikey alarm and a long/continuous alarm. This allows you to set two different thresholds for different scenarios. For example, you may want to alarm if your average latency breaches 3 seconds in a single 5 minute evaluation period, OR if it remains above 1 second for several evaluation periods. We didn't include that here for brevity, however, CDK enables you to turn this into a repeatable pattern with ease.
+:::
+
+We also add metrics for latency (consider adding alarms for this), number of requests, and amount of data processed.
+
+Let's move onto Lambda.
+
+## Lambda Metrics, Alarms and Dashboard Widgets
+
+```typescript {13-19} {26-28}
+addLambdaWidgets({ functions }: { functions: Array<IFunction> }) {
+  this.addHeading('Lambda Functions')
+  const errorMetrics = functions.map(fn => ({ fn, metric: fn.metricErrors()}))
+  const throttleMetrics = functions.map(fn => ({ fn, metric: fn.metricThrottles()}))
+  const errorAlarms = errorMetrics.map(errorMetric => errorMetric.metric.createAlarm(this, `ErrorAlarm${errorMetric.fn.node.id}`, {
+    evaluationPeriods: 1,
+    threshold: 1,
+  }))
+  const throttleAlarms = throttleMetrics.map(throttleMetric => throttleMetric.metric.createAlarm(this, `ThrottleAlarm${throttleMetric.fn.node.id}`, {
+    evaluationPeriods: 1,
+    threshold: 1,
+  }))
+  // NOTE: Composite Alarms cost $0.50/month
+  const errorCompositeAlarm = new CompositeAlarm(this, 'ErrorCompositeAlarm', {
+    alarmRule: AlarmRule.anyOf(
+      ...errorAlarms.map(errorAlarm => AlarmRule.fromAlarm(errorAlarm, AlarmState.ALARM)),
+      ...throttleAlarms.map(throttleAlarm => AlarmRule.fromAlarm(throttleAlarm, AlarmState.ALARM)),
+    ),
+  })
+  this.subscribeAlarm(errorCompositeAlarm)
+  this.dashboard.addWidgets(
+    new GraphWidget({
+      width: 8,
+      left: [
+        ...functions.map(fn => fn.metricDuration()),
+        ...functions.map(fn => fn.metricDuration({
+          statistic: 'P95',
+        })),
+      ],
+    }),
+    new GraphWidget({
+      width: 8,
+      left: functions.map(fn => fn.metricInvocations()),
+    }),
+    new GraphWidget({
+      width: 8,
+      left: errorMetrics.map(m => m.metric),
+      right: throttleMetrics.map(m => m.metric),
+      leftAnnotations: [errorAlarms[0].toAnnotation()],
+    }),
+  )
+
+  return {
+    alarms: [...errorAlarms, ...throttleAlarms],
+  }
+}
+```
+
+The main difference with the Lambda metrics is that we're dealing with **multiple** Lambda Functions (as opposed to a single API Gateway Resource). Each graph includes the metrics for all of the Lambda Functions passed into the Monitoring construct. Alternatively, you could use `functions.map` to instead create one graph per function.
+
+The metrics we're graphing are duration (both average and P95), number of invocations, number of errors, and number of times a function was throttled. We're only alarming on the error and throttle metrics here, though you should also consider alarming on duration.
+
+We're actually creating 2 alarms per Lambda Function for throttle and error.  These alarms aren't set up to notify; for that we creat a composite alarm so that we don't get inundated with notifications when a single issue causes multiple functions to fail.
+
+:::caution[Pricing]
+Alarms cost $0.10 per month (though you get 10 free) and the composite alarm costs $0.50 a month. If you don't want to have N alarms per function, Lambda also emits standard metrics that cover ALL Lambda Functions within your account. This is a viable option if you're following the best practice of only running a single App within an AWS Account.
+:::
+
+See the <a href="https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html#monitoring-metrics-types" target="_blank" rel="noopener">Lambda Metrics Documentation</a> for other available standard metrics.
+
+## DynamoDB Metrics and Dashboard Widgets
+
+```typescript
+addTableWidgets({ tables }: { tables: Array<ITableV2> }) {
+  this.addHeading('DynamoDB Tables')
+  this.dashboard.addWidgets(
+    new GraphWidget({
+      width: 8,
+      left: tables.map(table => table.metricConsumedReadCapacityUnits()),
+    }),
+    new GraphWidget({
+      width: 8,
+      left: tables.map(table => table.metricConsumedWriteCapacityUnits()),
+    }),
+    new GraphWidget({
+      width: 8,
+      left: tables.map(table => table.metricUserErrors()),
+    }),
+  )
+}
+```
+
+There's nothing new to learn here that isn't covered by the Lambda section. For each DynamoDB Table provided we're graphing the number of consumed Read and Write Capacity Units, and the number of User Errors.
+
+Consider adding an alarm for the `UserErrors` metric since it's likely due to a bug in your code. If you're not using DynamoDB's On Demand billing, you should also consider adding alarms for RCUs and WCUs.
+
+DynamoDB offers significantly more standard metrics than most AWS Services, so you should definitely familiarize yourself with them and decide what's important for you to graph and alarm on. But don't go overboard! It's important to find the right balance between alarming on too many things and not enough. As a rule of thumb: if it's not actionable, don't alarm on it.
+
+See the <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html" target="_blank" rel="noopener">DynamoDB Metrics Documentation</a> for other available standard metrics.
+
+## Cognito Metrics and Dashboard Widgets
+
+```typescript
+addCognitoWidgets({ userPoolId, userPoolClientId }: { userPoolId: string, userPoolClientId: string }) {
+  this.addHeading('Cognito')
+  const dimensionsMap = {
+    UserPool: userPoolId,
+    UserPoolClient: userPoolClientId,
+  }
+  this.dashboard.addWidgets(
+    new GraphWidget({
+      width: 8,
+      left: [new Metric({
+        namespace: 'AWS/Cognito',
+        metricName: 'TokenRefreshSuccesses',
+        dimensionsMap,
+      })],
+    }),
+    new GraphWidget({
+      width: 8,
+      left: [new Metric({
+        namespace: 'AWS/Cognito',
+        metricName: 'SignUpSuccesses',
+        dimensionsMap,
+      })],
+    }),
+    new GraphWidget({
+      width: 8,
+      left: [
+        new Metric({
+          namespace: 'AWS/Cognito',
+          metricName: 'SignInSuccesses',
+          dimensionsMap,
+        }),
+        new Metric({
+          namespace: 'AWS/Cognito',
+          metricName: 'FederationSuccesses',
+          dimensionsMap,
+        }),
+      ],
+    }),
+  )
+}
+```
+
+Adding Cognito User Pools graphs gives great insights on the number of new and returning users. You may even be able to use the `TokenRefreshSuccesses` metric to get a rough number of currently active users.
+
+Unfortunately, the Cognito User Pool Construct doesn't have those handy `metric*` methods, so we need to manually create them using `new Metric`.
+
+See the <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/metrics-for-cognito-user-pools.html" target="_blank" rel="noopener">Cognito Metrics Documentation</a> for other available standard metrics.
+
+## Amplify Hosting Metrics and Dashboard Widgets
+
+```typescript
+addWebAppWidgets({ amplifyApp }: { amplifyApp: IApp }) {
+  this.addHeading('Web App')
+  const dimensionsMap = {
+    App: amplifyApp.appId,
+  }
+  this.dashboard.addWidgets(
+    new GraphWidget({
+      width: 12,
+      left: [new Metric({
+        namespace: 'AWS/AmplifyHosting',
+        metricName: 'Requests',
+        dimensionsMap,
+      })],
+    }),
+    new GraphWidget({
+      width: 12,
+      left: [new Metric({
+        namespace: 'AWS/AmplifyHosting',
+        metricName: 'Latency',
+        dimensionsMap,
+      })],
+    }),
+    new GraphWidget({
+      width: 12,
+      left: [new Metric({
+        namespace: 'AWS/AmplifyHosting',
+        metricName: 'BytesDownloaded',
+        dimensionsMap,
+      }),
+      new Metric({
+        namespace: 'AWS/AmplifyHosting',
+        metricName: 'BytesUploaded',
+        dimensionsMap,
+      })],
+    }),
+    new GraphWidget({
+      width: 12,
+      left: [
+        new Metric({
+          namespace: 'AWS/AmplifyHosting',
+          metricName: '4xxErrors',
+          dimensionsMap,
+        }),
+        new Metric({
+          namespace: 'AWS/AmplifyHosting',
+          metricName: '5xxErrors',
+          dimensionsMap,
+        }),
+      ],
+    }),
+  )
+}
+```
+
+## Alarm Status Dashboard Widget
+
+```typescript
+addAlarmStatusWidget({ alarms }: { alarms: Array<Alarm> }) {
+  this.addHeading('Alarms')
+  const alarmStatusWidgetHeight = 1 + Math.ceil(alarms.length / 6)
+  this.dashboard.addWidgets(new AlarmStatusWidget({
+    alarms,
+    width: 24,
+    height: alarmStatusWidgetHeight,
+  }))
+}
+```
+
+## Using the Construct
+
+```typescript title="packages/cdk/lib/cdk-stack.ts"
+new Monitoring(this, 'Monitoring', {
+  userPoolId: userPool.userPoolId,
+  userPoolClientId: userPoolClient.userPoolClientId,
+  amplifyApp: amplifyApp,
+  api: api,
+  functions: [
+    lambdaFunction,
+  ],
+  tables: [
+    dynamoDbTable,
+  ],
+})
+```
+
+## A note on laying out widgets
+
+CloudWatch Dashboards are rendered as a 24 column layout. Keep this in mind when deciding on the width of each widget.
+
+According to the docs, every widget included in a single `addWidgets` is rendered next to each other, and every new call to `addWidgets` creates a new row. In practice, I found that when my widgets within a single `addWidgets` didn't add up to a multiple of 24, the layout started to go a little wonky, and widgets that I expected to be rendered in a new row (because they were in a separate `addWidgets`) were not.
+
+## Custom Metrics
+

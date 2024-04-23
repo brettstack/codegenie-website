@@ -1,53 +1,31 @@
-export function TermsAndConditionsBody() {
+export function TermsOfServiceBody() {
   return (
     <div className="text-white">
+      <h1>Code Genie &ndash; Platform Terms of Service</h1>
       <p>
-        <span>Code Genie &ndash; Platform Terms and Conditions</span>
+        Welcome to Code Genie! We provide a platform where you can generate source code based on your data model (<strong>Platform</strong>
+        ).
       </p>
       <p>
-        <span>Welcome to Code Genie! We provide a platform where you can generate source code based on your data model or idea (</span>
-        <span>Platform</span>
-        <span>). </span>
+        In these Terms, when we say <strong>you</strong> or <strong>your</strong>, we mean both you and any entity you are authorised to
+        represent (such as your employer). When we say <strong>we</strong>, <strong>us</strong>, or <strong>our</strong>, we mean{' '}
+        <strong>Code Genie Pty Ltd</strong> (<strong>ACN 670 918 108</strong>).
       </p>
       <p>
-        <span>In these Terms, when we say </span>
-        <span>you </span>
-        <span>or </span>
-        <span>your</span>
-        <span>, we mean both you and any entity you are authorised to represent (such as your employer). When we say </span>
-        <span>we, us,</span>
-        <span>&nbsp;or </span>
-        <span>our</span>
-        <span>, we mean </span>
-        <span>Code Genie Pty Ltd </span>
-        <span>(ACN 670 918 108). </span>
+        These Terms form our contract with you, and set out our obligations as a service provider and your obligations as a customer. You
+        cannot use our Platform unless you agree to these Terms.
       </p>
       <p>
-        <span>
-          These Terms form our contract with you, and set out our obligations as a service provider and your obligations as a customer. You
-          cannot use our Platform unless you agree to these Terms.
-        </span>
+        Some capitalised words in these Terms have defined meanings, and each time that word is used in these Terms it has the same meaning.
+        You can find a list of the defined words and their meaning at the end of these Terms.
       </p>
       <p>
-        <span>
-          Some capitalised words in these Terms have defined meanings, and each time that word is used in these Terms it has the same
-          meaning. You can find a list of the defined words and their meaning at the end of these Terms.
-        </span>
+        For questions about these Terms, or to get in touch with us, please email:{' '}
+        <a href="mailto:support@codegenie.codes">support@codegenie.codes</a>.
       </p>
-      <p>
-        <span>For questions about these Terms, or to get in touch with us, please email: </span>
-        <span>brett@codegenie.codes</span>
-        <span>.</span>
-      </p>
-      <p>
-        <span>These Terms were last updated on 31st January 2024. </span>
-      </p>
-      <p>
-        <span></span>
-      </p>
-      <p>
-        <span>OUR DISCLOSURES</span>
-      </p>
+      <p>These Terms were last updated on 23rd April 2024.</p>
+      <hr />
+      <h2>Our Disclosures</h2>
       <p>
         <span>Please read these Terms carefully before you accept. We draw your attention to the fact that:</span>
       </p>

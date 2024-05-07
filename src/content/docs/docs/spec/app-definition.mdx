@@ -11,26 +11,332 @@ import FileTree from '../../../../components/file-tree.astro'
   - logo.png
 </FileTree>
 
-## app.yaml
+Code Genie generates source code based on your application's data model (or Entity Relationship Model).
 
-### title
+It's recommended to import type definitions from the `@codegenie/cli` package (`npm i -D @codegenie/cli`) for a better experience when defining your application's data model.
 
-### x-codeGenie.permissionModel
+```ts title='.codegenie/app.ts'
+import type { AppDefinition } from '@codegenie/cli'
 
-### x-codeGenie.defaultAuthRoute
+const appDefinition: AppDefinition = {
+  name: 'My App',
+  ...
+}
 
-### x-codeGenie.entities
+export default appDefinition
+```
 
-### definitions
+The fastest way to get started is to ask Code Genie to generate an initial data model for you by providing a description of what you're trying to build. See the [Getting Started Guide](/docs/guides/getting-started).
 
-## ./entities/[Widget].yaml
+## App
 
-### x-codeGenie.ui.listView
+### alarmNotificationEmail
 
-- `Table` (default): Table list view
-- `CardList`: Card List view.
-- `List`: List view.
+Email address to receive notifications when an alarm is triggered.
 
-## theme.yaml
+### apiDomainName
 
-## logo.png
+Domain name to use for your API, e.g. api.example.com.
+
+### appDomainName
+
+Domain name to use for your web app, e.g. app.example.com.
+
+### appId
+
+The automatically generated ID of your Code Genie application. All builds/generations will create a Build under this App. If `appId` isn't specified, a new App will be created when you run `generate` and `appId` will be set for you.
+
+### auth
+
+#### identityProviders
+
+A list of Identity Providers supported by your App.
+
+```
+identityProviders: [{ providerType: 'Google' }, { providerType: 'SAML' }]
+```
+
+### defaultAuthRouteEntity
+
+The name of the Entity to be used as the default/root page when first logging in. For example, if you specify 'Widget', you'll land on the Widget List page. This value must be set to a key defined in `entities`.
+
+### description
+
+A short user-facing description of your application. Added as HTML meta tags for `description`, `og:description`, and `twitter:description`.
+
+### domainName
+
+Your root domain name. Used for sending emails such as User Verification emails.
+
+### entities
+
+A key/value Map where the key is a pascal-cased name of your Entity.
+
+```
+entities: {
+  MyWidget: {}
+}
+```
+
+See [Entity](#entity) for more details.
+
+### ignoreOutputPaths
+
+A list of paths to not generate. Useful when you want to re-generate your app but have heavily modified certain files that you don't wish to overwrite.
+
+### name
+
+Name of your application.
+
+### organizationInviteEmail
+
+Email address to use when a user invites another user to their organization. e.g. organization-invite@example.com
+
+### permissionModel
+
+The permission model to use.
+
+- `Global`: All users have access to all data within the app. Used for single-tenanted applications such as internal apps.
+- `User`: Users can only access their own data.
+- `Organization`: Users can only access data within their Organization. An Organization Entity is included with your app, allowing you to invite other Users to your Organization.
+
+### region
+
+The AWS region you want to deploy your app in. Must be set to a valid AWS region, e.g. `us-west-2`.
+
+### theme
+
+#### primaryColor
+
+Your app's primary brand color to use throughout your application. e.g. #579ddd
+
+### verifyUserEmail
+
+Email address to use for sending User verification emails when a user first registers. e.g. verify@example.com
+
+## Entity
+
+Define your aplication's Data Model (or Entity Relationship Model) by specifying `entities`. For each Entity defined, Code Genie generates:
+
+- React/UI Components: List Page, Details Page, Upsert (Create/Edit) Modal, Delete Modal, Table, Card List
+- API: Routes and Controllers for Create, Read (List + Get), Update, and Delete (CRUD)
+- Database Table
+- ... and more
+
+{/* ## description */}
+
+### dynamodb
+
+This is an optional setting for advanced usage only.
+
+#### gsis
+
+Specify GSIs when you need to query data based on a partition other than the Table's `partitionKey`
+
+##### attributes
+
+A list of attributes to project on this partition, or "ALL" (default).
+
+##### name
+
+Name of the GSI
+
+##### partitionKey
+
+Partition Key for this GSI
+
+##### sortKey
+
+Sort Key for this GSI
+
+#### lsis
+
+Specify LSIs when you need to sort the data in a way other than the Table's `sortKey`
+
+##### attributes
+
+A list of attributes to project on this partition, or "ALL" (default).
+
+##### name
+
+Name of the LSI
+
+##### sortKey
+
+Sort Key for this LSI
+
+#### partitionKey
+
+The name of the property to partition data on. If the Entity specifies a `parentEntity`, this defaults to the Parent Entity's ID Property.
+
+#### sortKey
+
+The name of the property to sort data by. If the Entity specifies a `parentEntity`, this defaults to this Entity's ID Property, which by default is a time-sortable randomly generated ID.
+
+### parentEntity
+
+If this Entity is a child of another Entity (i.e the other Entity has a one-to-many relationship with this Entity), specify the name/key of that Entity. Entities that have a `parentEntity` are affected in the following ways:
+
+- They don't show up in the main navigation of the UI. Instead, they show up in the details page of their Parent Entity. Their URL routes are nested under their parent, e.g. `/parentEntity/:parentEntityId/childEntity/:childEntityId`.
+- Their API routes are nested under their parent, e.g. `/parentEntity/:parentEntityId/childEntity/:childEntityId`. Note that deeply nested entities (i.e Entities that have a Parent Entity that also has a Parent Entity) don't result in deeply nested API routes.
+- Their DynamoDB Table has both a `partitionKey` and a `sortKey`. The `partitionKey` is set to the ID Property of the Parent Entity, and the `sortKey` is set to its own ID Property, enabling efficient querying of child records.
+
+### properties
+
+A map of Properties (or "attributes") that this Entity has. Each entry should have a `camelCased` key of the property name.
+
+```
+properties: {
+  myProperty: {}
+}
+```
+
+See [Property](#property) for more details.
+
+### ui
+
+#### generateDetailsPage
+
+Whether a Details Page should be generated for this Entity. This is especially useful when an Entity has few properties and no Child Entities (i.e all of the information is easily visible on the List Page).
+
+#### icon
+
+This icon shows up in navigation and breadcrumbs.
+
+#### listView
+
+How the List Page should present the data. Valid options are 'Table' (default), 'List', and 'CardList'.
+
+#### nestedTableEntity
+
+Specify a Child Entity (i.e an Entity that defines this Entity as its `parentEntity`) to add a nested table to each row to list child records.
+
+#### remainOnCurrentPageOnCreate
+
+Remain on the current page instead of navigating to the newly created record's page.
+
+#### showCreatedDateTime
+
+Show the created time of the record in the UI.
+
+#### showEditInCardList
+
+Show an Edit button on each Card in the List.
+
+#### showEditInTable
+
+Show an Edit button on each Row in the Table.
+
+
+## Property
+
+### type
+
+Must be one of the following:
+
+- `string`: Uses a standard text input in edit views, and displayed as plain text in read views. DynamoDB type: `string`.
+- `number`: Uses a number input in edit views. Can use [format](#format) to present as a compact or monetary value in read views. DynamoDB Type: `number`.
+- `date`: Uses a date/time picker (depending on [format](#format)) in edit views. Shows as a relative time in read views with the complete date on hover (e.g. 5 days ago). DynamoDB type: `date`.
+- `boolean`: Uses a Switch in edit views. Shows 'Yes'/'No' in read views. DynamoDB type: `boolean`.
+- `enum`: Uses a single select in edit views. DynamoDB type: `string`.
+- `array`: Uses a multi-select in edit views, and a list of Tags/Pills in read views. DynamoDB type: `list`.
+- `map`: Often called an "object" or "key:value". Uses a multiline textarea in edit views. DynamoDB type: `map`.
+- `image`: Uses a file uploader in edit views, and displays an image in read views. Images are stored as base64 encoded strings in DynamoDB. This will be replaced with storing images in S3 in a future update.
+
+### isIdProperty
+
+The property used to uniquely identify a Record of this Entity. If no property is marked with `isIdProperty`, one is created for you with the format `{entityName}d` (e.g., for an Entity called `Widget`, the property is called `widgetId`). When specifying your own ID property, it's recommended to still follow this format.
+
+### isNameProperty
+
+The property used for a human to identify a Record of this Entity, e.g. a person's name or a list's title. This property is more prominent in the UI in places such as Tables (shown as the first column), Cards (shown in the title), and in search/select components.
+
+### isMainImageProperty
+
+You can mark a property of type `image` as the main image property, e.g. the standard User Entity has a `profilePicture` property. This property will be presented in multiple places next to the record's name property, such as in List Views, Details Views, and when selecting a related record.
+
+### isRequired
+
+Prevent creating/editing a record without setting a value for this property.
+
+### isImmutable
+
+Allow this property to be set during creation of the record, but cannot be udpated/edited later.
+
+### isReadOnly
+
+Cannot be set by the user. Use [defaultValue](#defaultValue) to set a value during creation.
+
+### defaultValue
+
+Default value of this property. The value should match the type of property (.e.g Boolean properties can specify a value of `true` or `false`). Special values include:
+
+- `$now`: Sets the value to `Date.now()`. Only valid for Date properties (`type: 'date'`)
+- `$currentUserId`: Sets the value to the current User's ID. Only valid for String properties (`type: 'string'`)
+
+### description
+
+When specified, a tooltip is shown for the field in the edit view with this description.
+
+### format
+
+Some property types allow you to specify a format.
+
+String Properties:
+
+- `email`: Uses an email input in edit views, and an email link in read views.
+- `url`: Uses a link in read views.
+- `multiline`: Uses a multi-line text area input in edit views, and is given extra space when shown in read views.
+- `password`: Uses a password input in edit views.
+- `color`: Uses a color picker input in edit views, and shows a color swatch in read views.
+
+Number Properties:
+
+- `compact`: Uses a compact number (e.g. 2.7k) in read views.
+- `money`: Similar to `compact` but includes a '$'.
+
+Date Properties:
+
+- `date`: Uses a datepicker input in edit views. Shows as a relative time in read views with the complete date on hover (e.g. 5 days ago). This is the default format for Date Properties.
+- `date-time`: Similar to `date`, but includes a time component in the datepicker.
+- `time`: Similar to `date`, but only shows a Time picker.
+- `timestamp`: Similar to `date`, but the DynamoDB attribute type is set to `number` instead of `date`
+
+### maxLength
+
+String length must be \<= this amount. String Properties only.
+
+### minLength
+
+String length must be >= this amount. String Properties only.
+
+### regexPattern
+
+String must match this pattern. String Properties only.
+
+### min
+
+Value must be at least this amount. Number Properties only.
+
+### max
+
+Value cannot be more than this amount. Number Properties only.
+
+### isInteger
+
+Adds regex to [Upsert Component](/docs/project-walkthrough/frontend/components#upsertmodal) to prevent decimals and sets stepper to 1.
+
+### relatedEntity
+
+Specify an Entity to create a parent-child relationship (i.e the Parent Entity has a one-to-many relationship with this Entity). This value must match the name/key of another Entity defined in `entities`. String Properties only.
+
+### ui
+
+```
+{
+  showInCardList?: boolean
+  showInDetails?: boolean
+  showInReadView?: boolean
+  showInTable?: boolean
+}
+```

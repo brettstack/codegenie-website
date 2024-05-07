@@ -10,9 +10,10 @@ tags:
   - aws
   - iac
 ---
-import { Image } from 'astro:assets';
+
+import { Image } from 'astro:assets'
 import { Tabs, TabItem } from '@astrojs/starlight/components'
-import demoDashboard from '../../../assets/images/blog/dashboard-1440.webp';
+import demoDashboard from '../../../assets/images/blog/dashboard-1440.webp'
 
 Monitoring is a crucial part of software operations, but can also be one of the most tedious to implement. If you're using a traditional config-based IAC tool such as CloudFormation, SAM, Serverless, Terraform, et al. you'll find yourself copy-pasting dozens of lines for each new metric that you want to graph and alert on.
 
@@ -21,12 +22,10 @@ Modern IAC tools such as CDK enable you to define your infrastructure using actu
 In this article we'll cover how to build a <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html" target="_blank" rel="noopener">CloudWatch Dashboard</a> and <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html" target="_blank" rel="noopener">Alarms</a> to monitor a Full Stack Serverless AWS application consisting of <a href="https://aws.amazon.com/api-gateway" target="_blank" rel="noopener">API Gateway</a>, <a href="https://aws.amazon.com/lambda" target="_blank" rel="noopener">Lambda</a>, <a href="https://aws.amazon.com/cognito" target="_blank" rel="noopener">Cognito</a>, <a href="https://aws.amazon.com/dynamodb" target="_blank" rel="noopener">DynamoDB</a>, and a web app hosted on <a href="https://aws.amazon.com/amplify/hosting" target="_blank" rel="noopener">Amplify Hosting</a>. Here's what the end result looks like (though you'll need to use your imagination to fill in the empty charts with pretty lines).
 
 <figure>
-  <Image
-    src={demoDashboard}
-    alt="Demo Dashboard"
-    loading='eager'
-  />
-  <figcaption style={{margin: 0, color: '#666', fontSize: '0.8rem'}}>Example dashboard that would look so much more interesting if it had actual data.</figcaption>
+  <Image src={demoDashboard} alt="Demo Dashboard" loading="eager" />
+  <figcaption style={{ margin: 0, color: '#666', fontSize: '0.8rem' }}>
+    Example dashboard that would look so much more interesting if it had actual data.
+  </figcaption>
 </figure>
 
 ## Monitoring Construct
@@ -72,9 +71,7 @@ export default class Monitoring extends Construct {
   constructor(scope: Construct, id: string, props: MonitoringProps) {
     super(scope, id)
     this.alarmSnsTopic = new Topic(scope, 'AlarmTopic')
-    this.alarmSnsTopic.addSubscription(
-      new EmailSubscription(ALARM_NOTIFICATION_EMAIL),
-    )
+    this.alarmSnsTopic.addSubscription(new EmailSubscription(ALARM_NOTIFICATION_EMAIL))
     this.dashboard = new Dashboard(this, 'Dashboard', {
       start: '-P10D',
     })
@@ -88,12 +85,14 @@ export default class Monitoring extends Construct {
   }
 
   addHeading(heading: string) {
-    this.dashboard.addWidgets(new TextWidget({
-      markdown: `# ${heading}`,
-      width: 24,
-      height: 1,
-      background: TextWidgetBackground.TRANSPARENT,
-    }))
+    this.dashboard.addWidgets(
+      new TextWidget({
+        markdown: `# ${heading}`,
+        width: 24,
+        height: 1,
+        background: TextWidgetBackground.TRANSPARENT,
+      })
+    )
   }
 
   subscribeAlarm(alarm: Alarm | CompositeAlarm) {
@@ -136,7 +135,7 @@ addApiWidgets({ api }: { api: IHttpApi }) {
     threshold: 1,
   })
   this.subscribeAlarm(serverErrorsAlarm)
-  
+
   this.dashboard.addWidgets(
     new GraphWidget({
       width: 12,
@@ -190,7 +189,7 @@ Let's move onto Lambda.
 
 ## Lambda Metrics, Alarms and Dashboard Widgets
 
-The main difference with the Lambda metrics is that we're dealing with ***multiple*** Lambda Functions (as opposed to a single API Gateway Resource). Each graph includes the metrics for all of the Lambda Functions passed into the Monitoring construct.
+The main difference with the Lambda metrics is that we're dealing with **_multiple_** Lambda Functions (as opposed to a single API Gateway Resource). Each graph includes the metrics for all of the Lambda Functions passed into the Monitoring construct.
 
 ```typescript {13-18} {25-27}
 addLambdaWidgets({ functions }: { functions: Array<IFunction> }) {
@@ -243,7 +242,7 @@ addLambdaWidgets({ functions }: { functions: Array<IFunction> }) {
 
 The metrics we're graphing are duration (both average and P95), number of invocations, number of errors, and number of times a function was throttled. We're only alarming on the error and throttle metrics here, though you should also consider alarming on duration.
 
-We're creating 2 alarms per Lambda Function for throttle and error.  These alarms aren't set up to notify. Instead, we create a composite alarm so that we don't get inundated with notifications when a single issue causes multiple functions to fail.
+We're creating 2 alarms per Lambda Function for throttle and error. These alarms aren't set up to notify. Instead, we create a composite alarm so that we don't get inundated with notifications when a single issue causes multiple functions to fail.
 
 :::caution[Pricing]
 Alarms cost $0.10 per month (though you get 10 free) and the composite alarm costs $0.50 a month. If you don't want to have N alarms per function, Lambda also emits standard metrics that cover ALL Lambda Functions within your account. This is a viable option if you're following the best practice of only running a single App within an AWS Account.
@@ -423,14 +422,8 @@ new Monitoring(this, 'Monitoring', {
   userPoolClientId: userPoolClient.userPoolClientId,
   amplifyApp: amplifyApp,
   api: api,
-  functions: [
-    lambdaFunction1,
-    lambdaFunction2,
-  ],
-  tables: [
-    dynamoDbTable1,
-    dynamoDbTable2,
-  ],
+  functions: [lambdaFunction1, lambdaFunction2],
+  tables: [dynamoDbTable1, dynamoDbTable2],
 })
 ```
 
@@ -448,6 +441,4 @@ Graphing and alarming on the standard metrics that AWS provides us with out-of-t
 
 ## Try it yourself with Code Genie
 
-Building a full stack Serverless app on AWS takes a lot of time, effort, and expertise. Code Genie lets you get up and running fast with a solid software foundation based on your data model. In mere minutes you can have a full stack application (like the one described above) deployed to your own AWS account (and the source code downloaded for you to start hacking). Check out the [Getting Started Guide](/docs/guides/getting-started) for more details.
-
-*Coming Soon*: We're currently working on adding support for dashboards and alarming similar to what's described in this post so that Code Genie Apps will have this functionality out-of-the-box.
+Building a full stack Serverless app on AWS takes a lot of time, effort, and expertise. Code Genie lets you get up and running fast with a solid software foundation based on your data model. In minutes you can have a full stack application deployed to your own AWS account, and the source code downloaded for you to start hacking. Metrics, Monitoring, and a Dashboard like the one described in this article is included out-of-the-box. Check out the [Getting Started Guide](/docs/guides/getting-started) for more details.

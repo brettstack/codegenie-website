@@ -12,6 +12,18 @@ Before continuing you'll need an [AWS Account](https://aws.amazon.com/resources/
 - [Node.js 20+](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 - [AWS CLI](https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html)
 
+## Login to Code Genie CLI
+
+Start by logging into the Code Genie CLI with:
+
+```sh title="Login"
+npx @codegenie/cli login
+```
+
+:::tip
+If you don't yet have an account, you can create one during this flow. If you choose to signup with an Email + Password, you'll receive an email with a confirmation code. You'll need to enter the code on the same tab you used to register to complete the CLI login. If you instead clicked the link, simply re-run `npx @codegenie/cli login`.
+:::
+
 ## Generate a ToDo app
 
 Run the Code Genie CLI command below to generate a ToDo application:
@@ -24,7 +36,7 @@ npx @codegenie/cli generate \
 Items should have a title, description, be markable as completed, have a due date, and have an image."
 ```
 
-:::
+:::tip
 Try to keep the description focused on the kind of data that your app deals with, rather than the custom business logic requirements. Code Genie creates project foundations based on data models, and doesn't add custom business logic (yet).
 :::
 
@@ -41,6 +53,7 @@ This command can take up to 10 minutes to run since it's installing dependencies
 After it completes, your browser will open your web app's Getting Started page with lots of great tips on what to do next (for now, just follow along in this guide). Take a minute to explore your Todo app by first registering for an account via your app's home page.
 
 ## (optional) Modify the App Definition and Data Model within the .codegenie directory
+
 The generate command we ran earlier gave us a starting point for modeling our application. While generating an app based on a description may seem like magic, the true power of Code Genie is unlocked by accurately modeling your app definition.
 
 Modify one or more of the Entity properties defined in `.codegenie/app.ts` and then regenerate the project by running:

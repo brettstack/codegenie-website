@@ -12,21 +12,13 @@ export const Hero = () => {
       id="home"
     >
       <div className="w-11/12 md:w-[800px] xl:w-[900px] flex flex-col justify-center items-center pt-16 md:pt-16 lg:pt-20 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="text-customSecondary text-sm sm:text-base mb-6 mt-16 sm:mt-10">
-          Generate Full Stack Serverless AWS Applications, with a <span style={{textDecoration: 'line-through'}}>wish</span> AI-powered command <span className='text-3xl md:text-5xl'>🧞‍♂️</span>
+            Generate Full Stack Serverless AWS Applications based on your own data model <span className="text-3xl md:text-5xl">🧞‍♂️</span>
             {/* Save months developing new software */}
           </div>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }}>
           {/* <div className="gradient-text text-5xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
           <span className="inline md:hidden">No-code</span>
           <span className="hidden md:inline">No-code/Low-code</span>
@@ -40,19 +32,14 @@ export const Hero = () => {
             </h1>
           </div>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <div className='mb-4 '>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
+          <div className="mb-4 ">
             <div className="mb-6 text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-4">
-              <p>
-              Try it now! Swap in your own idea and run:
-              </p>
-              <div className='terminal mt-6'>
-                npx @codegenie/cli generate --name "Wildlife Rescue" --description "An app that lets users report injured wildlife. Other users (wildlife rescuers) can see reports in their area and respond with questions and updates."
-              </div>
+              {/* <p>Try it now! Swap in your own idea and run:</p>
+              <div className="terminal mt-6">
+                npx @codegenie/cli generate --name "Wildlife Rescue" --description "An app that lets users report injured wildlife. Other
+                users (wildlife rescuers) can see reports in their area and respond with questions and updates."
+              </div> */}
               {/* <p>
                 Download source code based on your data model or idea, then deploy
                 to your AWS account in minutes.
@@ -72,17 +59,13 @@ export const Hero = () => {
             </div> */}
           </div>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}>
           <div className="flex flex-col gap-2 sm:flex-row mb-14 mt-4 justify-center">
-            <a
-              href='/docs/guides/getting-started'
-              className="w-[320px] h-12 custom-button-colored unstyled"
-            >
+            {/* <a href="/docs/guides/getting-started" className="w-[320px] h-12 custom-button-colored unstyled">
               See the Getting Started guide
+            </a> */}
+            <a href="https://app.codegenie.codes" className="w-[320px] h-12 custom-button-colored unstyled">
+              Get Started
             </a>
           </div>
         </motion.div>
@@ -118,10 +101,7 @@ export const Hero = () => {
               preserveAspectRatio="none"
               className=" bg-customDarkBg2"
             >
-              <path
-                d="M1200 0L0 0 598.97 114.72 1200 0z"
-                className="shape-fill custom-bg-dark1"
-              ></path>
+              <path d="M1200 0L0 0 598.97 114.72 1200 0z" className="shape-fill custom-bg-dark1"></path>
             </svg>
           </div>
         </div>

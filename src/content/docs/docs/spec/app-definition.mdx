@@ -90,7 +90,7 @@ Name of your application.
 
 ### organizationInviteEmail
 
-Email address to use when a user invites another user to their organization. e.g. organization-invite@example.com
+Only relevant when using the Organization Permission Model. Email address to use when a user invites another user to their organization. e.g. organization-invite@example.com
 
 ### permissionModel
 
@@ -165,13 +165,13 @@ Name of the LSI
 
 Sort Key for this LSI
 
-#### partitionKey
+{/* #### partitionKey
 
 The name of the property to partition data on. If the Entity specifies a `parentEntity`, this defaults to the Parent Entity's ID Property.
 
 #### sortKey
 
-The name of the property to sort data by. If the Entity specifies a `parentEntity`, this defaults to this Entity's ID Property, which by default is a time-sortable randomly generated ID.
+The name of the property to sort data by. If the Entity specifies a `parentEntity`, this defaults to this Entity's ID Property, which by default is a time-sortable randomly generated ID. */}
 
 ### parentEntity
 
@@ -328,7 +328,7 @@ Adds regex to [Upsert Component](/docs/project-walkthrough/frontend/components#u
 
 ### relatedEntity
 
-Specify an Entity to create a parent-child relationship (i.e the Parent Entity has a one-to-many relationship with this Entity). This value must match the name/key of another Entity defined in `entities`. String Properties only.
+Specify an Entity to create a one-to-one relationship. This value must match the name/key of another Entity. String Properties only.
 
 ### ui
 

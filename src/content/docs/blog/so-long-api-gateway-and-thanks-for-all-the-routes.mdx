@@ -75,7 +75,7 @@ In my tests comparing the performance of API Gateway to CloudFront, I found both
   </figcaption>
 </figure>
 
-You can try it out yourself at <a href="https://production.d1gtqqp4ixg5qm.amplifyapp.com/public-api" target="_blank" rel="noopener">https://production.d1gtqqp4ixg5qm.amplifyapp.com/public-api</a> (no guarantees on how long this website will be live) or deploy your own version by cloning this repo <a href="https://github.com/brettstack/cloudfront-apigw-lambda" target="_blank" rel="noopener">https://github.com/brettstack/cloudfront-apigw-lambda</a> and running `npm run init:dev`
+You can try it out yourself at <a href="https://production.d1gtqqp4ixg5qm.amplifyapp.com/public-api" target="_blank" rel="noopener">https://production.d1gtqqp4ixg5qm.amplifyapp.com/public-api</a> (no guarantees on how long this website will be live) or deploy your own version by cloning this repo <a href="https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw" target="_blank" rel="noopener">https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw</a> and running `npm run init:dev`
 
 ## Locking down the Lambda FURL
 
@@ -118,5 +118,12 @@ Performing JWT validation yourself is also incredibly fast (~4ms cold; ~0.3ms wa
 
 ## Conclusion
 
-CloudFront + Lambda Function URL (CLFURL) is an excellent combination for Serverless APIs when you don't need any of the advanced features offered by API Gateway. With CloudFront being an order of magnitude cheaper than API Gateway, it puts it more in line with what'd you'd expect when compared to the cost of other components of your Serverless architecture (and without sacrificing performance).
+CloudFront + Lambda Function URL (CLFURL) is an excellent combination for Serverless APIs when you don't need any of the advanced features offered by API Gateway. With CloudFront being an order of magnitude cheaper than API Gateway, it puts it more in line with what'd you'd expect when compared to the cost of other components of your Serverless architecture.
 
+The minor performance improvement is nice, but likely to be unnoticeable to the end user. On the other hand, the increase in the max timeout will surely be appreciated by developers looking to add Generative AI to to their API.
+
+A repo is available at <a href="https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw" target="_blank" rel="noopener">https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw</a>. This repo was generated using <a href="https://app.codegenie.codes/">Code Genie</a> and modified to include CloudFront + Lambda Function URL and benchmarks.
+
+Code Genie will soon offer CLFURL as an option when generating your source code, and will continue to support API Gateway HTTP APIs as well.
+
+If you've found this blog useful, please give it a reshare! You can follow <a href="https://x.com/AWSbrett" target="_blank" rel="noopener">me</a> and <a href="https://x.com/CodeGenieCodes/" target="_blank" rel="noopener">Code Genie</a> on Twitter. Finally, if you're building something new (or want to refresh something old), be sure to check out Code Genie. It takes care of all the boring parts of starting a new project so you can focus on what's interesting.

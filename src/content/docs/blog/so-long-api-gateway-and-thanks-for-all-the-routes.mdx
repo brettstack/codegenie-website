@@ -36,7 +36,7 @@ However, most of the time I just need a way to invoke a Lambda Function over HTT
 ## Why change?
 
 ### Cost
-Since launch, one of the biggest criticisms of API Gateway has been its pricing. One would expect that the cost of Lambda (the thing that's doing the heavy lifting) would make up the larger portion of the cost pie compared to the thing that's simply connecting it to a client. In reality, API Gateway costs often exceed Lambda by more than 2x. Under similar conditions, CloudFront costs ~10% of Lambda costs.
+Since launch, one of the biggest criticisms of API Gateway has been its pricing. One would expect that the cost of Lambda (the thing that's doing the heavy lifting) would make up the larger portion of the cost pie compared to the thing that's simply connecting it to a client. In reality, API Gateway costs often exceed Lambda by more than 2x. Under similar conditions, CloudFront costs ~10% of what Lambda does.
 
 :::caution[WARNING: Gross oversimplification to prove a point detected]
 Of course saying API Gateway is simply a service that connects Lambda over HTTP is unfair. <a href="https://x.com/theburningmonk" target="_blank" rel="noopener">Yan Cui</a> has an excellent comparison of the two approaches in his blog post <a href="https://theburningmonk.com/2024/03/when-to-use-api-gateway-vs-lambda-function-urls/" target="_blank" rel="noopener">When to use API Gateway vs. Lambda Function URLs

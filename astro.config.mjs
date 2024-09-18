@@ -4,7 +4,6 @@ import starlightBlog from 'starlight-blog'
 import react from '@astrojs/react'
 import tailwind from '@astrojs/tailwind'
 import sitemap from '@astrojs/sitemap'
-import prefetch from '@astrojs/prefetch'
 
 import robotsTxt from 'astro-robots-txt'
 const description =
@@ -14,6 +13,10 @@ const ogImage = 'https://codegenie.codes/og.jpg'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://codegenie.codes',
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
+  },
   integrations: [
     react(),
     tailwind(),
@@ -180,9 +183,6 @@ export default defineConfig({
       ],
     }),
     sitemap(),
-    prefetch({
-      intentSelector: ["a[href^='/']", "a[href^='https://codegenie.codes']", "a[href^='https://www.codegenie.codes']"],
-    }),
     robotsTxt(),
   ],
 })

@@ -1,7 +1,7 @@
-import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
-import { defineCollection } from 'astro:content';
-import { blogSchema } from 'starlight-blog/schema';
+import { docsSchema, i18nSchema } from '@astrojs/starlight/schema'
+import { defineCollection } from 'astro:content'
+import { blogSchema } from 'starlight-blog/schema'
 
 export const collections = {
-	docs: defineCollection({ schema: docsSchema({ extend: blogSchema() }) }),
-};
+  docs: defineCollection({ schema: docsSchema({ extend: (context) => blogSchema(context) }) }),
+}

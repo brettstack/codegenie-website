@@ -35,13 +35,13 @@ However, most of the time I just need a way to invoke a Lambda Function over HTT
 ## Why change?
 
 ### Cost
-Since launch, one of the biggest criticisms of API Gateway has been its pricing. One would expect that Lambda (the thing that's doing the heavy lifting) would make up the majority of the cost, and not the thing that's simply connecting it to a client. In reality, API Gateway often exceeds Lambda costs by more than 2x. Under similar conditions, CloudFront costs ~10% of what Lambda does.
+Since launch, one of the biggest criticisms of API Gateway has been its pricing. One would expect that Lambda (the thing that's doing the heavy lifting) would make up the majority of the cost, and not the thing that's simply connecting it to a client. In reality, API Gateway (even the newer, cheaper HTTP API variant) often exceeds Lambda costs by more than 2x. Under similar conditions, CloudFront costs ~10% of what Lambda does.
 
 :::caution[WARNING: Gross oversimplification to prove a point detected]
 Saying API Gateway is just a service that connects Lambda over HTTP is unfair. <a href="https://x.com/theburningmonk" target="_blank" rel="noopener">Yan Cui</a> has an excellent comparison of the two approaches in his blog post <a href="https://theburningmonk.com/2024/03/when-to-use-api-gateway-vs-lambda-function-urls/" target="_blank" rel="noopener">When to use API Gateway vs. Lambda Function URLs</a>. He covers many of the advanced features of API Gateway and concludes with a preference for API Gateway in most scenarios.
 :::
 
-The one area where API Gateway has a cost advantage is on unauthorized requests. When using the JWT Authorizer, API Gateway eats those costs for you. With CLFURL you would pay both the CloudFront and Lambda costs for unauthorized requests. This is really only a concern when it comes to DDOS (or Denial of Wallet) attacks. Fortunately, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/ddos-event-mitigation-logic-continuous-inspection.html" target="_blank" rel="noopener">AWS Shield Standard</a> (a free DDOS protection service included with CloudFront) *should* mitigate those attacks.
+The one area where API Gateway has a cost advantage is on unauthorized requests. When using its Authorizer feature, API Gateway eats those costs for you. With CLFURL you would pay both the CloudFront and Lambda costs for unauthorized requests. This is mostly only a concern when it comes to DDOS (or Denial of Wallet) attacks. Fortunately, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/ddos-event-mitigation-logic-continuous-inspection.html" target="_blank" rel="noopener">AWS Shield Standard</a> (a free DDOS protection service included with CloudFront) *should* mitigate those attacks.
 
 ### Max timeout
 
@@ -67,6 +67,8 @@ In my tests comparing the performance of API Gateway to CloudFront, I found both
 1. CloudFront adds a shocking +300ms latency for cross-region (other-side-of-the-world) requests **when not under load**. These findings are why I didn't switch to CLFURL earlier this year. I recently decided to test the performance again, hoping that AWS had resolved the issue. They hadn't. However, after diving deeper I discovered that this latency is akin to a cold start. When under load, this extra latency is a rare occurrence.
 2. Under load, CloudFront offers marginally better performance than API Gateway. ~4% faster on average.
 
+Note that these tests were performed against the faster HTTP API flavor of API Gateway. If you're using the original REST API option, you might see a more significant performance difference around the 20% mark.
+
 <figure>
   <Image src={apigwLfurlClfurlPerformance} alt="API Gateway vs Lambda Function URL vs CloudFront + LFURL" style={{margin: 'auto'}} />
   <figcaption style={{ margin: 0, color: '#666', fontSize: '0.8rem', textAlign: 'center' }}>
@@ -78,12 +80,12 @@ You can try it out yourself at <a href="https://production.d1gtqqp4ixg5qm.amplif
 
 ## Locking down the Lambda FURL
 
-If you want to enforce CloudFront security features such as Shield and WAF, you need to ensure attackers can't bypass CloudFront by calling your Lambda Function URL directly. To accomplish this, <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-lambda.html" target="_blank" rel="noopener">AWS recommends</a> setting the LFURL's authorization to AWS_IAM and using OAC to grant access for the distribution. If only it were that simple. Unfortunately, there are two big limitations:
+If you want to enforce CloudFront security features such as Shield and WAF, you need to ensure attackers can't bypass CloudFront by calling your Lambda Function URL directly. To accomplish this, <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-lambda.html" target="_blank" rel="noopener">AWS recommends</a> setting the LFURL's authorization to AWS_IAM and using OAC to grant access for the distribution. If only it were that simple. Unfortunately, there are two challenges  with this:
 
-1. CloudFront overrides the Authorization header when invoking your Lambda Function, so you need to use a different, non-standard header to include your JWT.
+1. CloudFront overrides the `Authorization` header when invoking your Lambda Function, so you need to use a different, non-standard header to include your auth token. You can use CloudFront Functions to copy the original `Authorization` header to a new header like `X-Auth` so that at least your clients can continue using the standard header name.
 2. The client needs to sign the payload in PUT/POST methods. See this post by <a href="https://speedrun.nobackspacecrew.com/blog/2024/05/22/using-cloudfront-as-a-lightweight-proxy.html#lambda-oac" target="_blank" rel="noopener">David Behroozi</a> for more details.
 
-A simpler solution proposed by <a href="https://x.com/ryan_sb" target="_blank" rel="noopener">Ryan Scott Brown</a> is to have CloudFront add a custom origin header with a secret: `'X-CloudFront-Secret': 'NoBadGuysAllowed'`. Your Lambda Function can check the secret in the header, and return an error code if it doesn't match. Another solution proposed by <a href="https://x.com/dreamorosi" target="_blank" rel="noopener">Andrea Amorosi</a> uses Lambda@Edge.
+A simpler solution proposed by <a href="https://x.com/ryan_sb" target="_blank" rel="noopener">Ryan Scott Brown</a> is to have CloudFront add a custom origin header with a secret: `'X-CloudFront-Secret': 'NoBadGuysAllowed'`. Your Lambda Function can check the secret in the header, and return an error code if it doesn't match. Another solution proposed by <a href="https://x.com/dreamorosi" target="_blank" rel="noopener">Andrea Amorosi</a> uses Lambda@Edge. Since an attacker would need to discover both the Lambda Function URL and the secret before successfully bypassing CloudFront, this solution is likely more than enough for most applications.
 
 <a href="https://x.com/ryan_sb/status/1835363459979960624" target="_blank" rel="noopener">
 <figure>
@@ -97,8 +99,6 @@ A simpler solution proposed by <a href="https://x.com/ryan_sb" target="_blank" r
 ## Replacing API Gateway Authorizer with in-Lambda JWT validation
 
 The only "advanced" API Gateway feature I use on all of my APIs is the Cognito/JWT Authorizer. Since CloudFront doesn't have a similar native feature, we need to perform the JWT validation inside the Lambda Function. This has the added bonus of making our app more portable and easier to run locally, while also granting us more flexibility.
-
-Performing JWT validation yourself is also incredibly fast (~4ms cold; ~0.3ms warm in Node.js) thanks to <a href="https://x.com/AWSbrett/status/1779422735539847454" target="_blank" rel="noopener">this tip by David Behroozi</a>.
 
 <figure>
   <Image src={jwtExpressMiddleware} alt="Express Middleware for JWT validation" style={{margin: 'auto'}} />
@@ -114,15 +114,16 @@ Performing JWT validation yourself is also incredibly fast (~4ms cold; ~0.3ms wa
   </figcaption>
 </figure>
 
+Performing Cognito JWT validation yourself is also incredibly fast (~4ms cold; ~0.3ms warm in Node.js) thanks to <a href="https://x.com/AWSbrett/status/1779422735539847454" target="_blank" rel="noopener">this tip by David Behroozi</a>.
 
 ## Conclusion
 
 CloudFront + Lambda Function URL (CLFURL) is an excellent combination for Serverless APIs when you don't need any of the advanced features offered by API Gateway. With CloudFront being an order of magnitude cheaper than API Gateway, it puts it more in line with what'd you'd expect when compared to the cost of other components of your Serverless architecture.
 
-The minor performance improvement is nice, but likely to be unnoticeable to the end user. On the other hand, the increase in the max timeout will surely be appreciated by developers looking to add Generative AI to their API.
+The minor performance improvement compared to HTTP API is nice, but likely to be unnoticeable to the end user (compared to REST API may be a different story). On the other hand, the increase in the max timeout will surely be appreciated by developers looking to add Generative AI to their API.
 
-A repo is available at <a href="https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw" target="_blank" rel="noopener">https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw</a>. This repo was generated using <a href="https://app.codegenie.codes/">Code Genie</a> and modified to include CloudFront + Lambda Function URL and benchmarks.
+A repo is available at <a href="https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw" target="_blank" rel="noopener">https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw</a>. This repo was generated using <a href="https://app.codegenie.codes/">Code Genie</a> and modified to include CloudFront + Lambda Function URL and benchmarks. Check out the commit history to find the interesting parts.
 
 Code Genie will soon offer CLFURL as an option when generating your source code, and will continue to support API Gateway HTTP APIs as well.
 
-If you've found this blog useful, please give it a reshare! You can follow <a href="https://x.com/AWSbrett" target="_blank" rel="noopener">me</a> and <a href="https://x.com/CodeGenieCodes/" target="_blank" rel="noopener">Code Genie</a> on Twitter. Finally, if you're building something new (or want to refresh something old), be sure to check out Code Genie. It takes care of all the boring parts of starting a new project so you can focus on what's interesting.
+If you've found this blog useful, please give it a reshare! You can follow <a href="https://x.com/AWSbrett" target="_blank" rel="noopener">me</a> and <a href="https://x.com/CodeGenieCodes/" target="_blank" rel="noopener">Code Genie</a> on Twitter. Finally, if you're building something new (or want to refresh something old), be sure to check out Code Genie. It takes care of all the boring parts of starting a new project so you can focus on what's interesting!

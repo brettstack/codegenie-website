@@ -38,8 +38,7 @@ However, most of the time I just need a way to invoke a Lambda Function over HTT
 Since launch, one of the biggest criticisms of API Gateway has been its pricing. One would expect that Lambda (the thing that's doing the heavy lifting) would make up the majority of the cost, and not the thing that's simply connecting it to a client. In reality, API Gateway often exceeds Lambda costs by more than 2x. Under similar conditions, CloudFront costs ~10% of what Lambda does.
 
 :::caution[WARNING: Gross oversimplification to prove a point detected]
-Saying API Gateway is just a service that connects Lambda over HTTP is unfair. <a href="https://x.com/theburningmonk" target="_blank" rel="noopener">Yan Cui</a> has an excellent comparison of the two approaches in his blog post <a href="https://theburningmonk.com/2024/03/when-to-use-api-gateway-vs-lambda-function-urls/" target="_blank" rel="noopener">When to use API Gateway vs. Lambda Function URLs
-</a>. He covers many of the advanced features of API Gateway and concludes with a preference for API Gateway in most scenarios.
+Saying API Gateway is just a service that connects Lambda over HTTP is unfair. <a href="https://x.com/theburningmonk" target="_blank" rel="noopener">Yan Cui</a> has an excellent comparison of the two approaches in his blog post <a href="https://theburningmonk.com/2024/03/when-to-use-api-gateway-vs-lambda-function-urls/" target="_blank" rel="noopener">When to use API Gateway vs. Lambda Function URLs</a>. He covers many of the advanced features of API Gateway and concludes with a preference for API Gateway in most scenarios.
 :::
 
 The one area where API Gateway has a cost advantage is on unauthorized requests. When using the JWT Authorizer, API Gateway eats those costs for you. With CLFURL you would pay both the CloudFront and Lambda costs for unauthorized requests. This is really only a concern when it comes to DDOS (or Denial of Wallet) attacks. Fortunately, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/ddos-event-mitigation-logic-continuous-inspection.html" target="_blank" rel="noopener">AWS Shield Standard</a> (a free DDOS protection service included with CloudFront) *should* mitigate those attacks.
@@ -58,7 +57,7 @@ In fact, this is the main reason I started investigating this option in the firs
 </figure>
 
 :::note[API Gateway max timeout can be increased on request]
-API Gateway <a href="https://aws.amazon.com/about-aws/whats-new/2024/06/amazon-api-gateway-integration-timeout-limit-29-seconds/" target="_blank" rel="noopener">recently announced</a> it can increase the max timeout via support request. This is only available for Regional REST APIs (not the less-expensive HTTP API offering, or Edge-Optimized REST APIs). Additionally, this increase comes at the cost of a decrease for the account-level throttle quota limits.
+API Gateway <a href="https://aws.amazon.com/about-aws/whats-new/2024/06/amazon-api-gateway-integration-timeout-limit-29-seconds/" target="_blank" rel="noopener">recently announced</a> it can increase the max timeout via support request. This is only available for Regional REST APIs (not the less-expensive HTTP API offering, or Edge-Optimized REST APIs).
 :::
 
 ### Performance?
@@ -120,7 +119,7 @@ Performing JWT validation yourself is also incredibly fast (~4ms cold; ~0.3ms wa
 
 CloudFront + Lambda Function URL (CLFURL) is an excellent combination for Serverless APIs when you don't need any of the advanced features offered by API Gateway. With CloudFront being an order of magnitude cheaper than API Gateway, it puts it more in line with what'd you'd expect when compared to the cost of other components of your Serverless architecture.
 
-The minor performance improvement is nice, but likely to be unnoticeable to the end user. On the other hand, the increase in the max timeout will surely be appreciated by developers looking to add Generative AI to to their API.
+The minor performance improvement is nice, but likely to be unnoticeable to the end user. On the other hand, the increase in the max timeout will surely be appreciated by developers looking to add Generative AI to their API.
 
 A repo is available at <a href="https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw" target="_blank" rel="noopener">https://github.com/CodeGenieApp/cloudfront-lambda-url-vs-apigw</a>. This repo was generated using <a href="https://app.codegenie.codes/">Code Genie</a> and modified to include CloudFront + Lambda Function URL and benchmarks.
 

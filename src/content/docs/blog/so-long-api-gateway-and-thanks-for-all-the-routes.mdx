@@ -26,7 +26,7 @@ For nearly a decade I've been building APIs with API Gateway and Lambda. I was e
 However, most of the time I just need a way to invoke a Lambda Function over HTTP with a custom domain name, and this is exactly what CloudFront + Lambda Function URL (CLFURL) enables.
 
 <figure>
-  <img src={clefairy.src} alt="Clefairy" loading="eager" style={{margin: 'auto'}} />
+  <img src={clefairy.src} alt="Clefairy" loading="eager" style={{margin: 'auto', width: '480px', maxWidth: '100%'}} />
   <figcaption style={{ margin: 0, color: '#666', fontSize: '0.8rem', textAlign: 'center' }}>
     Clefairy: The unofficial mascot of CLFURL
   </figcaption>
@@ -47,7 +47,7 @@ The one area where API Gateway has a cost advantage is on unauthorized requests.
 
 API Gateway has a max timeout of 29 seconds, which is more than enough for most REST API needs. However, with AI becoming a core feature of many products, those extra 31 seconds afforded by CloudFront (a total of 1 minute) can be crucial.
 
-In fact, this is the main reason I started investigating this option in the first place! <a href="https://codegenie.codes" target="_blank" rel="noopener">Code Genie</a> uses AI to generate data models based on the description of your app. There is currently a 500 character limit on this description to mitigate the chance of it taking longer than 29 seconds. By moving to CLFURL, Code Genie will be able to handle significantly more complex requests, and enable other AI features.
+In fact, this is the main reason I started investigating this option in the first place! <a href="https://codegenie.codes" target="_blank" rel="noopener">Code Genie</a> uses AI to generate data models based on the description of your app. There is currently a 500 character limit on this description to mitigate the chance of it taking longer than 29 seconds. By moving to CLFURL, Code Genie will be able to handle significantly more complex requests, and enable other AI features in the future.
 
 <figure>
   <Image src={codeGenieMaxDescription} alt="500 characters is not enough to describe complex applications" style={{margin: 'auto'}} />
@@ -65,9 +65,7 @@ API Gateway <a href="https://aws.amazon.com/about-aws/whats-new/2024/06/amazon-a
 In my tests comparing the performance of API Gateway to CloudFront, I found both approaches yield similar results. Here are the highlights:
 
 1. CloudFront adds a shocking +300ms latency for cross-region (other-side-of-the-world) requests **when not under load**. These findings are why I didn't switch to CLFURL earlier this year. I recently decided to test the performance again, hoping that AWS had resolved the issue. They hadn't. However, after diving deeper I discovered that this latency is akin to a cold start. When under load, this extra latency is a rare occurrence.
-2. Under load, CloudFront offers marginally better performance than API Gateway. ~4% faster on average.
-
-Note that these tests were performed against the faster HTTP API flavor of API Gateway. If you're using the original REST API option, you might see a more significant performance difference around the 20% mark.
+2. Under load, CloudFront offers marginally better performance than API Gateway HTTP API. ~4% faster on average. **These tests were only run against the cheaper, faster HTTP API option**. If you're using the original REST API option, you might see a more significant performance difference around the 20% mark (along with 3x the cost).
 
 <figure>
   <Image src={apigwLfurlClfurlPerformance} alt="API Gateway vs Lambda Function URL vs CloudFront + LFURL" style={{margin: 'auto'}} />
@@ -115,6 +113,8 @@ The only "advanced" API Gateway feature I use on all of my APIs is the Cognito/J
 </figure>
 
 Performing Cognito JWT validation yourself is also incredibly fast (~4ms cold; ~0.3ms warm in Node.js) thanks to <a href="https://x.com/AWSbrett/status/1779422735539847454" target="_blank" rel="noopener">this tip by David Behroozi</a>.
+
+Another option is to use a <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/example-function-validate-token.html" target="_blank" rel="noopener">CloudFront Function to perform JWT validation</a>. This has the benefit of rejecting the request before it makes it to your Lambda Function, at the cost of a little extra complexity and having to do some magic to get local development working.
 
 ## Conclusion
 
